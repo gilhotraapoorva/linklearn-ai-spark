@@ -178,15 +178,17 @@ const GamificationStats = () => {
                       : 'border-muted bg-muted/20 opacity-50'
                   }`}
                 >
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">{badge.icon}</div>
-                    <div className="text-xs font-medium">{badge.name}</div>
-                    <Badge 
-                      className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-fit mx-auto`}
-                      variant="secondary"
-                    >
-                      {badge.rarity}
-                    </Badge>
+                  <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
+                    <div className="text-center">
+                      <div className="text-2xl mb-1">{badge.icon}</div>
+                      <div className="text-xs font-medium max-w-full truncate">{badge.name}</div>
+                      <Badge 
+                        className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-fit mx-auto`}
+                        variant="secondary"
+                      >
+                        {badge.rarity}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               ))}

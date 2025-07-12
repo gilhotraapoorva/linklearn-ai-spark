@@ -236,12 +236,12 @@ const WeeklyHackathon = () => {
           opacity: 0.5,
         };
       } else if (offset === 2) {
-        // Far right (fully opaque, moved out of view, not interactive)
+        // Far right (should be hidden, not moved to the rightmost side)
         return {
-          transform: 'translateX(600px) scale(0.82) rotateY(-28deg)',
-          zIndex: 0,
-          opacity: 1,
+          opacity: 0,
+          transform: 'translate(-50%, -50%) scale(0.7)',
           pointerEvents: 'none',
+          zIndex: 0,
         };
       } else {
         // Hide other cards
@@ -314,14 +314,16 @@ const WeeklyHackathon = () => {
               style.opacity = 0.5;
               style.zIndex = 8;
             } else if (offset === 2) {
-              // Far right (should not overlap with anyone or UI)
-              style.transform = 'translate(420px, -50%) scale(0.82) rotateY(-32deg)';
-              style.opacity = 0.5;
-              style.zIndex = 8;
+              // Far right (should be hidden, not moved to the rightmost side)
+              style.opacity = 0;
+              style.transform = 'translate(-50%, -50%) scale(0.7)';
+              style.pointerEvents = 'none';
+              style.zIndex = 0;
             } else {
               // Hide other cards
               style.opacity = 0;
               style.transform = 'translate(-50%, -50%) scale(0.7)';
+              style.pointerEvents = 'none';
             }
             return (
               <React.Fragment key={hackathon.id}>
