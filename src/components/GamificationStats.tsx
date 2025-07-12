@@ -46,7 +46,7 @@ const userStats: UserStats = {
       name: "First Steps",
       description: "Complete your first quest",
       icon: "🎯",
-      rarity: "common",
+      rarity: "rook",
       unlocked: true
     },
     {
@@ -81,8 +81,8 @@ const GamificationStats = () => {
   
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
-      case 'common':
-        return 'bg-muted text-muted-foreground';
+      case 'rook':
+        return 'bg-primary text-primary-foreground';
       case 'rare':
         return 'bg-primary text-primary-foreground';
       case 'epic':
@@ -132,10 +132,10 @@ const GamificationStats = () => {
               <div className="text-2xl font-bold">{userStats.questsCompleted}</div>
               <div className="text-xs text-muted-foreground">Quests</div>
             </div>
-            <div className="text-center p-3 bg-background rounded-lg">
-              <Zap className="h-6 w-6 text-accent mx-auto mb-1" />
+            <div className="text-center p-3 bg-background rounded-lg flex flex-col items-start justify-center">
+              <Zap className="h-6 w-6 text-accent mb-1" />
               <div className="text-2xl font-bold">{userStats.hackathonsCompleted}</div>
-              <div className="text-xs text-muted-foreground">Hackathons</div>
+              <div className="text-xs text-muted-foreground">Hacks</div>
             </div>
           </div>
         </CardContent>
@@ -172,24 +172,20 @@ const GamificationStats = () => {
               {userStats.badges.map((badge) => (
                 <div
                   key={badge.id}
-                  className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                  className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all duration-200 h-full min-h-[110px] min-w-0 overflow-hidden ${
                     badge.unlocked
                       ? 'border-primary bg-primary/5 hover:bg-primary/10'
                       : 'border-muted bg-muted/20 opacity-50'
                   }`}
                 >
-                  <div className="flex flex-col items-center justify-center h-full w-full overflow-hidden">
-                    <div className="text-center">
-                      <div className="text-2xl mb-1">{badge.icon}</div>
-                      <div className="text-xs font-medium max-w-full truncate">{badge.name}</div>
-                      <Badge 
-                        className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-fit mx-auto`}
-                        variant="secondary"
-                      >
-                        {badge.rarity}
-                      </Badge>
-                    </div>
-                  </div>
+                  <div className="text-2xl mb-1">{badge.icon}</div>
+                  <div className="text-xs font-medium break-words text-center w-full">{badge.name}</div>
+                  <Badge 
+                    className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-full max-w-[80px] mx-auto truncate`}
+                    variant="secondary"
+                  >
+                    {badge.rarity}
+                  </Badge>
                 </div>
               ))}
             </div>

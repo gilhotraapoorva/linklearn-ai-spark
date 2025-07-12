@@ -327,7 +327,7 @@ const WeeklyHackathon = () => {
             }
             return (
               <React.Fragment key={hackathon.id}>
-                <div style={style} className="w-[270px] h-[320px] flex-shrink-0">
+                <div style={style} className="w-[300px] h-[340px] flex-shrink-0">
                   <div className="rounded-2xl bg-white shadow-2xl border-0 p-6 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)]">
                     {/* Rainbow gradient overlay, more vibrant and blurred for depth */}
                     <div className="absolute inset-0 pointer-events-none rounded-2xl z-0" style={{background: 'conic-gradient(from 180deg at 50% 50%, #ffb6ff 0deg, #b5ffff 90deg, #baffc9 180deg, #ffe29a 270deg, #ffb6ff 360deg)', opacity: 0.22, filter: 'blur(2px)'}} />
