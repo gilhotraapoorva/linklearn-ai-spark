@@ -10,6 +10,7 @@ import {
   Sparkles,
   LinkedinIcon as LinkedIn
 } from "lucide-react";
+import linkedinLogo from '/linkedin.svg';
 
 const Header = () => {
   const userStats = {
@@ -20,13 +21,15 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-background border-b border-border shadow-card">
+    <header className="bg-white border-b border-border shadow-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <LinkedIn className="h-8 w-8 text-primary" />
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8" />
+              </a>
               <div className="flex items-center gap-1">
                 <span className="text-xl font-bold text-foreground">Learning</span>
                 <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
