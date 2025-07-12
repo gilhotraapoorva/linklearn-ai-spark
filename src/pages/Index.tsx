@@ -19,9 +19,9 @@ import {
 
 const Index = () => {
   const upcomingEvents = [
-    { type: "Quest", title: "Debug Challenge", time: "Tomorrow" },
-    { type: "Hackathon", title: "Mobile App Challenge", time: "This Weekend" },
-    { type: "Learning", title: "AI Fundamentals", time: "Next Week" },
+    // { type: "Quest", title: "Debug Challenge", time: "Tomorrow" },
+    // { type: "Hackathon", title: "Mobile App Challenge", time: "This Weekend" },
+    // { type: "Learning", title: "AI Fundamentals", time: "Next Week" },
   ];
 
   const insights = [
@@ -66,6 +66,29 @@ const Index = () => {
             <div className="space-y-4">
               <GamificationStats />
             </div>
+                   {/* Quick Actions */}
+            <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  Quick Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {/* <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Target className="h-4 w-4 mr-2" />
+                  Generate New Quest
+                </Button> */}
+                <Button variant="outline" size="sm" className="w-full justify-start">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  View Progress Report
+                </Button>
+                {/* <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Users className="h-4 w-4 mr-2" />
+                  Find Study Buddy
+                </Button> */}
+              </CardContent>
+            </Card>
 
             {/* AI Insights */}
             <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
@@ -86,15 +109,15 @@ const Index = () => {
             </Card>
 
             {/* Upcoming Events */}
-            <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-primary" />
-                  Upcoming
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {upcomingEvents.map((event, index) => (
+            {/* <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300"> */}
+              {/* <CardHeader> */}
+                {/* <CardTitle className="flex items-center gap-2"> */}
+                  {/* <Calendar className="h-5 w-5 text-primary" /> */}
+                  {/* Upcoming */}
+                {/* </CardTitle> */}
+              {/* </CardHeader> */}
+              {/* <CardContent className="space-y-3"> */}
+                {/* {upcomingEvents.map((event, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-background rounded-lg">
                     <div className="flex items-center gap-2">
                       {event.type === 'Quest' && <Target className="h-4 w-4 text-primary" />}
@@ -109,33 +132,11 @@ const Index = () => {
                       {event.type}
                     </Badge>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                ))} */}
+              {/* </CardContent> */}
+            {/* </Card> */}
 
-            {/* Quick Actions */}
-            <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Target className="h-4 w-4 mr-2" />
-                  Generate New Quest
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  View Progress Report
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Users className="h-4 w-4 mr-2" />
-                  Find Study Buddy
-                </Button>
-              </CardContent>
-            </Card>
+     
           </div>
         </div>
       </main>

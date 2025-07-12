@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Bell, 
-  Settings, 
+  // Settings, 
   User, 
   Flame, 
   Trophy,
@@ -14,8 +14,8 @@ import {
 const Header = () => {
   const userStats = {
     name: "Alex Johnson",
-    level: 12,
-    currentStreak: 7,
+    // level: 12,
+    // currentStreak: 7,
     notifications: 3
   };
 
@@ -37,14 +37,14 @@ const Header = () => {
 
           {/* Center Stats */}
           <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
+            {/* <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
               <Trophy className="h-4 w-4 text-accent" />
               <span className="text-sm font-medium">Level {userStats.level}</span>
-            </div>
-            <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
+            </div> */}
+            {/* <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
               <Flame className="h-4 w-4 text-gamification-streak" />
               <span className="text-sm font-medium">{userStats.currentStreak} day streak</span>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Side Actions */}
@@ -61,10 +61,10 @@ const Header = () => {
               </Button>
             </div>
 
-            {/* Settings */}
+            {/* Settings
             <Button variant="ghost" size="icon">
               <Settings className="h-5 w-5" />
-            </Button>
+            </Button> */}
 
             {/* User Profile */}
             <div className="flex items-center gap-2">

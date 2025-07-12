@@ -57,22 +57,22 @@ const userStats: UserStats = {
       rarity: "rare",
       unlocked: true
     },
-    {
-      id: "code-ninja",
-      name: "Code Ninja",
-      description: "Complete 50 coding quests",
-      icon: "🥷",
-      rarity: "epic",
-      unlocked: false
-    },
-    {
-      id: "hackathon-hero",
-      name: "Hackathon Hero",
-      description: "Win 10 hackathons",
-      icon: "👑",
-      rarity: "legendary",
-      unlocked: false
-    }
+    // {
+    //   id: "code-ninja",
+    //   name: "Code Ninja",
+    //   description: "Complete 50 coding quests",
+    //   icon: "🥷",
+    //   rarity: "epic",
+    //   unlocked: false
+    // },
+    // {
+    //   id: "hackathon-hero",
+    //   name: "Hackathon Hero",
+    //   description: "Win 10 hackathons",
+    //   icon: "👑",
+    //   rarity: "legendary",
+    //   unlocked: false
+    // }
   ]
 };
 
@@ -182,7 +182,7 @@ const GamificationStats = () => {
                     <div className="text-2xl mb-1">{badge.icon}</div>
                     <div className="text-xs font-medium">{badge.name}</div>
                     <Badge 
-                      className={`text-xs mt-1 ${getRarityColor(badge.rarity)}`}
+                      className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-fit mx-auto`}
                       variant="secondary"
                     >
                       {badge.rarity}
