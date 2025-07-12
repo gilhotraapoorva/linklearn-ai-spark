@@ -485,9 +485,8 @@ const WeeklyHackathon = () => {
         >
           <DialogContent className="max-w-2xl p-0 bg-transparent shadow-none border-none">
             <div
-              className="rounded-3xl overflow-hidden p-8 pb-0 text-center relative"
+              className="rounded-3xl overflow-hidden p-0 pb-0 text-center relative bg-white"
               style={{
-                background: "linear-gradient(135deg, #0072b1 0%, #0a66c2 100%)", // LinkedIn blue gradient
                 boxShadow: "0 8px 32px 0 rgba(31,38,135,0.18)",
               }}
             >
@@ -500,20 +499,23 @@ const WeeklyHackathon = () => {
                   style={{objectFit: 'contain'}}
                 />
               )}
-              <h2 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
-                {selectedHackathon?.title}
-              </h2>
-              <div className="text-lg font-medium text-white/80 mb-2">
-                {selectedHackathon?.theme}
-              </div>
-              {/* Prizes */}
-              <div className="flex flex-wrap justify-center gap-2 mb-4">
-                {selectedHackathon?.prizes?.map((prize, i) => (
-                  <Badge key={i} className="bg-yellow-100 text-yellow-800 border-yellow-300 border font-semibold px-3 py-1 rounded-full text-xs">
-                    <Trophy className="inline-block h-4 w-4 mr-1 text-yellow-500" />
-                    {prize}
-                  </Badge>
-                ))}
+              {/* HEADER: Make this blue */}
+              <div className="bg-blue-600 px-8 pt-12 pb-6 text-center">
+                <h2 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
+                  {selectedHackathon?.title}
+                </h2>
+                <div className="text-lg font-medium text-white/80 mb-2">
+                  {selectedHackathon?.theme}
+                </div>
+                {/* Prizes */}
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {selectedHackathon?.prizes?.map((prize, i) => (
+                    <Badge key={i} className="bg-yellow-100 text-yellow-800 border-yellow-300 border font-semibold px-3 py-1 rounded-full text-xs">
+                      <Trophy className="inline-block h-4 w-4 mr-1 text-yellow-500" />
+                      {prize}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             </div>
             {/* Scrollable Info Section */}
