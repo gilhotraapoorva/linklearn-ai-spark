@@ -3,6 +3,7 @@ import SkillGraph from "@/components/SkillGraph";
 import DailyQuest from "@/components/DailyQuest";
 import GamificationStats from "@/components/GamificationStats";
 import WeeklyHackathon from "@/components/WeeklyHackathon";
+import WeeklyWisdomQuiz from "@/components/WeeklyWisdomQuiz";
 import LlamaBot from "@/components/LlamaBot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,6 +64,9 @@ const Index = () => {
             
             {/* Weekly Hackathon */}
             <WeeklyHackathon />
+            
+            {/* Weekly Wisdom Quiz (replaces Weekly Developer Digest) */}
+            <WeeklyWisdomQuiz />
             
             {/* Skill Graph */}
             <SkillGraph />

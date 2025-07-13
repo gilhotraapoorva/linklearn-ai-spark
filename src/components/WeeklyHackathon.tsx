@@ -341,7 +341,15 @@ const WeeklyHackathon = () => {
                       <Calendar className="h-3 w-3" />
                       {hackathon.status === "active" ? `Started ${hackathon.startsIn}` : hackathon.startsIn}
                     </div>
-                    <Button variant="outline" size="sm" className="w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7">
+                    <Button
+                      variant={hackathon.status === "active" ? "success" : "outline"}
+                      size="sm"
+                      className={
+                        hackathon.status === "active"
+                          ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700"
+                          : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
+                      }
+                    >
                       {hackathon.status === "active" ? "Join" : "Register"}
                     </Button>
                   </div>
