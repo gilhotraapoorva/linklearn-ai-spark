@@ -53,16 +53,8 @@ const questData = {
 };
 
 const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case 'Beginner':
-      return 'bg-success text-success-foreground';
-    case 'Intermediate':
-      return 'bg-warning text-warning-foreground';
-    case 'Advanced':
-      return 'bg-destructive text-destructive-foreground';
-    default:
-      return 'bg-muted text-muted-foreground';
-  }
+  // Always return colorless style for difficulty
+  return 'bg-transparent text-foreground border border-border';
 };
 
 const QuestPage = () => {
