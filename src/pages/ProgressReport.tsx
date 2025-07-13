@@ -51,41 +51,115 @@ interface WeeklyStats {
   streakDays: number;
 }
 
-const skillsProgress: SkillProgress[] = [
-  { name: "React Development", current: 85, previous: 78, change: 7, category: "Frontend" },
-  { name: "TypeScript", current: 70, previous: 65, change: 5, category: "Programming" },
-  { name: "System Design", current: 45, previous: 40, change: 5, category: "Architecture" },
-  { name: "AI/ML Basics", current: 25, previous: 18, change: 7, category: "Emerging Tech" },
-  { name: "DevOps", current: 60, previous: 60, change: 0, category: "Infrastructure" },
-  { name: "Data Structures", current: 80, previous: 75, change: 5, category: "Programming" },
-];
+// Replace static skillsProgress with a map
+const skillsProgressMap: Record<'week' | 'month' | 'quarter', SkillProgress[]> = {
+  week: [
+    { name: "React Development", current: 85, previous: 78, change: 7, category: "Frontend" },
+    { name: "TypeScript", current: 70, previous: 65, change: 5, category: "Programming" },
+    { name: "System Design", current: 45, previous: 40, change: 5, category: "Architecture" },
+    { name: "AI/ML Basics", current: 25, previous: 18, change: 7, category: "Emerging Tech" },
+    { name: "DevOps", current: 60, previous: 60, change: 0, category: "Infrastructure" },
+    { name: "Data Structures", current: 80, previous: 75, change: 5, category: "Programming" },
+  ],
+  month: [
+    { name: "React Development", current: 88, previous: 73, change: 15, category: "Frontend" },
+    { name: "TypeScript", current: 74, previous: 62, change: 12, category: "Programming" },
+    { name: "System Design", current: 50, previous: 38, change: 12, category: "Architecture" },
+    { name: "AI/ML Basics", current: 30, previous: 15, change: 15, category: "Emerging Tech" },
+    { name: "DevOps", current: 62, previous: 60, change: 2, category: "Infrastructure" },
+    { name: "Data Structures", current: 83, previous: 70, change: 13, category: "Programming" },
+  ],
+  quarter: [
+    { name: "React Development", current: 92, previous: 65, change: 27, category: "Frontend" },
+    { name: "TypeScript", current: 80, previous: 55, change: 25, category: "Programming" },
+    { name: "System Design", current: 60, previous: 30, change: 30, category: "Architecture" },
+    { name: "AI/ML Basics", current: 40, previous: 10, change: 30, category: "Emerging Tech" },
+    { name: "DevOps", current: 70, previous: 60, change: 10, category: "Infrastructure" },
+    { name: "Data Structures", current: 90, previous: 60, change: 30, category: "Programming" },
+  ],
+};
 
-const recentAchievements: Achievement[] = [
-  {
-    id: "quest-streak",
-    name: "Week Warrior",
-    description: "Completed 7-day quest streak",
-    icon: "🔥",
-    date: "2 days ago",
-    xpEarned: 200
-  },
-  {
-    id: "react-master",
-    name: "React Rookie",
-    description: "Completed 10 React challenges",
-    icon: "⚛️",
-    date: "5 days ago",
-    xpEarned: 150
-  },
-  {
-    id: "hackathon-participant",
-    name: "Code Gladiator",
-    description: "Participated in first hackathon",
-    icon: "🏆",
-    date: "1 week ago",
-    xpEarned: 300
-  }
-];
+// Replace static recentAchievements with a map
+const recentAchievementsMap: Record<'week' | 'month' | 'quarter', Achievement[]> = {
+  week: [
+    {
+      id: "quest-streak",
+      name: "Week Warrior",
+      description: "Completed 7-day quest streak",
+      icon: "🔥",
+      date: "2 days ago",
+      xpEarned: 200
+    },
+    {
+      id: "react-master",
+      name: "React Rookie",
+      description: "Completed 10 React challenges",
+      icon: "⚛️",
+      date: "5 days ago",
+      xpEarned: 150
+    },
+    {
+      id: "hackathon-participant",
+      name: "Code Gladiator",
+      description: "Participated in first hackathon",
+      icon: "🏆",
+      date: "1 week ago",
+      xpEarned: 300
+    }
+  ],
+  month: [
+    {
+      id: "quest-streak",
+      name: "Month Marathoner",
+      description: "Completed 30-day quest streak",
+      icon: "🔥",
+      date: "3 days ago",
+      xpEarned: 800
+    },
+    {
+      id: "typescript-pro",
+      name: "TypeScript Pro",
+      description: "Mastered advanced TypeScript challenges",
+      icon: "📘",
+      date: "1 week ago",
+      xpEarned: 400
+    },
+    {
+      id: "system-designer",
+      name: "System Designer",
+      description: "Completed 5 system design projects",
+      icon: "🏗️",
+      date: "2 weeks ago",
+      xpEarned: 600
+    }
+  ],
+  quarter: [
+    {
+      id: "quarter-champion",
+      name: "Quarter Champion",
+      description: "Top performer for the quarter",
+      icon: "🥇",
+      date: "5 days ago",
+      xpEarned: 2000
+    },
+    {
+      id: "ai-ml-innovator",
+      name: "AI/ML Innovator",
+      description: "Built 3 AI/ML projects",
+      icon: "🤖",
+      date: "3 weeks ago",
+      xpEarned: 1200
+    },
+    {
+      id: "data-structures-guru",
+      name: "Data Structures Guru",
+      description: "Solved 100+ data structure problems",
+      icon: "🧠",
+      date: "1 month ago",
+      xpEarned: 1500
+    }
+  ],
+};
 
 const weeklyStats: WeeklyStats = {
   questsCompleted: 12,
@@ -334,7 +408,7 @@ const ProgressReport = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {skillsProgress.map((skill) => (
+              {skillsProgressMap[selectedTimeframe].map((skill) => (
                 <div key={skill.name} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -368,7 +442,7 @@ const ProgressReport = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {recentAchievements.map((achievement) => (
+              {recentAchievementsMap[selectedTimeframe].map((achievement) => (
                 <div key={achievement.id} className="flex items-start gap-4 p-4 bg-blue-50/50 rounded-lg border border-blue-100">
                   <span className="text-2xl">{achievement.icon}</span>
                   <div className="flex-1">
