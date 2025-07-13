@@ -11,6 +11,7 @@ import QuestPage from "./pages/DailyQuest";
 import MCQRound from "./components/MCQRound";
 import SubmissionRound from "./components/SubmissionRound";
 import WeeklyWisdomQuizPage from "./pages/WeeklyWisdomQuizPage";
+import RedeemXP from "./pages/RedeemXP";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/hackathon/:id/submission" element={<SubmissionRound />} />
           <Route path="/progress" element={<ProgressReport />} />
           <Route path="/weekly-wisdom-quiz" element={<WeeklyWisdomQuizPage />} />
+          <Route path="/redeem-xp" element={<RedeemXP />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

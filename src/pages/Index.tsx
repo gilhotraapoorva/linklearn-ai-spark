@@ -16,7 +16,8 @@ import {
   Calendar,
   BookOpen,
   Users,
-  Lightbulb
+  Lightbulb,
+  Star
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -37,6 +38,10 @@ const Index = () => {
 
   const handleViewProgressReport = () => {
     navigate('/progress');
+  };
+
+  const handleRedeemXP = () => {
+    navigate('/redeem-xp');
   };
 
   return (
@@ -122,6 +127,28 @@ const Index = () => {
                     <span className="text-sm">{insight}</span>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* XP Wallet */}
+            <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5 text-yellow-400" />
+                  XP Wallet
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center space-y-3">
+                <div className="text-2xl font-bold text-blue-900">You have <span className="text-yellow-500">achieved</span> <span className="text-yellow-500">2,380 XP!</span></div>
+                <div className="italic text-blue-700 text-sm mb-2">Make your toil count!</div>
+                <Button 
+                  variant="default" 
+                  size="lg" 
+                  className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold rounded-full px-8 py-2 mt-2 shadow-lg"
+                  onClick={handleRedeemXP}
+                >
+                  REDEEM XP
+                </Button>
               </CardContent>
             </Card>
 

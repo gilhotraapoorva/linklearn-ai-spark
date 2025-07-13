@@ -19,10 +19,12 @@ import {
   Award,
   ArrowLeft,
   Download,
-  Share2
+  Share2,
+  BarChart3
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 
 interface SkillProgress {
   name: string;
@@ -93,9 +95,106 @@ const weeklyStats: WeeklyStats = {
   streakDays: 7
 };
 
+const weeklyActivityDataMap = {
+  week: [
+    { day: 'Mon', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Tue', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Wed', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Thu', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Fri', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Sat', xp: Math.floor(Math.random() * 150 + 50) },
+    { day: 'Sun', xp: Math.floor(Math.random() * 150 + 50) },
+  ],
+  month: Array.from({ length: 4 }, (_, i) => ({ day: `W${i + 1}`, xp: Math.floor(Math.random() * 700 + 200) })),
+  quarter: Array.from({ length: 3 }, (_, i) => ({ day: `M${i + 1}`, xp: Math.floor(Math.random() * 2000 + 500) })),
+};
+const PIE_COLORS = [
+  '#2563EB', // blue-600
+  '#1D4ED8', // blue-700
+  '#818CF8', // indigo-400
+  '#F59E42', // orange-400
+  '#10B981', // emerald-500
+  '#F43F5E', // rose-500
+  '#FBBF24', // yellow-400
+];
+
+const PIE_COLORS_WEEK = [
+  '#2563EB', // blue-600
+  '#1D4ED8', // blue-700
+  '#818CF8', // indigo-400
+  '#F59E42', // orange-400
+  '#10B981', // emerald-500
+  '#F43F5E', // rose-500
+  '#FBBF24', // yellow-400
+];
+const PIE_COLORS_MONTH = [
+  '#2563EB', // blue-600
+  '#F59E42', // orange-400
+  '#10B981', // emerald-500
+  '#F43F5E', // rose-500
+];
+const PIE_COLORS_QUARTER = [
+  '#2563EB', // blue-600
+  '#F59E42', // orange-400
+  '#10B981', // emerald-500
+];
+
+function getPalette(len: number) {
+  if (len === 7) return PIE_COLORS_WEEK;
+  if (len === 4) return PIE_COLORS_MONTH;
+  if (len === 3) return PIE_COLORS_QUARTER;
+  // fallback
+  return PIE_COLORS_WEEK.slice(0, len);
+}
+
+const overviewStatsMap = {
+  week: {
+    questsCompleted: 12,
+    xpEarned: 890,
+    streakDays: 7,
+    hackathonsEntered: 2,
+    skillImprovements: 5,
+  },
+  month: {
+    questsCompleted: 38,
+    xpEarned: 3200,
+    streakDays: 22,
+    hackathonsEntered: 5,
+    skillImprovements: 14,
+  },
+  quarter: {
+    questsCompleted: 110,
+    xpEarned: 9500,
+    streakDays: 65,
+    hackathonsEntered: 13,
+    skillImprovements: 37,
+  },
+};
+
 const ProgressReport = () => {
   const navigate = useNavigate();
   const [selectedTimeframe, setSelectedTimeframe] = useState<'week' | 'month' | 'quarter'>('week');
+  const activityData = weeklyActivityDataMap[selectedTimeframe];
+  const palette = getPalette(activityData.length);
+  const stats = overviewStatsMap[selectedTimeframe];
+
+  const activityLabels = {
+    week: {
+      heading: 'Weekly Activity',
+      bar: 'Daily XP earned this week',
+      pie: 'XP Distribution by Day',
+    },
+    month: {
+      heading: 'Monthly Activity',
+      bar: 'Weekly XP earned this month',
+      pie: 'XP Distribution by Week',
+    },
+    quarter: {
+      heading: 'Quarterly Activity',
+      bar: 'Monthly XP earned this quarter',
+      pie: 'XP Distribution by Month',
+    },
+  };
 
   const getChangeIcon = (change: number) => {
     if (change > 0) return <ChevronUp className="h-4 w-4 text-blue-500" />;
@@ -169,7 +268,7 @@ const ProgressReport = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-600 text-sm font-medium">Quests Completed</p>
-                  <p className="text-3xl font-bold text-blue-900">{weeklyStats.questsCompleted}</p>
+                  <p className="text-3xl font-bold text-blue-900">{stats.questsCompleted}</p>
                 </div>
                 <Target className="h-8 w-8 text-blue-500" />
               </div>
@@ -181,7 +280,7 @@ const ProgressReport = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-600 text-sm font-medium">XP Earned</p>
-                  <p className="text-3xl font-bold text-blue-900">{weeklyStats.xpEarned.toLocaleString()}</p>
+                  <p className="text-3xl font-bold text-blue-900">{stats.xpEarned.toLocaleString()}</p>
                 </div>
                 <Star className="h-8 w-8 text-blue-500" />
               </div>
@@ -193,7 +292,7 @@ const ProgressReport = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-600 text-sm font-medium">Streak Days</p>
-                  <p className="text-3xl font-bold text-blue-900">{weeklyStats.streakDays}</p>
+                  <p className="text-3xl font-bold text-blue-900">{stats.streakDays}</p>
                 </div>
                 <Flame className="h-8 w-8 text-blue-500" />
               </div>
@@ -205,7 +304,7 @@ const ProgressReport = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-600 text-sm font-medium">Hackathons</p>
-                  <p className="text-3xl font-bold text-blue-900">{weeklyStats.hackathonsEntered}</p>
+                  <p className="text-3xl font-bold text-blue-900">{stats.hackathonsEntered}</p>
                 </div>
                 <Trophy className="h-8 w-8 text-blue-500" />
               </div>
@@ -217,7 +316,7 @@ const ProgressReport = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-600 text-sm font-medium">Skills Improved</p>
-                  <p className="text-3xl font-bold text-blue-900">{weeklyStats.skillImprovements}</p>
+                  <p className="text-3xl font-bold text-blue-900">{stats.skillImprovements}</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-blue-500" />
               </div>
@@ -230,7 +329,7 @@ const ProgressReport = () => {
           <Card className="bg-white border-blue-100 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-blue-900">
-                <Brain className="h-5 w-5 text-blue-600" />
+                <BarChart3 className="h-5 w-5 text-blue-600" />
                 Skills Progress
               </CardTitle>
             </CardHeader>
@@ -294,31 +393,65 @@ const ProgressReport = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-blue-900">
               <Calendar className="h-5 w-5 text-blue-600" />
-              Weekly Activity
+              {activityLabels[selectedTimeframe].heading}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="grid grid-cols-7 gap-2">
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                  <div key={day} className="text-center">
-                    <div className="text-xs text-blue-600 mb-2">{day}</div>
-                    <div 
-                      className="h-16 bg-blue-100 rounded-lg flex items-end justify-center relative overflow-hidden"
-                    >
-                      <div 
-                        className="w-full bg-blue-500 rounded-lg transition-all duration-500"
-                        style={{ height: `${Math.random() * 80 + 20}%` }}
-                      />
-                      <span className="absolute bottom-1 text-xs text-white font-medium">
-                        {Math.floor(Math.random() * 150 + 50)}
-                      </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                {/* Bar chart (slimmer, elegant) */}
+                <div>
+                  <div className={`flex justify-center gap-4`}> {/* Use flex for slimmer bars and more spacing */}
+                    {activityData.map((data, index) => (
+                      <div key={data.day} className="flex flex-col items-center w-8"> {/* Slim bar */}
+                        <div className="text-xs text-blue-600 mb-2">{data.day}</div>
+                        <div className="h-32 bg-blue-100 rounded-lg flex items-end justify-center relative overflow-hidden w-full" style={{ minWidth: 16, maxWidth: 32 }}>
+                          <div 
+                            className="rounded-lg transition-all duration-500 shadow-md"
+                            style={{ width: '100%', height: `${(data.xp / Math.max(...activityData.map(d => d.xp), 1)) * 100}%`, backgroundColor: palette[index % palette.length], borderRadius: 6 }}
+                          />
+                          <span className="absolute bottom-1 text-xs text-white font-medium left-1/2 -translate-x-1/2">
+                            {data.xp}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-sm text-blue-600 mt-2">
+                    {activityLabels[selectedTimeframe].bar}
+                  </div>
+                </div>
+                {/* Pie chart (bigger, beautiful) */}
+                <div className="flex flex-col items-center">
+                  <div className="w-full max-w-md h-80 flex items-center justify-center">
+                    <div className="relative w-full h-full flex items-center justify-center">
+                      <div className="absolute inset-0 z-0 rounded-full shadow-2xl" style={{ boxShadow: '0 8px 32px 0 rgba(31,38,135,0.18)' }}></div>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={activityData}
+                            dataKey="xp"
+                            nameKey="day"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={110}
+                            innerRadius={60}
+                            stroke="#fff"
+                            strokeWidth={4}
+                          >
+                            {activityData.map((entry, idx) => (
+                              <Cell key={`cell-${idx}`} fill={palette[idx % palette.length]} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip formatter={(value: number) => `${value} XP`} />
+                        </PieChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
-                ))}
-              </div>
-              <div className="text-center text-sm text-blue-600">
-                Daily XP earned this week
+                  <div className="text-center text-xs text-blue-500 mt-2">
+                    {activityLabels[selectedTimeframe].pie}
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
