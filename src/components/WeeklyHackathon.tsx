@@ -43,20 +43,18 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-001",
     title: "Build a Real-time Chat App",
-    description: "Create a modern chat application with real-time messaging capabilities",
     theme: "Real-time Applications",
     difficulty: "Intermediate",
     duration: "48 hours",
     participants: 1247,
     prizes: ["LinkedIn Premium (1 month)", "Exclusive Badge", "Career Mentorship"],
     skills: ["React", "WebSockets", "Node.js", "Database Design"],
-    startsIn: "1 day ago",
+    startsIn: "2 days",
     status: "upcoming"
   },
   {
     id: "hack-002",
     title: "AI-Powered Task Manager",
-    description: "Build an intelligent task management system using AI",
     theme: "AI & Productivity",
     difficulty: "Advanced",
     duration: "72 hours",
@@ -69,7 +67,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-003",
     title: "Sustainable Energy Dashboard",
-    description: "Create a comprehensive dashboard for renewable energy monitoring",
     theme: "Green Tech",
     difficulty: "Intermediate",
     duration: "36 hours",
@@ -82,7 +79,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-004",
     title: "Adobe Creative Hack",
-    description: "Design innovative creative tools and solutions",
     theme: "Design & Creativity",
     difficulty: "Beginner",
     duration: "24 hours",
@@ -95,7 +91,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-005",
     title: "Tesla Mobility Challenge",
-    description: "Develop next-generation mobility and transportation solutions",
     theme: "Mobility & AI",
     difficulty: "Advanced",
     duration: "60 hours",
@@ -108,7 +103,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-006",
     title: "Xiaomi IoT Sprint",
-    description: "Build smart device integrations and IoT solutions",
     theme: "Smart Devices",
     difficulty: "Intermediate",
     duration: "30 hours",
@@ -302,11 +296,6 @@ const WeeklyHackathon = () => {
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1 items-center mb-2">
-                      {hackathon.status === "active" && (
-                        <Badge className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white animate-pulse">
-                          LIVE
-                        </Badge>
-                      )}
                       <Badge
                         className={
                           getDifficultyColor(hackathon.difficulty) +
@@ -339,10 +328,10 @@ const WeeklyHackathon = () => {
                     </div>
                     <div className="text-[10px] text-primary font-bold flex items-center gap-1 mb-1">
                       <Calendar className="h-3 w-3" />
-                      {hackathon.status === "active" ? `Started ${hackathon.startsIn}` : hackathon.startsIn}
+                      {hackathon.startsIn}
                     </div>
                     <Button variant="outline" size="sm" className="w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7">
-                      {hackathon.status === "active" ? "Join" : "Register"}
+                      Register
                     </Button>
                   </div>
                   {/* Subtle animated rainbow border on hover */}
@@ -414,11 +403,9 @@ const WeeklyHackathon = () => {
                 <CalendarIcon className="h-6 w-6 text-blue-500 mb-2" />
                 <div className="text-xs text-blue-600">Date</div>
                 <div className="font-bold text-base text-blue-600">
-                  {selectedHackathon?.status === "active" 
-                    ? `Started ${selectedHackathon.startsIn}`
-                    : selectedHackathon?.startsIn
-                      ? `Starts in ${selectedHackathon.startsIn}`
-                      : ""}
+                  {selectedHackathon?.startsIn
+                    ? `Starts in ${selectedHackathon.startsIn}`
+                    : ""}
                 </div>
               </div>
               <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
