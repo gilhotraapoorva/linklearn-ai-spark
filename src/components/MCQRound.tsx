@@ -5,7 +5,15 @@ import { Button } from './ui/button';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { Progress } from './ui/progress';
-import { Clock, CheckCircle, XCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+import { Clock, CheckCircle, XCircle, ArrowLeft, ArrowRight, AlertTriangle } from 'lucide-react';
 
 interface Question {
   id: number;
@@ -190,6 +198,7 @@ export default function MCQRound() {
   const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState(0);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     if (timeLeft > 0 && !showResults) {
@@ -227,6 +236,19 @@ export default function MCQRound() {
     const finalScore = calculateScore();
     setScore(finalScore);
     setShowResults(true);
+    setShowConfirmDialog(false);
+  };
+
+  const handleSubmitClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    handleSubmit();
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmDialog(false);
   };
 
   const getAnsweredCount = () => {
@@ -297,21 +319,15 @@ export default function MCQRound() {
                     <>
                       <p className="text-lg text-gray-700">
                         You scored {score}/20 ({Math.round((score / 20) * 100)}%). 
-                        You need at least 2/20 (10%) to pass this round.
+                        You need at least 2/20 (10%) to pass this round. Unfortunately, you cannot retake this assessment.
                       </p>
-                      <div className="flex gap-4 justify-center">
+                      <div className="flex justify-center">
                         <Button 
                           onClick={() => navigate(`/hackathon/${id}`)}
                           variant="outline"
                           className="border-blue-600 text-blue-600 hover:bg-blue-50"
                         >
                           Back to Hackathon
-                        </Button>
-                        <Button 
-                          onClick={() => window.location.reload()}
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          Retake Quiz
                         </Button>
                       </div>
                     </>
@@ -445,7 +461,7 @@ export default function MCQRound() {
                   <div className="flex gap-3">
                     {currentQuestion === questions.length - 1 ? (
                       <Button
-                        onClick={handleSubmit}
+                        onClick={handleSubmitClick}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6"
                       >
                         Submit Quiz
@@ -482,7 +498,7 @@ export default function MCQRound() {
                   Back to Hackathon
                 </Button>
                 <Button
-                  onClick={handleSubmit}
+                  onClick={handleSubmitClick}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                   disabled={getAnsweredCount() === 0}
                 >
@@ -493,6 +509,45 @@ export default function MCQRound() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              Confirm Submission
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to submit your quiz? Once submitted, you cannot make any changes or retake the assessment.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                <strong>Summary:</strong>
+              </p>
+              <p className="text-sm text-blue-600 mt-1">
+                • Questions answered: {getAnsweredCount()} of {questions.length}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Time remaining: {formatTime(timeLeft)}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Minimum score required: 10% ({Math.ceil(questions.length * 0.1)} questions)
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCancelSubmit}>
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmSubmit} className="bg-blue-600 hover:bg-blue-700">
+              Yes, Submit Quiz
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -7,13 +7,22 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Clock,
   CheckCircle,
   AlertCircle,
   Trophy,
   Target,
-  Brain
+  Brain,
+  AlertTriangle
 } from "lucide-react";
 
 interface Question {
@@ -245,6 +254,7 @@ const MCQRound = () => {
   const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   React.useEffect(() => {
     if (timeLeft > 0 && !isSubmitted) {
@@ -280,6 +290,19 @@ const MCQRound = () => {
   const handleSubmit = () => {
     setIsSubmitted(true);
     setShowResults(true);
+    setShowConfirmDialog(false);
+  };
+
+  const handleSubmitClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    handleSubmit();
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmDialog(false);
   };
 
   const calculateScore = () => {
@@ -346,7 +369,7 @@ const MCQRound = () => {
                 <p className="text-gray-600">
                   {passed ? 
                     "You've successfully passed the first round! You can now proceed to the submission phase." :
-                    "You need at least 70% (14/20) to proceed to the next round. You can try again after 24 hours."
+                    "You need at least 70% (14/20) to proceed to the next round. Unfortunately, you cannot retake this assessment."
                   }
                 </p>
               </div>
@@ -479,7 +502,7 @@ const MCQRound = () => {
           <div className="flex gap-2">
             {currentQuestion === mcqQuestions.length - 1 ? (
               <Button 
-                onClick={handleSubmit}
+                onClick={handleSubmitClick}
                 className="bg-blue-600 text-white hover:bg-blue-700"
                 disabled={answeredCount < mcqQuestions.length}
               >
@@ -523,6 +546,45 @@ const MCQRound = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              Confirm Submission
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to submit your test? Once submitted, you cannot make any changes or retake the assessment.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                <strong>Summary:</strong>
+              </p>
+              <p className="text-sm text-blue-600 mt-1">
+                • Questions answered: {answeredCount} of {mcqQuestions.length}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Time remaining: {formatTime(timeLeft)}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Minimum score required: 70% ({Math.ceil(mcqQuestions.length * 0.7)} questions)
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCancelSubmit}>
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmSubmit} className="bg-blue-600 hover:bg-blue-700">
+              Yes, Submit Test
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
