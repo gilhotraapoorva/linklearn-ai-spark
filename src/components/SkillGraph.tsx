@@ -75,10 +75,6 @@ const SkillGraph = () => {
                 value={skill.level} 
                 className="h-2" 
               />
-              <div 
-                className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-1000 ${getSkillColor(skill.level)}`}
-                style={{ width: `${skill.level}%` }}
-              />
             </div>
           </div>
         ))}

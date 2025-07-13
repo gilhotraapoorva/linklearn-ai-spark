@@ -42,7 +42,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-001",
     title: "Build a Real-time Chat App",
-    description: "Create a modern chat application with real-time messaging, user authentication, and a beautiful UI. Perfect for showcasing your full-stack skills!",
     theme: "Real-time Applications",
     difficulty: "Intermediate",
     duration: "48 hours",
@@ -55,7 +54,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-002",
     title: "AI-Powered Task Manager",
-    description: "Develop an intelligent task management app that uses AI to prioritize tasks, suggest optimal schedules, and provide productivity insights.",
     theme: "AI & Productivity",
     difficulty: "Advanced",
     duration: "72 hours",
@@ -68,7 +66,6 @@ const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-003",
     title: "Sustainable Energy Dashboard",
-    description: "Build a comprehensive dashboard for monitoring renewable energy systems with real-time data visualization and predictive analytics.",
     theme: "Green Tech",
     difficulty: "Intermediate",
     duration: "36 hours",
@@ -76,6 +73,42 @@ const upcomingHackathons: Hackathon[] = [
     prizes: ["Solar Panel Kit", "Green Tech Certification", "Industry Mentorship"],
     skills: ["Data Visualization", "IoT", "Python", "React"],
     startsIn: "1 week",
+    status: "upcoming"
+  },
+  {
+    id: "hack-004",
+    title: "Adobe Creative Hack",
+    theme: "Design & Creativity",
+    difficulty: "Beginner",
+    duration: "24 hours",
+    participants: 2100,
+    prizes: ["Adobe CC License", "Mentorship", "Swag"],
+    skills: ["UI/UX", "Photoshop", "Illustrator"],
+    startsIn: "3 days",
+    status: "upcoming"
+  },
+  {
+    id: "hack-005",
+    title: "Tesla Mobility Challenge",
+    theme: "Mobility & AI",
+    difficulty: "Advanced",
+    duration: "60 hours",
+    participants: 980,
+    prizes: ["Tesla Internship", "$1000", "Tesla Swag"],
+    skills: ["AI", "Python", "Embedded"],
+    startsIn: "4 days",
+    status: "upcoming"
+  },
+  {
+    id: "hack-006",
+    title: "Xiaomi IoT Sprint",
+    theme: "Smart Devices",
+    difficulty: "Intermediate",
+    duration: "30 hours",
+    participants: 1500,
+    prizes: ["Xiaomi Gadgets", "Cash Prize", "Certificate"],
+    skills: ["IoT", "Android", "Cloud"],
+    startsIn: "6 days",
     status: "upcoming"
   }
 ];
@@ -186,17 +219,17 @@ const WeeklyHackathon = () => {
 
   // Render horizontally scrollable cards
   const renderCarousel = () => (
-    <Card className="bg-white shadow-card hover:shadow-hover transition-all duration-300">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-black">
+    <Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-none w-full max-w-full min-w-0 overflow-x-auto">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-neutral-900">
           <Trophy className="h-5 w-5 text-primary" />
           Upcoming Hackathons
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0 pb-2">
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-4 cursor-grab select-none"
+          className="flex gap-4 overflow-x-auto pb-2 cursor-grab select-none min-h-[220px] w-full"
           style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', userSelect: isDragging.current ? 'none' : 'auto' }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
@@ -221,88 +254,76 @@ const WeeklyHackathon = () => {
             // For the third hackathon (idx === 2), check for skill match
             const isForYou = idx === 2 && normalizedHackathonSkills.some(skill => normalizedUserSkills.some(userSkill => skill.includes(userSkill.split(" ")[0])));
             return (
-              <div key={hackathon.id} className="w-[270px] h-[320px] flex-shrink-0">
+              <div key={hackathon.id} className="w-[180px] h-[210px] flex-shrink-0">
                 <div
-                  className={`rounded-2xl shadow-2xl border-0 p-6 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
                   style={{ background: isForYou ? 'linear-gradient(135deg, #fff 0%, #f6faff 60%, #f3f6fb 100%)' : '#fff' }}
                 >
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4">
+                  <div className="relative z-10 flex flex-col flex-1 min-h-0">
+                    <div className="flex items-center gap-2 mb-2">
                       <img
                         src={logo}
                         alt={`${company} Logo`}
-                        className="h-10 w-10 rounded-full border-2 border-primary/30 bg-white object-contain shadow-lg"
+                        className="h-8 w-8 rounded-full border-2 border-primary/30 bg-white object-contain shadow-lg"
                       />
-                      <span className="text-base font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-3 py-1 rounded-lg shadow-inner backdrop-blur-md">
+                      <span className="text-xs font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-2 py-0.5 rounded-lg shadow-inner backdrop-blur-md">
                         {company}
                       </span>
                       {isForYou && (
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
+                            <Star className="h-4 w-4 text-green-500 cursor-pointer ml-1 z-[999999]" />
                           </TooltipTrigger>
-                          <TooltipContent side="top" align="center" className="w-72 text-left z-[999999] drop-shadow-2xl">
-                            <span className="block text-sm font-semibold text-primary mb-1">Recommended for You</span>
+                          <TooltipContent side="top" align="center" className="w-48 text-left z-[999999] drop-shadow-2xl">
+                            <span className="block text-xs font-semibold text-primary mb-1">Recommended for You</span>
                             <span className="text-xs text-muted-foreground">This hackathon is recommended because it matches your skill set.</span>
                           </TooltipContent>
                         </Tooltip>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Code className="h-5 w-5 text-accent" />
-                      <span className="text-lg font-extrabold text-foreground leading-tight drop-shadow-sm">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Code className="h-4 w-4 text-accent" />
+                      <span className="text-sm font-extrabold text-neutral-900 leading-tight drop-shadow-sm truncate">
                         {hackathon.title}
                       </span>
-                      <Badge
-                        className={
-                          getStatusColor(hackathon.status) +
-                          " ml-2 px-3 py-1 rounded-full text-xs font-bold shadow"
-                        }
-                      >
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {hackathon.status}
-                      </Badge>
                     </div>
-                    <p className="text-muted-foreground text-sm leading-relaxed min-h-[40px] mb-4 font-medium">
-                      {hackathon.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 items-center mb-4">
+                    <div className="flex flex-wrap gap-1 items-center mb-2">
                       <Badge
                         className={
                           getDifficultyColor(hackathon.difficulty) +
-                          " px-3 py-1 rounded-full text-xs font-bold"
+                          " px-2 py-0.5 rounded-full text-[10px] font-bold"
                         }
                       >
                         {hackathon.difficulty}
                       </Badge>
                       <Badge
                         variant="outline"
-                        className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
                       >
                         <Clock className="h-3 w-3" />
                         {hackathon.duration}
                       </Badge>
                       <Badge
                         variant="outline"
-                        className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
                       >
                         <Users className="h-3 w-3" />
-                        {hackathon.participants.toLocaleString()} participants
+                        {hackathon.participants.toLocaleString()}
                       </Badge>
                       <Badge
                         variant="secondary"
                         style={{ whiteSpace: "nowrap", alignSelf: "center" }}
-                        className="px-3 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent-foreground border-accent/20 border"
+                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-primary text-white border-primary border"
                       >
                         {hackathon.theme}
                       </Badge>
                     </div>
-                    <div className="text-xs text-primary font-bold flex items-center gap-2 mb-1">
+                    <div className="text-[10px] text-primary font-bold flex items-center gap-1 mb-1">
                       <Calendar className="h-3 w-3" />
-                      Starts in {hackathon.startsIn}
+                      {hackathon.startsIn}
                     </div>
-                    <Button variant="outline" size="sm" className="w-full mt-2">
+                    <Button variant="outline" size="sm" className="w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7">
                       Register
                     </Button>
                   </div>
