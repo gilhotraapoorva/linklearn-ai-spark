@@ -11,12 +11,6 @@ import {
   Star,
   Rocket,
   GitBranch,
-<<<<<<< HEAD
-  Info,
-=======
-  ChevronLeft,
-  ChevronRight
->>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 } from "lucide-react";
 import { useState } from "react";
 import placeholderLogo from "/public/placeholder.svg";
@@ -86,15 +80,12 @@ const upcomingHackathons: Hackathon[] = [
   }
 ];
 
-<<<<<<< HEAD
 // Set the first hackathon as live (active)
 if (upcomingHackathons.length > 0) {
   upcomingHackathons[0].status = "active";
 }
 
-=======
 // Mock data for upcoming hackathons
->>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 const companyNames = [
   "Intuit",
   "Google",
@@ -161,13 +152,7 @@ const WeeklyHackathon = () => {
     }
   };
 
-<<<<<<< HEAD
   const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
-=======
-  const [carouselIndex, setCarouselIndex] = React.useState(0);
-  const carouselRef = React.useRef<HTMLDivElement>(null);
-  const [selectedHackathon, setSelectedHackathon] = useState<Hackathon | null>(null);
->>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 
   // Drag-to-scroll logic
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -414,7 +399,6 @@ const WeeklyHackathon = () => {
                   {selectedHackathon?.prizes?.join(", ")}
                 </div>
               </div>
-<<<<<<< HEAD
             </div>
             <div className="text-left mb-2 flex items-center gap-2 text-blue-700 font-bold text-lg">
               <Star className="h-5 w-5 text-blue-500" />
@@ -422,61 +406,6 @@ const WeeklyHackathon = () => {
             </div>
             <div className="text-blue-700 text-base mb-2">
               {selectedHackathon?.description}
-=======
-              {/* Scrollable Info Section */}
-              <div className="bg-white px-8 pt-4 pb-24 rounded-b-3xl max-h-[350px] overflow-y-auto">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
-                    <CalendarIcon className="h-6 w-6 text-purple-500 mb-2" />
-                    <div className="text-xs text-muted-foreground">Date</div>
-                    <div className="font-bold text-base">
-                      {selectedHackathon?.startsIn
-                        ? `Starts in ${selectedHackathon.startsIn}`
-                        : ""}
-                    </div>
-                  </div>
-                  <div className="bg-pink-50 rounded-xl p-4 flex flex-col items-center">
-                    <MapPin className="h-6 w-6 text-pink-500 mb-2" />
-                    <div className="text-xs text-muted-foreground">Location</div>
-                    <div className="font-bold text-base">Delhi, India</div>
-                  </div>
-                  <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
-                    <UsersIcon className="h-6 w-6 text-blue-500 mb-2" />
-                    <div className="text-xs text-muted-foreground">Participants</div>
-                    <div className="font-bold text-base">
-                      {selectedHackathon?.participants?.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center">
-                    <TrophyIcon className="h-6 w-6 text-green-500 mb-2" />
-                    <div className="text-xs text-muted-foreground">Prizes</div>
-                    <div className="font-bold text-base">
-                      {selectedHackathon?.prizes?.join(", ")}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-left mb-2 flex items-center gap-2 text-purple-700 font-bold text-lg">
-                  <Star className="h-5 w-5 text-yellow-500" />
-                  About this Hackathon
-                </div>
-                <div className="text-muted-foreground text-base mb-2">
-                  {selectedHackathon?.description}
-                </div>
-                {/* Steps as bullet points */}
-                <ul className="list-disc pl-6 text-muted-foreground text-base mb-2">
-                  <li>Online Assessment</li>
-                  <li>Ideathon</li>
-                  <li>Project Submission</li>
-                </ul>
-                <div className="text-muted-foreground text-sm mb-4">
-                  Skills: {selectedHackathon?.skills?.join(", ")}
-                </div>
-              </div>
-              {/* Register Button at Center Bottom */}
-              <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
-                <Button size="lg" className="bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg">Register</Button>
-              </div>
->>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
             </div>
             {/* Steps as bullet points */}
             <ul className="list-disc pl-6 text-blue-700 text-base mb-2">
