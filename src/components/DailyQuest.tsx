@@ -67,7 +67,7 @@ const DailyQuest = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
-          Today's AI Quest
+          Daily Dev Dose
           {currentQuest.completed && (
             <Badge className="bg-gradient-success text-success-foreground">
               <Trophy className="h-3 w-3 mr-1" />

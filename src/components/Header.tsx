@@ -21,9 +21,11 @@ import {
   Rocket
 } from "lucide-react";
 import linkedinLogo from '/linkedin.svg';
+import { useUser } from "../lib/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
   
   const userStats = {
     name: "Alex Johnson",
@@ -109,6 +111,8 @@ const Header = () => {
         return 'text-blue-600';
     }
   };
+
+  const username = user?.email ? user.email.split("@")[0] : "Guest";
 
   return (
     <header className="bg-white/90 backdrop-blur border-b border-border shadow-lg">
@@ -206,11 +210,11 @@ const Header = () => {
             {/* User Profile */}
             <div className="flex items-center gap-2">
               <div className="hidden sm:block text-right">
-                <div className="text-sm font-medium">{userStats.name}</div>
+                <div className="text-sm font-medium">{username}</div>
                 <div className="text-xs text-muted-foreground">Learning Explorer</div>
               </div>
               <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={userStats.name} />
+                <AvatarImage src="/placeholder-avatar.jpg" alt={username} />
                 <AvatarFallback className="bg-gradient-primary text-primary-foreground">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
