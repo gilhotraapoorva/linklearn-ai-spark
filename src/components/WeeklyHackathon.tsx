@@ -11,8 +11,14 @@ import {
   Star,
   Rocket,
   GitBranch,
+<<<<<<< HEAD
   Info,
+=======
+  ChevronLeft,
+  ChevronRight
+>>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 } from "lucide-react";
+import { useState } from "react";
 import placeholderLogo from "/public/placeholder.svg";
 import {
   Dialog,
@@ -38,114 +44,57 @@ interface Hackathon {
   status: "upcoming" | "active" | "completed";
 }
 
-const weeklyHackathon: Hackathon = {
-  id: "hack-001",
-  title: "Build a Real-time Chat App",
-  description:
-    "Create a modern chat application with real-time messaging, user authentication, and a beautiful UI. Build group chats, direct messages, and notifications. Showcase your full-stack skills and deliver a seamless, engaging user experience.",
-  theme: "Real-time Applications",
-  difficulty: "Intermediate",
-  duration: "48 hours",
-  participants: 1247,
-  prizes: ["500 XP", "Exclusive Badge", "Career Mentorship"],
-  skills: ["React", "WebSockets", "Node.js", "Database Design"],
-  startsIn: "2 days",
-  status: "upcoming",
-};
-
-// Mock data for upcoming hackathons
 const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-001",
     title: "Build a Real-time Chat App",
-    description:
-      "Create a modern chat application with real-time messaging, user authentication, and a beautiful UI. Build group chats, direct messages, and notifications. Showcase your full-stack skills and deliver a seamless, engaging user experience.",
+    description: "Create a modern chat application with real-time messaging, user authentication, and a beautiful UI. Perfect for showcasing your full-stack skills!",
     theme: "Real-time Applications",
     difficulty: "Intermediate",
     duration: "48 hours",
     participants: 1247,
-    prizes: ["500 XP", "Exclusive Badge", "Career Mentorship"],
+    prizes: ["LinkedIn Premium (1 month)", "Exclusive Badge", "Career Mentorship"],
     skills: ["React", "WebSockets", "Node.js", "Database Design"],
     startsIn: "2 days",
-    status: "upcoming",
+    status: "upcoming"
   },
   {
     id: "hack-002",
-    title: "AI-Powered To-Do App",
-    description:
-      "Build a smart to-do app that uses AI to suggest tasks and optimize productivity. Integrate natural language processing for voice or text input, and use machine learning to prioritize, categorize, and analyze tasks for better daily management.",
-    theme: "AI Productivity",
-    difficulty: "Beginner",
-    duration: "24 hours",
-    participants: 980,
-    prizes: ["300 XP", "AI Badge"],
-    skills: ["React", "Python", "AI APIs"],
+    title: "AI-Powered Task Manager",
+    description: "Develop an intelligent task management app that uses AI to prioritize tasks, suggest optimal schedules, and provide productivity insights.",
+    theme: "AI & Productivity",
+    difficulty: "Advanced",
+    duration: "72 hours",
+    participants: 892,
+    prizes: ["$500 Cash Prize", "Tech Conference Pass", "AI Workshop Access"],
+    skills: ["Python", "Machine Learning", "React", "API Design"],
     startsIn: "5 days",
-    status: "upcoming",
+    status: "upcoming"
   },
   {
     id: "hack-003",
-    title: "Data Visualization Dashboard",
-    description:
-      "Create a dashboard to visualize complex datasets interactively. Use charts, graphs, and filters to help users explore data trends and insights. Focus on usability, performance, and beautiful, responsive design for all devices.",
-    theme: "Data Science",
-    difficulty: "Advanced",
-    duration: "72 hours",
-    participants: 650,
-    prizes: ["700 XP", "Data Badge", "Mentorship"],
-    skills: ["React", "D3.js", "Node.js"],
-    startsIn: "1 week",
-    status: "upcoming",
-  },
-  {
-    id: "hack-004",
-    title: "Blockchain Voting System",
-    description:
-      "Design a secure, transparent voting platform using blockchain technology. Implement smart contracts for vote validation and real-time results. Focus on privacy, scalability, and a user-friendly interface for all participants.",
-    theme: "Blockchain",
+    title: "Sustainable Energy Dashboard",
+    description: "Build a comprehensive dashboard for monitoring renewable energy systems with real-time data visualization and predictive analytics.",
+    theme: "Green Tech",
     difficulty: "Intermediate",
     duration: "36 hours",
-    participants: 800,
-    prizes: ["400 XP", "Blockchain Badge"],
-    skills: ["React", "Solidity", "Web3.js"],
-    startsIn: "9 days",
-    status: "upcoming",
-  },
-  {
-    id: "hack-005",
-    title: "Health Tracker App",
-    description:
-      "Build a health tracker that monitors daily activity, sleep, and nutrition. Integrate data visualization and personalized recommendations. Ensure privacy and accessibility for users of all ages and backgrounds.",
-    theme: "Health & Wellness",
-    difficulty: "Beginner",
-    duration: "30 hours",
-    participants: 1100,
-    prizes: ["350 XP", "Health Badge"],
-    skills: ["React Native", "Firebase", "Chart.js"],
-    startsIn: "12 days",
-    status: "upcoming",
-  },
-  {
-    id: "hack-006",
-    title: "E-Commerce Recommendation Engine",
-    description:
-      "Create a recommendation engine for an e-commerce site using collaborative filtering and AI. Display personalized product suggestions and analyze user behavior for improved shopping experiences.",
-    theme: "E-Commerce AI",
-    difficulty: "Advanced",
-    duration: "60 hours",
-    participants: 950,
-    prizes: ["600 XP", "E-Commerce Badge", "Mentorship"],
-    skills: ["React", "Python", "TensorFlow"],
-    startsIn: "2 weeks",
-    status: "upcoming",
-  },
+    participants: 1563,
+    prizes: ["Solar Panel Kit", "Green Tech Certification", "Industry Mentorship"],
+    skills: ["Data Visualization", "IoT", "Python", "React"],
+    startsIn: "1 week",
+    status: "upcoming"
+  }
 ];
 
+<<<<<<< HEAD
 // Set the first hackathon as live (active)
 if (upcomingHackathons.length > 0) {
   upcomingHackathons[0].status = "active";
 }
 
+=======
+// Mock data for upcoming hackathons
+>>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 const companyNames = [
   "Intuit",
   "Google",
@@ -183,6 +132,8 @@ function getRandomCompany(index: number) {
 }
 
 const WeeklyHackathon = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const getDifficultyColor = (difficulty: string) => {
     // All difficulties use blue or gray
     switch (difficulty) {
@@ -210,7 +161,13 @@ const WeeklyHackathon = () => {
     }
   };
 
+<<<<<<< HEAD
   const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
+=======
+  const [carouselIndex, setCarouselIndex] = React.useState(0);
+  const carouselRef = React.useRef<HTMLDivElement>(null);
+  const [selectedHackathon, setSelectedHackathon] = useState<Hackathon | null>(null);
+>>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
 
   // Drag-to-scroll logic
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -457,6 +414,7 @@ const WeeklyHackathon = () => {
                   {selectedHackathon?.prizes?.join(", ")}
                 </div>
               </div>
+<<<<<<< HEAD
             </div>
             <div className="text-left mb-2 flex items-center gap-2 text-blue-700 font-bold text-lg">
               <Star className="h-5 w-5 text-blue-500" />
@@ -464,6 +422,61 @@ const WeeklyHackathon = () => {
             </div>
             <div className="text-blue-700 text-base mb-2">
               {selectedHackathon?.description}
+=======
+              {/* Scrollable Info Section */}
+              <div className="bg-white px-8 pt-4 pb-24 rounded-b-3xl max-h-[350px] overflow-y-auto">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
+                    <CalendarIcon className="h-6 w-6 text-purple-500 mb-2" />
+                    <div className="text-xs text-muted-foreground">Date</div>
+                    <div className="font-bold text-base">
+                      {selectedHackathon?.startsIn
+                        ? `Starts in ${selectedHackathon.startsIn}`
+                        : ""}
+                    </div>
+                  </div>
+                  <div className="bg-pink-50 rounded-xl p-4 flex flex-col items-center">
+                    <MapPin className="h-6 w-6 text-pink-500 mb-2" />
+                    <div className="text-xs text-muted-foreground">Location</div>
+                    <div className="font-bold text-base">Delhi, India</div>
+                  </div>
+                  <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
+                    <UsersIcon className="h-6 w-6 text-blue-500 mb-2" />
+                    <div className="text-xs text-muted-foreground">Participants</div>
+                    <div className="font-bold text-base">
+                      {selectedHackathon?.participants?.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center">
+                    <TrophyIcon className="h-6 w-6 text-green-500 mb-2" />
+                    <div className="text-xs text-muted-foreground">Prizes</div>
+                    <div className="font-bold text-base">
+                      {selectedHackathon?.prizes?.join(", ")}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-left mb-2 flex items-center gap-2 text-purple-700 font-bold text-lg">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  About this Hackathon
+                </div>
+                <div className="text-muted-foreground text-base mb-2">
+                  {selectedHackathon?.description}
+                </div>
+                {/* Steps as bullet points */}
+                <ul className="list-disc pl-6 text-muted-foreground text-base mb-2">
+                  <li>Online Assessment</li>
+                  <li>Ideathon</li>
+                  <li>Project Submission</li>
+                </ul>
+                <div className="text-muted-foreground text-sm mb-4">
+                  Skills: {selectedHackathon?.skills?.join(", ")}
+                </div>
+              </div>
+              {/* Register Button at Center Bottom */}
+              <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
+                <Button size="lg" className="bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg">Register</Button>
+              </div>
+>>>>>>> 7c1f6662532c5df880394601fdf9b6ae2517eeec
             </div>
             {/* Steps as bullet points */}
             <ul className="list-disc pl-6 text-blue-700 text-base mb-2">
