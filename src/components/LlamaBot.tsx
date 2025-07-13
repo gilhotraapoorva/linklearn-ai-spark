@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { X, MessageCircle, Users, Target, Zap, Brain } from "lucide-react";
-import llamaBotImage from "/Users/angaurav/linksolve/linklearn-ai-spark/src/components/LlamaBot.tsx";
+import llamaBotImage from "../assets/llama-bot.png";
 
 interface Skill {
   name: string;
