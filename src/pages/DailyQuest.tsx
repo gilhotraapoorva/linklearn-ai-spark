@@ -15,42 +15,9 @@ import {
   RotateCcw,
   ChevronDown
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
-const questData = {
-  id: "quest-001",
-  title: "Refactor React Component for Performance",
-  description: "Take this React component and optimize it by implementing React.memo, useMemo, and useCallback where appropriate. Focus on preventing unnecessary re-renders.",
-  difficulty: "Intermediate",
-  estimatedTime: "15 min",
-  xpReward: 150,
-  category: "React Optimization",
-  problem: `const UserList = ({ users, onEdit, onDelete, searchTerm }) => {
-  const filteredUsers = users.filter(user => 
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString();
-  };
-
-  return (
-    <div className="user-list">
-      {filteredUsers.map(user => (
-        <div key={user.id} className="user-card">
-          <h3>{user.name}</h3>
-          <p>{user.email}</p>
-          <p>Joined: {formatDate(user.joinDate)}</p>
-          <button onClick={() => onEdit(user)}>Edit</button>
-          <button onClick={() => onDelete(user.id)}>Delete</button>
-        </div>
-      ))}
-    </div>
-  );
-};`,
-
-};
+import { generateDailyQuest, DailyQuest } from "../lib/ollamaService";
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
@@ -70,9 +37,30 @@ const QuestPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [quest, setQuest] = useState<DailyQuest | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { questId } = useParams();
   const location = useLocation();
+
+  useEffect(() => {
+    fetchQuest();
+    // eslint-disable-next-line
+  }, []);
+
+  const fetchQuest = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await generateDailyQuest();
+      setQuest(data);
+    } catch (err) {
+      setError("Failed to load quest.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const languages = [
     { value: "javascript", label: "JavaScript (React)", icon: "⚛️" },
@@ -302,7 +290,16 @@ impl UserList {
             Back
           </Button>
         </div>
-
+        <div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={fetchQuest}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Regenerate"}
+          </Button>
+        </div>
       </div>
 
       {/* Main Content - Fixed Height */}
@@ -311,45 +308,49 @@ impl UserList {
         <div className="w-1/2 h-full border-r border-border/50">
           <Card className="h-full rounded-none border-0 shadow-none bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
             <CardContent className="h-full overflow-y-auto p-6 space-y-6">
-              <div className="space-y-4 animate-in slide-in-from-left-4 duration-500">
-                <div className="space-y-4">
+              {loading ? (
+                <div className="flex items-center justify-center h-full text-lg">Loading quest...</div>
+              ) : error ? (
+                <div className="flex items-center justify-center h-full text-destructive">{error}</div>
+              ) : quest ? (
+                <div className="space-y-4 animate-in slide-in-from-left-4 duration-500">
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                        {quest.title}
+                      </h2>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className={`${getDifficultyColor(quest.difficulty || "Intermediate")} shadow-md pointer-events-none`}>
+                          {quest.difficulty || "Intermediate"}
+                        </Badge>
+                        <Badge variant="outline" className="flex items-center gap-1 bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30 shadow-md">
+                          <Clock className="h-3 w-3 text-primary" />
+                          {quest.estimatedTime || "15 min"}
+                        </Badge>
+                        <Badge className="flex items-center gap-1 bg-white text-foreground border border-border shadow-md">
+                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          {quest.xpReward || 150} XP
+                        </Badge>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed text-base">
+                      {quest.description}
+                    </p>
+                  </div>
+
                   <div className="space-y-3">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                      {questData.title}
-                    </h2>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge className={`${getDifficultyColor(questData.difficulty)} shadow-md pointer-events-none`}>
-                        {questData.difficulty}
-                      </Badge>
-                      <Badge variant="outline" className="flex items-center gap-1 bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30 shadow-md">
-                        <Clock className="h-3 w-3 text-primary" />
-                        {questData.estimatedTime}
-                      </Badge>
-                      <Badge className="flex items-center gap-1 bg-white text-foreground border border-border shadow-md">
-                        <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                        {questData.xpReward} XP
-                      </Badge>
+                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                      <div className="w-1 h-6 bg-primary rounded-full"></div>
+                      Component
+                    </h3>
+                    <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-6 rounded-xl border border-border/50 shadow-inner">
+                      <pre className="text-sm overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed text-foreground/90">
+                        <code>{quest.problem}</code>
+                      </pre>
                     </div>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed text-base">
-                    {questData.description}
-                  </p>
                 </div>
-
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-lg flex items-center gap-2">
-                    <div className="w-1 h-6 bg-primary rounded-full"></div>
-                    Component
-                  </h3>
-                  <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-6 rounded-xl border border-border/50 shadow-inner">
-                    <pre className="text-sm overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed text-foreground/90">
-                      <code>{questData.problem}</code>
-                    </pre>
-                  </div>
-                </div>
-
-
-              </div>
+              ) : null}
             </CardContent>
           </Card>
         </div>
@@ -440,7 +441,7 @@ impl UserList {
                         Great job!
                       </h4>
                       <p className="text-sm text-muted-foreground">
-                        Your solution has been submitted. You'll receive feedback and {questData.xpReward} XP once it's reviewed.
+                        Your solution has been submitted. You'll receive feedback and {quest.xpReward || 150} XP once it's reviewed.
                       </p>
                     </div>
                   )}
