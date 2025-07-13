@@ -17,8 +17,11 @@ import {
   Users,
   Lightbulb
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   const upcomingEvents = [
     // { type: "Quest", title: "Debug Challenge", time: "Tomorrow" },
     // { type: "Hackathon", title: "Mobile App Challenge", time: "This Weekend" },
@@ -30,6 +33,10 @@ const Index = () => {
     "You're on track to reach Level 13 by next month",
     "Consider exploring System Design - it's trending in your network"
   ];
+
+  const handleViewProgressReport = () => {
+    navigate('/progress');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,7 +87,12 @@ const Index = () => {
                   <Target className="h-4 w-4 mr-2" />
                   Generate New Quest
                 </Button> */}
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full justify-start"
+                  onClick={handleViewProgressReport}
+                >
                   <TrendingUp className="h-4 w-4 mr-2" />
                   View Progress Report
                 </Button>
