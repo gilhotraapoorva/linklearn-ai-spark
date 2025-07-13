@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-background border-b border-border shadow-card">
+    <header className="bg-white/90 backdrop-blur border-b border-border shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
@@ -35,17 +35,7 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Center Stats */}
-          <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
-              <Trophy className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium">Level {userStats.level}</span>
-            </div>
-            <div className="flex items-center gap-2 bg-gradient-card px-3 py-2 rounded-lg shadow-card">
-              <Flame className="h-4 w-4 text-gamification-streak" />
-              <span className="text-sm font-medium">{userStats.currentStreak} day streak</span>
-            </div>
-          </div>
+
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-3">
