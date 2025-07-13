@@ -12,6 +12,7 @@ import {
   Flame
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Quest {
   id: string;
@@ -38,21 +39,14 @@ const todaysQuest: Quest = {
 };
 
 const DailyQuest = () => {
+  const navigate = useNavigate();
   const [currentQuest, setCurrentQuest] = useState(todaysQuest);
   const [isStarted, setIsStarted] = useState(false);
 
   const handleStartQuest = () => {
-    setIsStarted(true);
-    // Simulate progress for demo
-    setTimeout(() => {
-      setCurrentQuest(prev => ({ ...prev, progress: 33 }));
-    }, 1000);
-    setTimeout(() => {
-      setCurrentQuest(prev => ({ ...prev, progress: 66 }));
-    }, 2000);
-    setTimeout(() => {
-      setCurrentQuest(prev => ({ ...prev, progress: 100, completed: true }));
-    }, 3000);
+    navigate(`/quest/${currentQuest.id}`, { 
+      state: { quest: currentQuest } 
+    });
   };
 
   const getDifficultyColor = (difficulty: string) => {
