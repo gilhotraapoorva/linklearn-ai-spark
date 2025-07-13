@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,14 +39,10 @@ import {
 
 const HackathonDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [isRegistered, setIsRegistered] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(1247);
   const [isLiked, setIsLiked] = useState(false);
-
-  // Check if this hackathon is active (for demo, we'll make hack-001 active)
-  const isActive = id === "hack-001";
 
   const hackathon = {
     id: "buildit-2024",
@@ -74,8 +70,8 @@ Participants will have access to mentorship from industry professionals, worksho
     maxParticipants: 5000,
     
     // Status and Registration
-    status: isActive ? "Active" : "Live",
-    registrationStatus: isActive ? "Active" : "Open",
+    status: "Live",
+    registrationStatus: "Open",
     difficulty: "All Levels",
     
     // Tracks and Themes
@@ -199,11 +195,6 @@ Participants will have access to mentorship from industry professionals, worksho
     // Here you would typically make an API call to register the user
   };
 
-  const handleJoin = () => {
-    // Navigate to MCQ round for active hackathons
-    navigate(`/hackathon/${id}/mcq`);
-  };
-
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);
   };
@@ -300,12 +291,10 @@ Participants will have access to mentorship from industry professionals, worksho
                 <div className="flex items-center gap-3 mb-4">
                   <Button 
                     className="flex-1 bg-primary hover:bg-primary/90"
-                    onClick={isActive ? handleJoin : handleRegister}
-                    disabled={!isActive && isRegistered}
+                    onClick={handleRegister}
+                    disabled={isRegistered}
                   >
-                    {isActive ? (
-                      "Join Hackathon"
-                    ) : isRegistered ? (
+                    {isRegistered ? (
                       <>
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Registered
