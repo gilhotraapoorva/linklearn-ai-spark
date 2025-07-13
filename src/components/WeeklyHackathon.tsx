@@ -241,7 +241,7 @@ const WeeklyHackathon = () => {
       <CardContent className="pt-0 pb-2">
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto overflow-y-visible pb-2 cursor-grab select-none min-h-[220px] w-full"
+          className="flex gap-6 overflow-x-auto overflow-y-visible pb-2 cursor-grab select-none min-h-[220px] w-full"
           style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', userSelect: isDragging.current ? 'none' : 'auto' }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
@@ -265,9 +265,9 @@ const WeeklyHackathon = () => {
             // For the third hackathon (idx === 2), check for skill match
             const isForYou = idx === 2 && normalizedHackathonSkills.some(skill => normalizedUserSkills.some(userSkill => skill.includes(userSkill.split(" ")[0])));
             return (
-              <div key={hackathon.id} className="w-[180px] h-[210px] flex-shrink-0">
+              <div key={hackathon.id} className="w-[300px] h-[210px] flex-shrink-0">
                 <div
-                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.07] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
                   style={{ background: isForYou ? 'linear-gradient(135deg, #fff 0%, #f6faff 60%, #f3f6fb 100%)' : '#fff' }}
                 >
@@ -287,7 +287,7 @@ const WeeklyHackathon = () => {
                             <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
                           </TooltipTrigger>
                           <TooltipContent 
-                            side="top" 
+                            side="bottom" 
                             align="center" 
                             className="w-48 text-left z-[99999] drop-shadow-2xl"
                           >

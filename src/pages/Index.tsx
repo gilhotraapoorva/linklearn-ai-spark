@@ -64,14 +64,14 @@ const Index = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           {/* Left Column - Main Content */}
           <div className="xl:col-span-2 space-y-6">
+            {/* Weekly Wisdom Quiz (now first) */}
+            <WeeklyWisdomQuiz />
+
             {/* Daily Quest */}
             <DailyQuest />
             
             {/* Weekly Hackathon */}
             <WeeklyHackathon />
-            
-            {/* Weekly Wisdom Quiz (replaces Weekly Developer Digest) */}
-            <WeeklyWisdomQuiz />
             
             {/* Skill Graph */}
             <SkillGraph />
