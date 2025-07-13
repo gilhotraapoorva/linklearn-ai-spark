@@ -222,6 +222,14 @@ export default function MCQRound() {
     }));
   };
 
+  const handleClearSelection = () => {
+    setAnswers(prev => {
+      const newAnswers = { ...prev };
+      delete newAnswers[questions[currentQuestion].id];
+      return newAnswers;
+    });
+  };
+
   const calculateScore = () => {
     let correct = 0;
     questions.forEach(question => {
@@ -261,6 +269,16 @@ export default function MCQRound() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4">
         <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
+          <Button 
+            variant="ghost" 
+            className="mb-6 text-muted-foreground hover:text-foreground"
+            onClick={() => navigate(`/hackathon/${id}`)}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+
           <Card className="border-2 border-blue-200">
             <CardHeader className="text-center bg-blue-50">
               <CardTitle className="text-2xl font-bold text-blue-900">
@@ -344,6 +362,16 @@ export default function MCQRound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4">
       <div className="max-w-6xl mx-auto">
+        {/* Back Button */}
+        <Button 
+          variant="ghost" 
+          className="mb-6 text-muted-foreground hover:text-foreground"
+          onClick={() => navigate(`/hackathon/${id}`)}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
+
         {/* Header */}
         <Card className="mb-6 border-2 border-blue-200">
           <CardHeader className="bg-blue-50">
@@ -435,17 +463,30 @@ export default function MCQRound() {
                   className="space-y-3"
                 >
                   {questions[currentQuestion].options.map((option, index) => (
-                    <div key={`${questions[currentQuestion].id}-${index}`} className="flex items-center space-x-3 p-3 rounded-lg border border-blue-100 hover:bg-blue-50">
-                      <RadioGroupItem value={index.toString()} id={`option-${questions[currentQuestion].id}-${index}`} />
-                      <Label 
-                        htmlFor={`option-${questions[currentQuestion].id}-${index}`} 
-                        className="flex-1 cursor-pointer text-gray-700"
-                      >
-                        {option}
-                      </Label>
-                    </div>
+                    <Label 
+                      key={`${questions[currentQuestion].id}-${index}`}
+                      htmlFor={`option-${questions[currentQuestion].id}-${index}`} 
+                      className="flex items-center space-x-3 p-4 rounded-lg border border-blue-100 hover:bg-blue-50 cursor-pointer w-full block transition-colors"
+                    >
+                      <RadioGroupItem value={index.toString()} id={`option-${questions[currentQuestion].id}-${index}`} className="flex-shrink-0" />
+                      <span className="text-gray-700 flex-1">{option}</span>
+                    </Label>
                   ))}
                 </RadioGroup>
+
+                {/* Clear Selection Button */}
+                {answers[questions[currentQuestion].id] !== undefined && (
+                  <div className="mt-6 pt-4 border-t border-blue-100">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleClearSelection}
+                      className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                    >
+                      Clear Selection
+                    </Button>
+                  </div>
+                )}
 
                 <div className="flex justify-between items-center pt-6">
                   <Button
@@ -489,22 +530,13 @@ export default function MCQRound() {
               <div className="text-sm text-gray-600">
                 Progress: {getAnsweredCount()}/{questions.length} questions answered
               </div>
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate(`/hackathon/${id}`)}
-                  className="border-blue-600 text-blue-600 hover:bg-blue-50"
-                >
-                  Back to Hackathon
-                </Button>
-                <Button
-                  onClick={handleSubmitClick}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  disabled={getAnsweredCount() === 0}
-                >
-                  Submit Quiz ({getAnsweredCount()}/{questions.length})
-                </Button>
-              </div>
+              <Button
+                onClick={handleSubmitClick}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={getAnsweredCount() === 0}
+              >
+                Submit Quiz ({getAnsweredCount()}/{questions.length})
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -512,37 +544,69 @@ export default function MCQRound() {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+        <DialogContent className="sm:max-w-[500px] p-0 gap-0 overflow-hidden border-2 border-blue-200">
+          <DialogHeader className="p-6 pb-4 bg-gradient-to-r from-blue-50 to-white border-b border-blue-100">
+            <DialogTitle className="flex items-center gap-3 text-xl font-bold text-blue-900">
+              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-5 w-5 text-amber-600" />
+              </div>
               Confirm Submission
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-gray-600 mt-3 leading-relaxed">
               Are you sure you want to submit your quiz? Once submitted, you cannot make any changes or retake the assessment.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-700">
-                <strong>Summary:</strong>
-              </p>
-              <p className="text-sm text-blue-600 mt-1">
-                • Questions answered: {getAnsweredCount()} of {questions.length}
-              </p>
-              <p className="text-sm text-blue-600">
-                • Time remaining: {formatTime(timeLeft)}
-              </p>
-              <p className="text-sm text-blue-600">
-                • Minimum score required: 10% ({Math.ceil(questions.length * 0.1)} questions)
-              </p>
+          
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-200 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">✓</span>
+                </div>
+                <p className="text-blue-800 font-semibold">
+                  Quiz Summary
+                </p>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-700 font-medium">Questions answered:</span>
+                  <span className="text-blue-900 font-bold">{getAnsweredCount()} of {questions.length}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-700 font-medium">Time remaining:</span>
+                  <span className="text-blue-900 font-bold font-mono">{formatTime(timeLeft)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-700 font-medium">Required to pass:</span>
+                  <span className="text-blue-900 font-bold">10% ({Math.ceil(questions.length * 0.1)} questions)</span>
+                </div>
+              </div>
             </div>
+            
+            {getAnsweredCount() < questions.length && (
+              <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                  <p className="text-amber-800 text-sm">
+                    You have {questions.length - getAnsweredCount()} unanswered questions. Consider reviewing before submitting.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleCancelSubmit}>
+          
+          <DialogFooter className="p-6 pt-0 flex gap-3">
+            <Button 
+              variant="outline" 
+              onClick={handleCancelSubmit}
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 flex-1"
+            >
               Cancel
             </Button>
-            <Button onClick={handleConfirmSubmit} className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              onClick={handleConfirmSubmit} 
+              className="bg-blue-600 hover:bg-blue-700 text-white flex-1 font-semibold"
+            >
               Yes, Submit Quiz
             </Button>
           </DialogFooter>
