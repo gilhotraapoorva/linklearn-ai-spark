@@ -58,9 +58,9 @@ const DailyQuest = () => {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Beginner':
-        return 'bg-success text-success-foreground';
+        return 'bg-primary text-primary-foreground';
       case 'Intermediate':
-        return 'bg-warning text-warning-foreground';
+        return 'bg-primary/80 text-primary-foreground';
       case 'Advanced':
         return 'bg-destructive text-destructive-foreground';
       default:

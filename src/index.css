@@ -27,13 +27,13 @@ All colors MUST be HSL.
     --muted: 210 40% 96%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 43 96% 56%;
-    --accent-foreground: 215 25% 15%;
+    --accent: 201 96% 32%;
+    --accent-foreground: 0 0% 100%;
 
-    --success: 142 76% 36%;
+    --success: 201 96% 32%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
+    --warning: 201 96% 32%;
     --warning-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -43,16 +43,16 @@ All colors MUST be HSL.
     --input: 214 32% 91%;
     --ring: 201 96% 32%;
 
-    /* Gamification colors */
-    --xp-bar: 142 76% 36%;
-    --streak-fire: 12 88% 59%;
-    --badge-gold: 43 96% 56%;
+    /* Gamification colors (remapped to blue/white) */
+    --xp-bar: 201 96% 32%;
+    --streak-fire: 201 96% 45%;
+    --badge-gold: 201 96% 32%;
     --quest-progress: 201 96% 32%;
 
-    /* Gradients */
+    /* Gradients (blue/white only) */
     --gradient-primary: linear-gradient(135deg, hsl(201 96% 32%), hsl(201 96% 45%));
-    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 45%));
-    --gradient-accent: linear-gradient(135deg, hsl(43 96% 56%), hsl(43 96% 65%));
+    --gradient-success: linear-gradient(135deg, hsl(201 96% 32%), hsl(201 96% 45%));
+    --gradient-accent: linear-gradient(135deg, hsl(201 96% 32%), hsl(201 96% 45%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
 
     /* Shadows */
@@ -98,8 +98,14 @@ All colors MUST be HSL.
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --success: 210 40% 98%;
+    --success-foreground: 222.2 47.4% 11.2%;
+
+    --warning: 210 40% 98%;
+    --warning-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -126,4 +132,34 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Shining animated outline for 'For You' hackathon */
+.shine-outline-for-you {
+  position: relative;
+  z-index: 1;
+}
+.shine-outline-animation {
+  border-radius: 1rem;
+  border-width: 4px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa, #f472b6, #34d399) 1;
+  animation: shine-move 2s linear infinite;
+}
+@keyframes shine-move {
+  0% {
+    border-image-source: linear-gradient(90deg, #34d399, #60a5fa, #a78bfa, #f472b6, #34d399);
+  }
+  100% {
+    border-image-source: linear-gradient(450deg, #34d399, #60a5fa, #a78bfa, #f472b6, #34d399);
+  }
+}
+
+/* Fade-in animation for badge */
+.animate-fade-in {
+  animation: fadeIn 0.7s ease-in;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }

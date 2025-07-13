@@ -11,6 +11,7 @@ import {
   Star,
   Rocket,
   GitBranch,
+  Info,
 } from "lucide-react";
 import placeholderLogo from "/public/placeholder.svg";
 import {
@@ -21,6 +22,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { MapPin, Users as UsersIcon, Trophy as TrophyIcon, Calendar as CalendarIcon } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface Hackathon {
   id: string;
@@ -139,6 +141,11 @@ const upcomingHackathons: Hackathon[] = [
   },
 ];
 
+// Set the first hackathon as live (active)
+if (upcomingHackathons.length > 0) {
+  upcomingHackathons[0].status = "active";
+}
+
 const companyNames = [
   "Intuit",
   "Google",
@@ -177,11 +184,12 @@ function getRandomCompany(index: number) {
 
 const WeeklyHackathon = () => {
   const getDifficultyColor = (difficulty: string) => {
+    // All difficulties use blue or gray
     switch (difficulty) {
       case "Beginner":
-        return "bg-success text-success-foreground";
+        return "bg-primary text-primary-foreground";
       case "Intermediate":
-        return "bg-warning text-warning-foreground";
+        return "bg-primary/80 text-primary-foreground";
       case "Advanced":
         return "bg-destructive text-destructive-foreground";
       default:
@@ -194,7 +202,7 @@ const WeeklyHackathon = () => {
       case "upcoming":
         return "bg-primary text-primary-foreground";
       case "active":
-        return "bg-success text-success-foreground animate-pulse";
+        return "bg-destructive text-destructive-foreground animate-pulse";
       case "completed":
         return "bg-muted text-muted-foreground";
       default:
@@ -202,380 +210,281 @@ const WeeklyHackathon = () => {
     }
   };
 
-  const [carouselIndex, setCarouselIndex] = React.useState(0);
-  const carouselRef = React.useRef<HTMLDivElement>(null);
   const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
 
-  const handleArrow = (direction: "left" | "right") => {
-    let newIndex = carouselIndex;
-    if (direction === "right" && carouselIndex < upcomingHackathons.length - 2) {
-      newIndex = carouselIndex + 1;
-    } else if (direction === "left" && carouselIndex > 0) {
-      newIndex = carouselIndex - 1;
-    }
-    setCarouselIndex(newIndex);
-    if (carouselRef.current) {
-      carouselRef.current.scrollTo({ left: newIndex * 310, behavior: "smooth" });
+  // Drag-to-scroll logic
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const isDragging = React.useRef(false);
+  const startX = React.useRef(0);
+  const scrollLeft = React.useRef(0);
+
+  const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft || 0);
+    scrollLeft.current = scrollRef.current?.scrollLeft || 0;
+    document.body.style.cursor = 'grabbing';
+  };
+  const onMouseLeave = () => {
+    isDragging.current = false;
+    document.body.style.cursor = '';
+  };
+  const onMouseUp = () => {
+    isDragging.current = false;
+    document.body.style.cursor = '';
+  };
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging.current) return;
+    e.preventDefault();
+    const x = e.pageX - (scrollRef.current?.offsetLeft || 0);
+    const walk = x - startX.current;
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollLeft.current - walk;
     }
   };
 
-  // Carousel for upcoming hackathons with 3D/overlapping effect
-  const renderCarousel = () => {
-    const visibleCards = 5; // Show 5 cards (2 left, center, 2 right)
-    const getCardStyle = (idx: number) => {
-      const offset = idx - carouselIndex;
-      const baseZ = 10;
-      // 3D transform logic
-      if (offset === 0) {
-        // Center card
-        return {
-          transform: "translateX(0px) scale(1.08) rotateY(0deg)",
-          zIndex: baseZ + 5,
-          boxShadow:
-            "0 12px 48px 0 rgba(31,38,135,0.18), 0 0 0 6px #fff",
-          opacity: 1,
-        };
-      } else if (offset === -1) {
-        // Left card
-        return {
-          transform: "translateX(-160px) scale(0.92) rotateY(18deg)",
-          zIndex: baseZ + 3,
-          boxShadow: "0 8px 32px 0 rgba(31,38,135,0.10)",
-          opacity: 0.85,
-        };
-      } else if (offset === 1) {
-        // Right card
-        return {
-          transform: "translateX(160px) scale(0.92) rotateY(-18deg)",
-          zIndex: baseZ + 3,
-          boxShadow: "0 8px 32px 0 rgba(31,38,135,0.10)",
-          opacity: 0.85,
-        };
-      } else if (offset === -2) {
-        // Far left
-        return {
-          transform: "translateX(-320px) scale(0.82) rotateY(28deg)",
-          zIndex: baseZ + 1,
-          boxShadow: "0 4px 16px 0 rgba(31,38,135,0.08)",
-          opacity: 0.5,
-        };
-      } else if (offset === 2) {
-        // Far right (should be hidden, not moved to the rightmost side)
-        return {
-          opacity: 0,
-          transform: "translate(-50%, -50%) scale(0.7)",
-          pointerEvents: "none",
-          zIndex: 0,
-        };
-      } else {
-        // Hide other cards
-        return {
-          transform: "scale(0.7)",
-          zIndex: 0,
-          opacity: 0,
-          pointerEvents: "none",
-        };
-      }
-    };
-
-    return (
-      <div className="mb-6">
-        <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-3 text-primary drop-shadow-sm">
-          <Rocket className="h-7 w-7 text-accent animate-bounce" />
+  // Render horizontally scrollable cards
+  const renderCarousel = () => (
+    <Card className="bg-white shadow-card hover:shadow-hover transition-all duration-300">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-black">
+          <Trophy className="h-5 w-5 text-primary" />
           Upcoming Hackathons
-        </h2>
-        <div className="flex justify-end gap-3 mb-3">
-          <button
-            onClick={() => handleArrow("left")}
-            disabled={carouselIndex === 0}
-            className={`h-10 w-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-200 border-2 border-primary/30 ${
-              carouselIndex === 0
-                ? "opacity-40 cursor-not-allowed"
-                : "hover:scale-105 hover:bg-primary/90"
-            }`}
-            aria-label="Scroll left"
-            type="button"
-          >
-            <svg
-              width="28"
-              height="28"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M17 22l-8-8 8-8" />
-            </svg>
-          </button>
-          <button
-            onClick={() => handleArrow("right")}
-            disabled={carouselIndex >= upcomingHackathons.length - 1}
-            className={`h-10 w-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-200 border-2 border-primary/30 ${
-              carouselIndex >= upcomingHackathons.length - 1
-                ? "opacity-40 cursor-not-allowed"
-                : "hover:scale-105 hover:bg-primary/90"
-            }`}
-            aria-label="Scroll right"
-            type="button"
-          >
-            <svg
-              width="28"
-              height="28"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M11 6l8 8-8 8" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex gap-0 justify-center items-center relative h-[520px] select-none">
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-4 cursor-grab select-none"
+          style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', userSelect: isDragging.current ? 'none' : 'auto' }}
+          onMouseDown={onMouseDown}
+          onMouseLeave={onMouseLeave}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+        >
           {upcomingHackathons.map((hackathon, idx) => {
             const company = getRandomCompany(idx);
             const logo = companyLogos[company] || placeholderLogo;
-            // 3D/overlapping effect logic
-            const offset = idx - carouselIndex;
-            let style: React.CSSProperties = {
-              transition:
-                "transform 0.5s cubic-bezier(.4,2,.3,1), opacity 0.5s",
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "",
-              zIndex: 10 - Math.abs(offset),
-              opacity: 1,
-              pointerEvents: Math.abs(offset) > 2 ? "none" : "auto",
-            };
-            if (offset === 0) {
-              // Center card
-              style.transform = "translate(-50%, -50%) scale(1.08)";
-              style.boxShadow =
-                "0 12px 48px 0 rgba(31,38,135,0.18), 0 0 0 8px #fff";
-            } else if (offset === -1) {
-              // Left neighbor
-              style.transform = "translate(-120%, -50%) scale(0.92) rotateY(18deg)";
-              style.opacity = 0.92;
-            } else if (offset === 1) {
-              // Right neighbor
-              style.transform = "translate(20%, -50%) scale(0.92) rotateY(-18deg)";
-              style.opacity = 0.92;
-            } else if (offset === -2) {
-              // Far left
-              style.transform = "translate(-210%, -50%) scale(0.82) rotateY(32deg)";
-              style.opacity = 0.5;
-              style.zIndex = 8;
-            } else if (offset === 2) {
-              // Far right (should be hidden, not moved to the rightmost side)
-              style.opacity = 0;
-              style.transform = "translate(-50%, -50%) scale(0.7)";
-              style.pointerEvents = "none";
-              style.zIndex = 0;
-            } else {
-              // Hide other cards
-              style.opacity = 0;
-              style.transform = "translate(-50%, -50%) scale(0.7)";
-              style.pointerEvents = "none";
-            }
+            // User skills for matching
+            const userSkills = [
+              "React Development",
+              "TypeScript",
+              "System Design",
+              "AI/ML Basics",
+              "DevOps",
+              "Data Structures",
+            ];
+            // Normalize for matching
+            const normalizedUserSkills = userSkills.map(s => s.toLowerCase());
+            const normalizedHackathonSkills = hackathon.skills.map(s => s.toLowerCase());
+            // For the third hackathon (idx === 2), check for skill match
+            const isForYou = idx === 2 && normalizedHackathonSkills.some(skill => normalizedUserSkills.some(userSkill => skill.includes(userSkill.split(" ")[0])));
             return (
-              <React.Fragment key={hackathon.id}>
-                <div style={style} className="w-[270px] h-[320px] flex-shrink-0">
-                  <div
-                    className="rounded-2xl bg-white shadow-2xl border-0 p-6 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer"
-                    onClick={() => setSelectedHackathon(hackathon)}
-                  >
-                    {/* Rainbow gradient overlay, more vibrant and blurred for depth */}
-                    <div
-                      className="absolute inset-0 pointer-events-none rounded-2xl z-0"
-                      style={{
-                        background:
-                          "conic-gradient(from 180deg at 50% 50%, #ffb6ff 0deg, #b5ffff 90deg, #baffc9 180deg, #ffe29a 270deg, #ffb6ff 360deg)",
-                        opacity: 0.22,
-                        filter: "blur(2px)",
-                      }}
-                    />
-                    <div className="relative z-10">
-                      <div className="flex items-center gap-3 mb-4">
-                        <img
-                          src={logo}
-                          alt={`${company} Logo`}
-                          className="h-10 w-10 rounded-full border-2 border-primary/30 bg-white object-contain shadow-lg"
-                        />
-                        <span className="text-base font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-3 py-1 rounded-lg shadow-inner backdrop-blur-md">
-                          {company}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Code className="h-5 w-5 text-accent" />
-                        <span className="text-lg font-extrabold text-foreground leading-tight drop-shadow-sm">
-                          {hackathon.title}
-                        </span>
-                        <Badge
-                          className={
-                            getStatusColor(hackathon.status) +
-                            " ml-2 px-3 py-1 rounded-full text-xs font-bold shadow"
-                          }
-                        >
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {hackathon.status}
-                        </Badge>
-                      </div>
-                      <p className="text-muted-foreground text-sm leading-relaxed min-h-[40px] mb-4 font-medium">
-                        {hackathon.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2 items-center mb-4">
-                        <Badge
-                          className={
-                            getDifficultyColor(hackathon.difficulty) +
-                            " px-3 py-1 rounded-full text-xs font-bold"
-                          }
-                        >
-                          {hackathon.difficulty}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
-                        >
-                          <Clock className="h-3 w-3" />
-                          {hackathon.duration}
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
-                        >
-                          <Users className="h-3 w-3" />
-                          {hackathon.participants.toLocaleString()} participants
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          style={{ whiteSpace: "nowrap", alignSelf: "center" }}
-                          className="px-3 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent-foreground border-accent/20 border"
-                        >
-                          {hackathon.theme}
-                        </Badge>
-                      </div>
-                      <div className="text-xs text-primary font-bold flex items-center gap-2 mb-1">
-                        <Calendar className="h-3 w-3" />
-                        Starts in {hackathon.startsIn}
-                      </div>
-                      <Button variant="outline" size="sm" className="w-full mt-2">
-                        Register
-                      </Button>
+              <div key={hackathon.id} className="w-[270px] h-[320px] flex-shrink-0">
+                <div
+                  className={`rounded-2xl shadow-2xl border-0 p-6 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  onClick={() => setSelectedHackathon(hackathon)}
+                  style={{ background: isForYou ? 'linear-gradient(135deg, #fff 0%, #f6faff 60%, #f3f6fb 100%)' : '#fff' }}
+                >
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <img
+                        src={logo}
+                        alt={`${company} Logo`}
+                        className="h-10 w-10 rounded-full border-2 border-primary/30 bg-white object-contain shadow-lg"
+                      />
+                      <span className="text-base font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-3 py-1 rounded-lg shadow-inner backdrop-blur-md">
+                        {company}
+                      </span>
+                      {isForYou && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
+                          </TooltipTrigger>
+                          <TooltipContent side="top" align="center" className="w-72 text-left z-[999999] drop-shadow-2xl">
+                            <span className="block text-sm font-semibold text-primary mb-1">Recommended for You</span>
+                            <span className="text-xs text-muted-foreground">This hackathon is recommended because it matches your skill set.</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </div>
-                    {/* Subtle animated rainbow border on hover */}
-                    <div
-                      className="absolute inset-0 rounded-2xl pointer-events-none z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{
-                        boxShadow:
-                          "0 0 0 4px #fff, 0 0 0 8px #ffb6ff, 0 0 0 12px #b5ffff, 0 0 0 16px #baffc9, 0 0 0 20px #ffe29a",
-                      }}
-                    />
+                    <div className="flex items-center gap-2 mb-2">
+                      <Code className="h-5 w-5 text-accent" />
+                      <span className="text-lg font-extrabold text-foreground leading-tight drop-shadow-sm">
+                        {hackathon.title}
+                      </span>
+                      <Badge
+                        className={
+                          getStatusColor(hackathon.status) +
+                          " ml-2 px-3 py-1 rounded-full text-xs font-bold shadow"
+                        }
+                      >
+                        <Calendar className="h-3 w-3 mr-1" />
+                        {hackathon.status}
+                      </Badge>
+                    </div>
+                    <p className="text-muted-foreground text-sm leading-relaxed min-h-[40px] mb-4 font-medium">
+                      {hackathon.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 items-center mb-4">
+                      <Badge
+                        className={
+                          getDifficultyColor(hackathon.difficulty) +
+                          " px-3 py-1 rounded-full text-xs font-bold"
+                        }
+                      >
+                        {hackathon.difficulty}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        <Clock className="h-3 w-3" />
+                        {hackathon.duration}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                      >
+                        <Users className="h-3 w-3" />
+                        {hackathon.participants.toLocaleString()} participants
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        style={{ whiteSpace: "nowrap", alignSelf: "center" }}
+                        className="px-3 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent-foreground border-accent/20 border"
+                      >
+                        {hackathon.theme}
+                      </Badge>
+                    </div>
+                    <div className="text-xs text-primary font-bold flex items-center gap-2 mb-1">
+                      <Calendar className="h-3 w-3" />
+                      Starts in {hackathon.startsIn}
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full mt-2">
+                      Register
+                    </Button>
                   </div>
+                  {/* Subtle animated rainbow border on hover */}
+                  <div
+                    className="absolute inset-0 rounded-2xl pointer-events-none z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      boxShadow:
+                        "0 0 0 4px #fff, 0 0 0 8px #ffb6ff, 0 0 0 12px #b5ffff, 0 0 0 16px #baffc9, 0 0 0 20px #ffe29a",
+                    }}
+                  />
+                  {isForYou && (
+                    <div className="fixed left-1/2" style={{top: 'calc(100% + 16px)', transform: 'translateX(-50%)'}}>
+                      <div className="bg-white/95 text-primary text-xs rounded-lg shadow-xl p-4 border border-primary font-medium text-left w-72 z-[9999]">
+                        <span className="block text-sm font-semibold text-primary mb-1">Recommended for You</span>
+                        <span className="text-xs text-muted-foreground">This hackathon aligns with your skill set, increasing your chances of success and learning impact.</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </React.Fragment>
+              </div>
             );
           })}
         </div>
-        {/* Modal Popup for Hackathon Details */}
-        <Dialog
-          open={!!selectedHackathon}
-          onOpenChange={(open) => !open && setSelectedHackathon(null)}
-        >
-          <DialogContent className="max-w-2xl p-0 bg-transparent shadow-none border-none">
-            <div
-              className="rounded-3xl overflow-hidden p-0 pb-0 text-center relative bg-white"
-              style={{
-                boxShadow: "0 8px 32px 0 rgba(31,38,135,0.18)",
-              }}
-            >
-              {/* Company logo in the background, top-left */}
-              {selectedHackathon && (
-                <img
-                  src={companyLogos[getRandomCompany(upcomingHackathons.findIndex(h => h.id === selectedHackathon.id))] || placeholderLogo}
-                  alt="Company Logo"
-                  className="absolute left-6 top-6 h-12 w-12 rounded-full bg-white/80 shadow-lg border-2 border-white z-10"
-                  style={{objectFit: 'contain'}}
-                />
-              )}
-              {/* HEADER: Make this blue */}
-              <div className="bg-blue-600 px-8 pt-12 pb-6 text-center">
-                <h2 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
-                  {selectedHackathon?.title}
-                </h2>
-                <div className="text-lg font-medium text-white/80 mb-2">
-                  {selectedHackathon?.theme}
+      </CardContent>
+      {/* Modal Popup for Hackathon Details */}
+      <Dialog
+        open={!!selectedHackathon}
+        onOpenChange={(open) => !open && setSelectedHackathon(null)}
+      >
+        <DialogContent className="max-w-2xl p-0 bg-transparent shadow-none border-none">
+          <div
+            className="rounded-3xl overflow-hidden p-0 pb-0 text-center relative bg-white"
+            style={{
+              boxShadow: "0 8px 32px 0 rgba(31,38,135,0.18)",
+            }}
+          >
+            {/* Company logo in the background, top-left */}
+            {selectedHackathon && (
+              <img
+                src={companyLogos[getRandomCompany(upcomingHackathons.findIndex(h => h.id === selectedHackathon.id))] || placeholderLogo}
+                alt="Company Logo"
+                className="absolute left-6 top-6 h-12 w-12 rounded-full bg-white/80 shadow-lg border-2 border-white z-10"
+                style={{objectFit: 'contain'}}
+              />
+            )}
+            {/* HEADER: Make this blue */}
+            <div className="bg-blue-600 px-8 pt-12 pb-6 text-center">
+              <h2 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
+                {selectedHackathon?.title}
+              </h2>
+              <div className="text-lg font-medium text-white/80 mb-2">
+                {selectedHackathon?.theme}
+              </div>
+              {/* Prizes */}
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
+                {selectedHackathon?.prizes?.map((prize, i) => (
+                  <Badge key={i} className="bg-white text-blue-600 border-blue-200 border font-semibold px-3 py-1 rounded-full text-xs">
+                    <Trophy className="inline-block h-4 w-4 mr-1 text-blue-500" />
+                    {prize}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Scrollable Info Section */}
+          <div className="bg-white px-8 pt-4 pb-24 rounded-b-3xl max-h-[350px] overflow-y-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
+                <CalendarIcon className="h-6 w-6 text-blue-500 mb-2" />
+                <div className="text-xs text-blue-600">Date</div>
+                <div className="font-bold text-base text-blue-600">
+                  {selectedHackathon?.startsIn
+                    ? `Starts in ${selectedHackathon.startsIn}`
+                    : ""}
                 </div>
-                {/* Prizes */}
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {selectedHackathon?.prizes?.map((prize, i) => (
-                    <Badge key={i} className="bg-yellow-100 text-yellow-800 border-yellow-300 border font-semibold px-3 py-1 rounded-full text-xs">
-                      <Trophy className="inline-block h-4 w-4 mr-1 text-yellow-500" />
-                      {prize}
-                    </Badge>
-                  ))}
+              </div>
+              <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
+                <MapPin className="h-6 w-6 text-blue-500 mb-2" />
+                <div className="text-xs text-blue-600">Location</div>
+                <div className="font-bold text-base text-blue-600">Delhi, India</div>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
+                <UsersIcon className="h-6 w-6 text-blue-500 mb-2" />
+                <div className="text-xs text-blue-600">Participants</div>
+                <div className="font-bold text-base text-blue-600">
+                  {selectedHackathon?.participants?.toLocaleString()}
+                </div>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
+                <TrophyIcon className="h-6 w-6 text-blue-500 mb-2" />
+                <div className="text-xs text-blue-600">Prizes</div>
+                <div className="font-bold text-base text-blue-600">
+                  {selectedHackathon?.prizes?.join(", ")}
                 </div>
               </div>
             </div>
-            {/* Scrollable Info Section */}
-            <div className="bg-white px-8 pt-4 pb-24 rounded-b-3xl max-h-[350px] overflow-y-auto">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-purple-50 rounded-xl p-4 flex flex-col items-center">
-                  <CalendarIcon className="h-6 w-6 text-purple-500 mb-2" />
-                  <div className="text-xs text-muted-foreground">Date</div>
-                  <div className="font-bold text-base">
-                    {selectedHackathon?.startsIn
-                      ? `Starts in ${selectedHackathon.startsIn}`
-                      : ""}
-                  </div>
-                </div>
-                <div className="bg-pink-50 rounded-xl p-4 flex flex-col items-center">
-                  <MapPin className="h-6 w-6 text-pink-500 mb-2" />
-                  <div className="text-xs text-muted-foreground">Location</div>
-                  <div className="font-bold text-base">Delhi, India</div>
-                </div>
-                <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
-                  <UsersIcon className="h-6 w-6 text-blue-500 mb-2" />
-                  <div className="text-xs text-muted-foreground">Participants</div>
-                  <div className="font-bold text-base">
-                    {selectedHackathon?.participants?.toLocaleString()}
-                  </div>
-                </div>
-                <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center">
-                  <TrophyIcon className="h-6 w-6 text-green-500 mb-2" />
-                  <div className="text-xs text-muted-foreground">Prizes</div>
-                  <div className="font-bold text-base">
-                    {selectedHackathon?.prizes?.join(", ")}
-                  </div>
-                </div>
-              </div>
-              <div className="text-left mb-2 flex items-center gap-2 text-purple-700 font-bold text-lg">
-                <Star className="h-5 w-5 text-yellow-500" />
-                About this Hackathon
-              </div>
-              <div className="text-muted-foreground text-base mb-2">
-                {selectedHackathon?.description}
-              </div>
-              {/* Steps as bullet points */}
-              <ul className="list-disc pl-6 text-muted-foreground text-base mb-2">
-                <li>Online Assessment</li>
-                <li>Ideathon</li>
-                <li>Project Submission</li>
-              </ul>
-              <div className="text-muted-foreground text-sm mb-4">
-                Skills: {selectedHackathon?.skills?.join(", ")}
-              </div>
+            <div className="text-left mb-2 flex items-center gap-2 text-blue-700 font-bold text-lg">
+              <Star className="h-5 w-5 text-blue-500" />
+              About this Hackathon
             </div>
-            {/* Register Button at Center Bottom */}
-            <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
-              <Button size="lg" className="bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg">Register</Button>
+            <div className="text-blue-700 text-base mb-2">
+              {selectedHackathon?.description}
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    );
-  };
+            {/* Steps as bullet points */}
+            <ul className="list-disc pl-6 text-blue-700 text-base mb-2">
+              <li>Online Assessment</li>
+              <li>Ideathon</li>
+              <li>Project Submission</li>
+            </ul>
+            <div className="text-blue-700 text-sm mb-4">
+              Skills: {selectedHackathon?.skills?.join(", ")}
+            </div>
+          </div>
+          {/* Register/Enter Button at Center Bottom */}
+          <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
+            <Button size="lg" className={`bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg`}>
+              {selectedHackathon?.status === 'active' ? 'Enter' : 'Register'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  );
 
   return (
     <div>

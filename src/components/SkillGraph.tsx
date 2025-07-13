@@ -21,16 +21,16 @@ const skillsData: Skill[] = [
 
 const SkillGraph = () => {
   const getSkillColor = (level: number) => {
-    if (level >= 80) return "bg-gradient-success";
-    if (level >= 60) return "bg-gradient-primary";
-    if (level >= 40) return "bg-gradient-accent";
+    if (level >= 80) return "bg-gradient-primary";
+    if (level >= 60) return "bg-gradient-primary/80";
+    if (level >= 40) return "bg-gradient-primary/60";
     return "bg-muted";
   };
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up':
-        return <TrendingUp className="h-3 w-3 text-success" />;
+        return <TrendingUp className="h-3 w-3 text-primary" />;
       case 'down':
         return <TrendingUp className="h-3 w-3 text-destructive rotate-180" />;
       default:

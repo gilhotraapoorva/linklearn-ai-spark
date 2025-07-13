@@ -45,8 +45,8 @@ const userStats: UserStats = {
       id: "first-quest",
       name: "First Steps",
       description: "Complete your first quest",
-      icon: "🎯",
-      rarity: "rook",
+      icon: "🏯",
+      rarity: "common",
       unlocked: true
     },
     {
@@ -86,9 +86,9 @@ const GamificationStats = () => {
       case 'rare':
         return 'bg-primary text-primary-foreground';
       case 'epic':
-        return 'bg-gradient-accent text-accent-foreground';
+        return 'bg-primary/80 text-primary-foreground';
       case 'legendary':
-        return 'bg-gradient-success text-success-foreground';
+        return 'bg-primary/60 text-primary-foreground';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -180,12 +180,14 @@ const GamificationStats = () => {
                 >
                   <div className="text-2xl mb-1">{badge.icon}</div>
                   <div className="text-xs font-medium break-words text-center w-full">{badge.name}</div>
-                  <Badge 
-                    className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-full max-w-[80px] mx-auto truncate`}
-                    variant="secondary"
-                  >
-                    {badge.rarity}
-                  </Badge>
+                  {(badge.rarity === 'epic' || badge.rarity === 'legendary') && (
+                    <Badge 
+                      className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-full max-w-[80px] mx-auto truncate`}
+                      variant="secondary"
+                    >
+                      {badge.rarity}
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>
