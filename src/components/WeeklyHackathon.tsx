@@ -37,24 +37,28 @@ interface Hackathon {
   skills: string[];
   startsIn: string;
   status: "upcoming" | "active" | "completed";
+  company: string;
 }
 
 const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-001",
     title: "Build a Real-time Chat App",
+    description: "Create a modern chat application with real-time messaging capabilities",
     theme: "Real-time Applications",
     difficulty: "Intermediate",
     duration: "48 hours",
     participants: 1247,
     prizes: ["LinkedIn Premium (1 month)", "Exclusive Badge", "Career Mentorship"],
     skills: ["React", "WebSockets", "Node.js", "Database Design"],
-    startsIn: "2 days",
-    status: "upcoming"
+    startsIn: "1 day ago",
+    status: "upcoming",
+    company: "Intuit"
   },
   {
     id: "hack-002",
     title: "AI-Powered Task Manager",
+    description: "Build an intelligent task management system using AI",
     theme: "AI & Productivity",
     difficulty: "Advanced",
     duration: "72 hours",
@@ -62,23 +66,27 @@ const upcomingHackathons: Hackathon[] = [
     prizes: ["$500 Cash Prize", "Tech Conference Pass", "AI Workshop Access"],
     skills: ["Python", "Machine Learning", "React", "API Design"],
     startsIn: "5 days",
-    status: "upcoming"
+    status: "upcoming",
+    company: "Google"
   },
   {
     id: "hack-003",
-    title: "Sustainable Energy Dashboard",
-    theme: "Green Tech",
+    title: "Apple Innovation Challenge",
+    description: "Design and build next-gen apps or solutions for the Apple ecosystem.",
+    theme: "Apple Ecosystem",
     difficulty: "Intermediate",
     duration: "36 hours",
     participants: 1563,
-    prizes: ["Solar Panel Kit", "Green Tech Certification", "Industry Mentorship"],
-    skills: ["Data Visualization", "IoT", "Python", "React"],
+    prizes: ["MacBook Air", "App Store Feature", "Apple Developer Swag"],
+    skills: ["Swift", "iOS", "UI/UX", "React"],
     startsIn: "1 week",
-    status: "upcoming"
+    status: "upcoming",
+    company: "Apple"
   },
   {
     id: "hack-004",
     title: "Adobe Creative Hack",
+    description: "Design innovative creative tools and solutions",
     theme: "Design & Creativity",
     difficulty: "Beginner",
     duration: "24 hours",
@@ -86,11 +94,13 @@ const upcomingHackathons: Hackathon[] = [
     prizes: ["Adobe CC License", "Mentorship", "Swag"],
     skills: ["UI/UX", "Photoshop", "Illustrator"],
     startsIn: "3 days",
-    status: "upcoming"
+    status: "upcoming",
+    company: "Adobe"
   },
   {
     id: "hack-005",
     title: "Tesla Mobility Challenge",
+    description: "Develop next-generation mobility and transportation solutions",
     theme: "Mobility & AI",
     difficulty: "Advanced",
     duration: "60 hours",
@@ -98,11 +108,13 @@ const upcomingHackathons: Hackathon[] = [
     prizes: ["Tesla Internship", "$1000", "Tesla Swag"],
     skills: ["AI", "Python", "Embedded"],
     startsIn: "4 days",
-    status: "upcoming"
+    status: "upcoming",
+    company: "Tesla"
   },
   {
     id: "hack-006",
     title: "Xiaomi IoT Sprint",
+    description: "Build smart device integrations and IoT solutions",
     theme: "Smart Devices",
     difficulty: "Intermediate",
     duration: "30 hours",
@@ -110,7 +122,8 @@ const upcomingHackathons: Hackathon[] = [
     prizes: ["Xiaomi Gadgets", "Cash Prize", "Certificate"],
     skills: ["IoT", "Android", "Cloud"],
     startsIn: "6 days",
-    status: "upcoming"
+    status: "upcoming",
+    company: "Xiaomi"
   }
 ];
 
@@ -145,10 +158,11 @@ const companyLogos: Record<string, string> = {
   Tesla: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg",
   Spotify:
     "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg",
-  Adobe:
-    "https://upload.wikimedia.org/wikipedia/commons/6/6a/Adobe_Corporate_Logo.png",
+  Adobe: "/adobe.svg",
   Stripe:
     "https://upload.wikimedia.org/wikipedia/commons/4/4e/Stripe_Logo%2C_revised_2016.svg",
+  Xiaomi: "/xiaomi.svg",
+  Apple: "/apple.svg",
 };
 
 function getRandomCompany(index: number) {
@@ -161,17 +175,8 @@ const WeeklyHackathon = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const getDifficultyColor = (difficulty: string) => {
-    // All difficulties use blue or gray
-    switch (difficulty) {
-      case "Beginner":
-        return "bg-primary text-primary-foreground";
-      case "Intermediate":
-        return "bg-primary/80 text-primary-foreground";
-      case "Advanced":
-        return "bg-destructive text-destructive-foreground";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
+    // Make all difficulties colorless
+    return "bg-transparent text-foreground border border-border";
   };
 
   const getStatusColor = (status: string) => {
@@ -226,7 +231,7 @@ const WeeklyHackathon = () => {
 
   // Render horizontally scrollable cards
   const renderCarousel = () => (
-    <Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-none w-full max-w-full min-w-0 overflow-x-auto">
+    <Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-none w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-neutral-900">
           <Trophy className="h-5 w-5 text-primary" />
@@ -236,7 +241,7 @@ const WeeklyHackathon = () => {
       <CardContent className="pt-0 pb-2">
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto pb-2 cursor-grab select-none min-h-[220px] w-full"
+          className="flex gap-6 overflow-x-auto overflow-y-visible pb-2 cursor-grab select-none min-h-[220px] w-full"
           style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', userSelect: isDragging.current ? 'none' : 'auto' }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
@@ -244,8 +249,7 @@ const WeeklyHackathon = () => {
           onMouseMove={onMouseMove}
         >
           {upcomingHackathons.map((hackathon, idx) => {
-            const company = getRandomCompany(idx);
-            const logo = companyLogos[company] || placeholderLogo;
+            const logo = companyLogos[hackathon.company] || placeholderLogo;
             // User skills for matching
             const userSkills = [
               "React Development",
@@ -261,9 +265,9 @@ const WeeklyHackathon = () => {
             // For the third hackathon (idx === 2), check for skill match
             const isForYou = idx === 2 && normalizedHackathonSkills.some(skill => normalizedUserSkills.some(userSkill => skill.includes(userSkill.split(" ")[0])));
             return (
-              <div key={hackathon.id} className="w-[180px] h-[210px] flex-shrink-0">
+              <div key={hackathon.id} className="w-[300px] h-[210px] flex-shrink-0">
                 <div
-                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.14)] cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.07] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
                   style={{ background: isForYou ? 'linear-gradient(135deg, #fff 0%, #f6faff 60%, #f3f6fb 100%)' : '#fff' }}
                 >
@@ -271,18 +275,35 @@ const WeeklyHackathon = () => {
                     <div className="flex items-center gap-2 mb-2">
                       <img
                         src={logo}
-                        alt={`${company} Logo`}
+                        alt={`${hackathon.company} Logo`}
                         className="h-8 w-8 rounded-full border-2 border-primary/30 bg-white object-contain shadow-lg"
                       />
                       <span className="text-xs font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-2 py-0.5 rounded-lg shadow-inner backdrop-blur-md">
-                        {company}
+                        {hackathon.company}
                       </span>
-                      {isForYou && (
+                      {hackathon.company === 'Apple' ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="bottom" 
+                            align="center" 
+                            className="w-48 text-left z-[99999] drop-shadow-2xl"
+                          >
+                            <span className="block text-xs font-semibold text-primary mb-1">This hackathon matches your skillset.</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : isForYou && (
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Star className="h-4 w-4 text-green-500 cursor-pointer ml-1 z-[999999]" />
                           </TooltipTrigger>
-                          <TooltipContent side="top" align="center" className="w-48 text-left z-[999999] drop-shadow-2xl">
+                          <TooltipContent 
+                            side="top" 
+                            align="center" 
+                            className="w-48 text-left z-[99999] drop-shadow-2xl"
+                          >
                             <span className="block text-xs font-semibold text-primary mb-1">Recommended for You</span>
                             <span className="text-xs text-muted-foreground">This hackathon is recommended because it matches your skill set.</span>
                           </TooltipContent>
@@ -296,6 +317,11 @@ const WeeklyHackathon = () => {
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1 items-center mb-2">
+                      {hackathon.status === "active" && (
+                        <Badge className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white animate-pulse">
+                          LIVE
+                        </Badge>
+                      )}
                       <Badge
                         className={
                           getDifficultyColor(hackathon.difficulty) +
@@ -328,10 +354,18 @@ const WeeklyHackathon = () => {
                     </div>
                     <div className="text-[10px] text-primary font-bold flex items-center gap-1 mb-1">
                       <Calendar className="h-3 w-3" />
-                      {hackathon.startsIn}
+                      {hackathon.status === "active" ? `Started ${hackathon.startsIn}` : hackathon.startsIn}
                     </div>
-                    <Button variant="outline" size="sm" className="w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7">
-                      Register
+                    <Button
+                      variant={hackathon.status === "active" ? "success" : "outline"}
+                      size="sm"
+                      className={
+                        hackathon.status === "active"
+                          ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700"
+                          : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
+                      }
+                    >
+                      {hackathon.status === "active" ? "Join" : "Register"}
                     </Button>
                   </div>
                   {/* Subtle animated rainbow border on hover */}
@@ -371,7 +405,7 @@ const WeeklyHackathon = () => {
             {/* Company logo in the background, top-left */}
             {selectedHackathon && (
               <img
-                src={companyLogos[getRandomCompany(upcomingHackathons.findIndex(h => h.id === selectedHackathon.id))] || placeholderLogo}
+                src={companyLogos[selectedHackathon.company] || placeholderLogo}
                 alt="Company Logo"
                 className="absolute left-6 top-6 h-12 w-12 rounded-full bg-white/80 shadow-lg border-2 border-white z-10"
                 style={{objectFit: 'contain'}}
@@ -403,9 +437,11 @@ const WeeklyHackathon = () => {
                 <CalendarIcon className="h-6 w-6 text-blue-500 mb-2" />
                 <div className="text-xs text-blue-600">Date</div>
                 <div className="font-bold text-base text-blue-600">
-                  {selectedHackathon?.startsIn
-                    ? `Starts in ${selectedHackathon.startsIn}`
-                    : ""}
+                  {selectedHackathon?.status === "active" 
+                    ? `Started ${selectedHackathon.startsIn}`
+                    : selectedHackathon?.startsIn
+                      ? `Starts in ${selectedHackathon.startsIn}`
+                      : ""}
                 </div>
               </div>
               <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
