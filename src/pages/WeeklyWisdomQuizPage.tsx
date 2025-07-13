@@ -1,6 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles } from "lucide-react";
@@ -78,115 +75,119 @@ const WeeklyWisdomQuizPage = () => {
 
 	return (
 		<div className="flex justify-center items-center min-h-[80vh] bg-background">
-			<Card className="w-full max-w-xl mx-auto bg-primary shadow-2xl border-0 rounded-3xl overflow-hidden">
-				<CardHeader className="pb-4 pt-8 flex flex-col items-center bg-primary text-white relative">
-					<CardTitle className="flex items-center gap-3 text-2xl font-extrabold drop-shadow-lg">
-						<Sparkles className="h-7 w-7 text-yellow-300 animate-pulse-glow" />
-						Weekly Wisdom Quiz
-					</CardTitle>
-					<div className="text-base mt-2 font-semibold tracking-wide">
+			<div className="w-full max-w-xl mx-auto rounded-3xl shadow-2xl overflow-hidden bg-white">
+				{/* Header */}
+				<div className="bg-[#1570EF] px-8 pt-8 pb-4 text-white text-center rounded-t-3xl">
+					<div className="flex items-center justify-center gap-2 mb-2">
+						<span className="inline-block">
+							<svg
+								width="28"
+								height="28"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<path
+									d="M12 2v2m6.364 1.636l-1.414 1.414M22 12h-2m-1.636 6.364l-1.414-1.414M12 22v-2m-6.364-1.636l1.414-1.414M2 12h2m1.636-6.364l1.414 1.414"
+									stroke="#FFD600"
+									strokeWidth="2"
+									strokeLinecap="round"
+								/>
+							</svg>
+						</span>
+						<span className="text-2xl font-extrabold drop-shadow-lg">
+							Weekly Wisdom Quiz
+						</span>
+					</div>
+					<div className="text-lg font-semibold mb-2">
 						Topic:{" "}
-						<span className="font-bold text-yellow-200">
+						<span className="text-[#FFD600] font-bold">
 							Building Inclusive Teams
 						</span>
 					</div>
-					<div className="mt-3 text-sm bg-white/20 text-white rounded-lg px-5 py-2 font-medium flex items-center gap-2 shadow-inner">
-						🌱{" "}
-						<span>Grow your soft skills and earn XP every week!</span>
-					</div>
-				</CardHeader>
-				<CardContent className="px-8 py-8">
-					{!showResult ? (
-						<>
-							<div className="mb-4 text-base font-semibold text-blue-700 flex items-center gap-2">
-								<span className="inline-block w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-								Question {current + 1} of {questions.length}
-							</div>
-							<div className="mb-4 text-xl font-bold text-blue-900 drop-shadow-sm">
-								{questions[current].q}
-							</div>
-							<div className="space-y-3 mb-8">
-								{questions[current].options.map((opt, idx) => (
-									<Button
-										key={idx}
-										variant={selected === idx ? "quest" : "outline"}
-										size="sm"
-										className={`w-full text-left text-base rounded-xl border-2 transition-all duration-200 ${
-											selected === idx
-												? "ring-2 ring-primary scale-[1.03] bg-gradient-to-r from-blue-200 to-blue-100"
-												: "hover:bg-blue-50"
-										}`}
-										onClick={() => handleOption(idx)}
-									>
-										{opt}
-									</Button>
-								))}
-							</div>
-							<Progress
-								value={
-									((current + (selected !== null ? 1 : 0)) /
-										questions.length) *
-									100
-								}
-								className="mb-6 h-3 bg-blue-100"
-							/>
-							<div className="flex items-center justify-between mb-6 text-xs text-blue-700">
-								<span className="flex items-center gap-1">
-									🏆{" "}
-									<span>Earn 100 XP for a perfect score!</span>
-								</span>
-								<span className="flex items-center gap-1">
-									🔄{" "}
-									<span>Retake anytime</span>
-								</span>
-							</div>
-							<Button
-								variant="quest"
-								size="quest"
-								className="w-full text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500"
-								onClick={handleNext}
-								disabled={selected === null}
-							>
-								{current === questions.length - 1
-									? "Finish Quiz"
-									: "Next Question"}
-							</Button>
-						</>
-					) : (
-						<div className="text-center space-y-6">
-							<div className="text-3xl font-extrabold text-blue-700 drop-shadow-lg flex items-center justify-center gap-2">
-								🎉 Quiz Complete!
-							</div>
-							<div className="text-lg font-semibold text-blue-900">
-								Your Score:{" "}
-								<span className="font-bold text-green-600">
-									{score} / {questions.length}
-								</span>
-							</div>
-							<div className="text-base text-green-800 bg-green-100 rounded-xl px-6 py-3 font-medium flex items-center gap-2 justify-center shadow-inner">
-								{"🥇 "}
-								<span>Great job! Keep building your wisdom streak.</span>
-							</div>
-							<Button
-								variant="quest"
-								size="quest"
-								className="w-full text-lg rounded-xl shadow-lg bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500"
-								onClick={handleRetake}
-							>
-								Retake Quiz
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								className="w-full rounded-xl border-blue-300 text-blue-700 font-semibold"
-								onClick={() => navigate("/")}
-							>
-								Back to Dashboard
-							</Button>
+					<div className="flex justify-center">
+						<div className="bg-[#2563EB] bg-opacity-80 text-white text-sm rounded-xl px-4 py-2 font-medium flex items-center gap-2 shadow-inner">
+							<span>🪴</span> Grow your soft skills and earn XP every week!
 						</div>
-					)}
-				</CardContent>
-			</Card>
+					</div>
+				</div>
+				{/* Quiz Body */}
+				<div className="px-8 py-10">
+					{/* Question Number */}
+					<div className="flex items-center gap-2 mb-4">
+						<span className="inline-block w-2 h-2 rounded-full bg-[#1570EF] animate-pulse"></span>
+						<span className="text-[#1570EF] font-semibold">
+							Question {current + 1} of {questions.length}
+						</span>
+					</div>
+					{/* Question Text */}
+					<div className="mb-6 text-2xl font-bold text-[#1D2939]">
+						{questions[current].q}
+					</div>
+					{/* Options */}
+					<div className="space-y-4 mb-8">
+						{questions[current].options.map((opt, idx) => (
+							<button
+								key={idx}
+								onClick={() => handleOption(idx)}
+								className={`w-full text-base py-3 rounded-xl border-2 transition-all duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1570EF] bg-white text-[#344054] ${
+									selected === idx
+										? "border-[#1570EF] ring-2 ring-[#1570EF] bg-[#EFF8FF]"
+										: "border-[#D1E9FF] hover:border-[#1570EF] hover:bg-[#F0F6FF]"
+								} `}
+							>
+								{opt}
+							</button>
+						))}
+					</div>
+					{/* Progress Bar */}
+					<div className="w-full h-2 rounded-full bg-[#EFF8FF] mb-4">
+						<div
+							className="h-2 rounded-full bg-[#1570EF] transition-all duration-500"
+							style={{
+								width: `${((current + (selected !== null ? 1 : 0)) /
+									questions.length) *
+									100}%`,
+							}}
+						/>
+					</div>
+					{/* XP and Retake Info */}
+					<div className="flex items-center justify-between mb-6 text-sm">
+						<span className="flex items-center gap-1 text-[#1570EF] font-medium">
+							<span>🏆</span> Earn 100 XP for a perfect score!
+						</span>
+						<span className="flex items-center gap-1 text-[#667085]">
+							<svg
+								width="16"
+								height="16"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<path
+									d="M12 4v1m0 15v-1m8-7h-1M5 12H4m13.657-6.343l-.707.707M6.343 17.657l-.707-.707m12.728 0l-.707.707M6.343 6.343l-.707-.707"
+									stroke="#667085"
+									strokeWidth="2"
+									strokeLinecap="round"
+								/>
+							</svg>{" "}
+							Retake anytime
+						</span>
+					</div>
+					{/* Next Button */}
+					<button
+						onClick={handleNext}
+						disabled={selected === null}
+						className={`w-full py-4 rounded-xl text-lg font-bold shadow-md transition-all duration-200 ${
+							selected === null
+								? "bg-[#B2DDFF] text-white cursor-not-allowed"
+								: "bg-[#1570EF] text-white hover:bg-[#2563EB]"
+						} `}
+					>
+						{current === questions.length - 1
+							? "Finish Quiz"
+							: "Next Question"}
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 };
