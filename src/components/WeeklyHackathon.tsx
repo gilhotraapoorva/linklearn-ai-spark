@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -156,6 +157,7 @@ function getRandomCompany(index: number) {
 }
 
 const WeeklyHackathon = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const getDifficultyColor = (difficulty: string) => {
@@ -186,6 +188,11 @@ const WeeklyHackathon = () => {
   };
 
   const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
+
+  const handleHackathonClick = (hackathon: Hackathon) => {
+    // Navigate to hackathon details page
+    navigate(`/hackathon/${hackathon.id}`);
+  };
 
   // Drag-to-scroll logic
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -440,8 +447,12 @@ const WeeklyHackathon = () => {
           </div>
           {/* Register/Enter Button at Center Bottom */}
           <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
-            <Button size="lg" className={`bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg`}>
-              {selectedHackathon?.status === 'active' ? 'Enter' : 'Register'}
+            <Button 
+              size="lg" 
+              className={`bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg`}
+              onClick={() => selectedHackathon && handleHackathonClick(selectedHackathon)}
+            >
+              View Details
             </Button>
           </div>
         </DialogContent>
