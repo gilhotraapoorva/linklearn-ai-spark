@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Sparkles, Clock, Medal, RefreshCcw } from "lucide-react";
 import React from "react";
 
@@ -15,6 +16,10 @@ const topics = [
 ];
 
 const WeeklyWisdomQuiz = () => {
+	const navigate = useNavigate();
+	const handleStartQuiz = () => {
+		navigate("/weekly-wisdom-quiz");
+	};
 	return (
 		<Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-none w-full max-w-full min-w-0">
 			<CardHeader className="pb-2">
@@ -56,6 +61,7 @@ const WeeklyWisdomQuiz = () => {
 					variant="quest"
 					size="quest"
 					className="w-full font-semibold"
+					onClick={handleStartQuiz}
 				>
 					Take Quiz Now
 				</Button>
