@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Pie, Bar } from 'react-chartjs-2';
 
 interface SkillProgress {
   name: string;
@@ -359,6 +360,108 @@ const ProgressReport = () => {
                 </p>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* New Charts Section */}
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Pie className="h-5 w-5 text-primary" />Quest Completion Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="w-full md:w-1/2">
+                <Pie
+                  data={{
+                    labels: ["Completed", "In Progress", "Not Started"],
+                    datasets: [
+                      {
+                        data: [weeklyStats.questsCompleted, 12, 6],
+                        backgroundColor: [
+                          '#22c55e', '#f59e42', '#e5e7eb'
+                        ],
+                        borderWidth: 2,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' },
+                    },
+                  }}
+                  height={180}
+                />
+                <div className="text-xs text-muted-foreground text-center mt-2">Quest Completion Status</div>
+              </div>
+              <div className="w-full md:w-1/2">
+                <Pie
+                  data={{
+                    labels: ["Hackathons", "Quests", "Quizzes"],
+                    datasets: [
+                      {
+                        data: [weeklyStats.hackathonsEntered, weeklyStats.questsCompleted, 5],
+                        backgroundColor: [
+                          '#6366f1', '#3b82f6', '#f59e42'
+                        ],
+                        borderWidth: 2,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: { position: 'bottom' },
+                    },
+                  }}
+                  height={180}
+                />
+                <div className="text-xs text-muted-foreground text-center mt-2">Participation Types</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><BarChart2 className="h-5 w-5 text-primary" />Weekly Activity Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Bar
+              data={{
+                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                datasets: [
+                  {
+                    label: 'Quests',
+                    data: [2, 1, 3, 2, 2, 1, 1],
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 8,
+                  },
+                  {
+                    label: 'Hackathons',
+                    data: [0, 0, 0, 1, 0, 0, 0],
+                    backgroundColor: '#f59e42',
+                    borderRadius: 8,
+                  },
+                  {
+                    label: 'Quizzes',
+                    data: [1, 0, 1, 0, 1, 0, 0],
+                    backgroundColor: '#22c55e',
+                    borderRadius: 8,
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { position: 'bottom' },
+                },
+                scales: {
+                  y: { min: 0, max: 4, ticks: { stepSize: 1 } },
+                },
+              }}
+              height={180}
+            />
+            <div className="text-xs text-muted-foreground text-center mt-2">Activity by Day (This Week)</div>
           </CardContent>
         </Card>
       </div>
