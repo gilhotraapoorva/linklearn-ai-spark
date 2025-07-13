@@ -7,13 +7,22 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Clock,
   CheckCircle,
   AlertCircle,
   Trophy,
   Target,
-  Brain
+  Brain,
+  AlertTriangle
 } from "lucide-react";
 
 interface Question {
@@ -245,6 +254,7 @@ const MCQRound = () => {
   const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   React.useEffect(() => {
     if (timeLeft > 0 && !isSubmitted) {
@@ -265,6 +275,14 @@ const MCQRound = () => {
     setAnswers(prev => ({ ...prev, [questionId]: answerIndex }));
   };
 
+  const handleClearSelection = () => {
+    setAnswers(prev => {
+      const newAnswers = { ...prev };
+      delete newAnswers[currentQuestionData.id];
+      return newAnswers;
+    });
+  };
+
   const handleNext = () => {
     if (currentQuestion < mcqQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -280,6 +298,19 @@ const MCQRound = () => {
   const handleSubmit = () => {
     setIsSubmitted(true);
     setShowResults(true);
+    setShowConfirmDialog(false);
+  };
+
+  const handleSubmitClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    handleSubmit();
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmDialog(false);
   };
 
   const calculateScore = () => {
@@ -306,12 +337,11 @@ const MCQRound = () => {
             <div className="flex items-center gap-4">
               <Button 
                 variant="ghost" 
-                size="sm" 
+                className="text-muted-foreground hover:text-foreground"
                 onClick={() => navigate(`/hackathon/${id}`)}
-                className="flex items-center gap-2 hover:bg-blue-50"
               >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Hackathon
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
               </Button>
               <div>
                 <h1 className="text-2xl font-bold text-blue-900">MCQ Round Results</h1>
@@ -346,7 +376,7 @@ const MCQRound = () => {
                 <p className="text-gray-600">
                   {passed ? 
                     "You've successfully passed the first round! You can now proceed to the submission phase." :
-                    "You need at least 70% (14/20) to proceed to the next round. You can try again after 24 hours."
+                    "You need at least 70% (14/20) to proceed to the next round. Unfortunately, you cannot retake this assessment."
                   }
                 </p>
               </div>
@@ -386,24 +416,25 @@ const MCQRound = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-blue-50/30">
+      {/* Back Button */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <Button 
+          variant="ghost" 
+          className="mb-6 text-muted-foreground hover:text-foreground"
+          onClick={() => navigate(`/hackathon/${id}`)}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="bg-white border-b border-blue-100 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => navigate(`/hackathon/${id}`)}
-                className="flex items-center gap-2 hover:bg-blue-50"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold text-blue-900">MCQ Round</h1>
-                <p className="text-blue-600">First Round Assessment</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold text-blue-900">MCQ Round</h1>
+              <p className="text-blue-600">First Round Assessment</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-lg">
@@ -451,17 +482,30 @@ const MCQRound = () => {
               className="space-y-4"
             >
               {currentQuestionData.options.map((option, index) => (
-                <div key={index} className="flex items-center space-x-3 p-3 border border-blue-100 rounded-lg hover:bg-blue-50 transition-colors">
-                  <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                  <Label 
-                    htmlFor={`option-${index}`} 
-                    className="flex-1 cursor-pointer text-blue-900"
-                  >
-                    {option}
-                  </Label>
-                </div>
+                <Label 
+                  key={index}
+                  htmlFor={`option-${index}`} 
+                  className="flex items-center space-x-3 p-4 border border-blue-100 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer w-full block"
+                >
+                  <RadioGroupItem value={index.toString()} id={`option-${index}`} className="flex-shrink-0" />
+                  <span className="text-blue-900 flex-1">{option}</span>
+                </Label>
               ))}
             </RadioGroup>
+            
+            {/* Clear Selection Button */}
+            {answers[currentQuestionData.id] !== undefined && (
+              <div className="mt-6 pt-4 border-t border-blue-100">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleClearSelection}
+                  className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                >
+                  Clear Selection
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -479,7 +523,7 @@ const MCQRound = () => {
           <div className="flex gap-2">
             {currentQuestion === mcqQuestions.length - 1 ? (
               <Button 
-                onClick={handleSubmit}
+                onClick={handleSubmitClick}
                 className="bg-blue-600 text-white hover:bg-blue-700"
                 disabled={answeredCount < mcqQuestions.length}
               >
@@ -523,6 +567,45 @@ const MCQRound = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              Confirm Submission
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to submit your test? Once submitted, you cannot make any changes or retake the assessment.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                <strong>Summary:</strong>
+              </p>
+              <p className="text-sm text-blue-600 mt-1">
+                • Questions answered: {answeredCount} of {mcqQuestions.length}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Time remaining: {formatTime(timeLeft)}
+              </p>
+              <p className="text-sm text-blue-600">
+                • Minimum score required: 70% ({Math.ceil(mcqQuestions.length * 0.7)} questions)
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCancelSubmit}>
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmSubmit} className="bg-blue-600 hover:bg-blue-700">
+              Yes, Submit Test
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

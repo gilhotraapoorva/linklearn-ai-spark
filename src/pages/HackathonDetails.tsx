@@ -152,26 +152,15 @@ This year's theme focuses on creating impactful solutions that can make a real d
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Events
+          Back
         </Button>
 
         {/* Hero Section with Diagonal Design */}
         <div className="relative mb-12">
-          {/* Background decorative elements */}
-          <div className="absolute -top-4 -right-4 w-32 h-32 bg-blue-100 rounded-full opacity-20"></div>
-          <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200 rounded-2xl opacity-30 rotate-12"></div>
-          
           <div className="bg-gradient-card shadow-card rounded-3xl border border-border overflow-hidden relative">
             {/* Diagonal Top Section with enhanced styling */}
-            <div className="relative h-80 bg-gradient-to-br from-primary via-blue-600 to-blue-700">
+            <div className="relative h-96 bg-gradient-to-br from-primary via-blue-600 to-blue-700">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-blue-600/80 to-blue-700/90"></div>
-              
-              {/* Animated background pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-10 left-10 w-24 h-24 border-2 border-blue-300 rounded-full animate-pulse"></div>
-                <div className="absolute bottom-20 right-20 w-16 h-16 bg-blue-200 rounded-xl rotate-45 animate-bounce"></div>
-                <div className="absolute top-1/2 right-10 w-12 h-12 border border-blue-300 rounded-lg rotate-12"></div>
-              </div>
               
               {/* Diagonal overlay */}
               <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background/20 to-transparent"></div>
@@ -188,17 +177,16 @@ This year's theme focuses on creating impactful solutions that can make a real d
               </div>
 
               {/* Main Content Overlay */}
-              <div className="relative z-10 h-full flex items-end p-8">
+              <div className="relative z-10 h-full flex items-end p-8 pb-12">
                 <div className="text-primary-foreground max-w-3xl">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-400 rounded-3xl blur-md opacity-40"></div>
                       <div className="relative w-20 h-20 bg-background/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border-2 border-blue-300/50">
                         <Building className="h-10 w-10 text-primary-foreground" />
                       </div>
                     </div>
-                    <div>
-                      <p className="text-primary-foreground text-lg font-semibold">{hackathon.organizer}</p>
+                    <div className="flex-1">
+                      <p className="text-primary-foreground text-lg font-semibold mb-1">{hackathon.organizer}</p>
                       <p className="text-blue-200 text-sm flex items-center gap-1">
                         <span>📍</span> {hackathon.location}
                       </p>
@@ -221,37 +209,28 @@ This year's theme focuses on creating impactful solutions that can make a real d
               
               <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
                 <div className="flex items-center gap-12">
-                  <div className="text-center group">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-blue-100 rounded-2xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
-                      <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                        <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                          {hackathon.participantCount.toLocaleString()}
-                        </div>
-                        <div className="text-muted-foreground text-sm font-medium">Participants</div>
+                  <div className="text-center">
+                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
+                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
+                        {hackathon.participantCount.toLocaleString()}
                       </div>
+                      <div className="text-muted-foreground text-sm font-medium">Participants</div>
                     </div>
                   </div>
-                  <div className="text-center group">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-blue-100 rounded-2xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
-                      <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                        <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                          {hackathon.duration}
-                        </div>
-                        <div className="text-muted-foreground text-sm font-medium">Duration</div>
+                  <div className="text-center">
+                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
+                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
+                        {hackathon.duration}
                       </div>
+                      <div className="text-muted-foreground text-sm font-medium">Duration</div>
                     </div>
                   </div>
-                  <div className="text-center group">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-blue-100 rounded-2xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
-                      <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                        <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                          {hackathon.totalPrizePool}
-                        </div>
-                        <div className="text-muted-foreground text-sm font-medium">Prize Pool</div>
+                  <div className="text-center">
+                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
+                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
+                        {hackathon.totalPrizePool}
                       </div>
+                      <div className="text-muted-foreground text-sm font-medium">Prize Pool</div>
                     </div>
                   </div>
                 </div>
@@ -302,13 +281,10 @@ This year's theme focuses on creating impactful solutions that can make a real d
             
             {/* About Section with creative layout */}
             <div className="relative">
-              <div className="absolute -top-2 -left-2 w-8 h-8 bg-blue-200 rounded-full opacity-60"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-100 to-transparent rounded-bl-3xl opacity-50"></div>
                 <div className="relative">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-200 rounded-2xl blur-sm opacity-50"></div>
                       <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
                         <Lightbulb className="h-8 w-8 text-white" />
                       </div>
@@ -319,7 +295,6 @@ This year's theme focuses on creating impactful solutions that can make a real d
                     {hackathon.description}
                   </p>
                   <div className="relative bg-gradient-to-r from-blue-50 to-primary/5 border-l-4 border-l-blue-500 rounded-r-2xl p-6 shadow-inner">
-                    <div className="absolute top-2 right-4 w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
                     <p className="text-foreground leading-relaxed font-medium">
                       {hackathon.longDescription}
                     </p>
@@ -330,11 +305,9 @@ This year's theme focuses on creating impactful solutions that can make a real d
 
             {/* Tracks Section with straight layout */}
             <div className="relative">
-              <div className="absolute -top-3 right-10 w-6 h-6 bg-blue-300 rounded-lg rotate-45 opacity-40"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8">
                 <div className="flex items-center gap-4 mb-8">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-blue-200 rounded-2xl blur-sm opacity-50"></div>
                     <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
                       <Target className="h-8 w-8 text-white" />
                     </div>
@@ -343,9 +316,8 @@ This year's theme focuses on creating impactful solutions that can make a real d
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {hackathon.tracks.map((track, index) => (
-                    <div key={index} className="group relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                      <div className="relative bg-background border-2 border-blue-100 rounded-2xl p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+                    <div key={index} className="relative">
+                      <div className="relative bg-background border-2 border-blue-100 rounded-2xl p-6">
                         <div className="flex items-start gap-3">
                           <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div>
@@ -363,14 +335,9 @@ This year's theme focuses on creating impactful solutions that can make a real d
             {/* Skills Section with enhanced design */}
             <div className="relative">
               <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8 relative overflow-hidden">
-                {/* Background decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-100 to-transparent rounded-bl-3xl opacity-40"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-50 to-transparent rounded-tr-3xl opacity-60"></div>
-                
                 <div className="relative">
                   <div className="flex items-center gap-4 mb-8">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-200 rounded-2xl blur-sm opacity-50"></div>
                       <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
                         <Code className="h-8 w-8 text-white" />
                       </div>
@@ -396,12 +363,12 @@ This year's theme focuses on creating impactful solutions that can make a real d
                       <CarouselContent className="-ml-1 md:-ml-2">
                         {hackathon.preferredSkills.map((skill, index) => (
                           <CarouselItem key={index} className="pl-1 md:pl-2 basis-1/4 md:basis-1/5 lg:basis-1/6">
-                            <div className="group relative h-full p-1">
-                              {/* Simplified smaller card with equal height and proper hover space */}
-                              <div className="relative bg-gradient-to-br from-white via-blue-50 to-blue-100 border border-blue-200 rounded-xl p-3 hover:border-blue-400 transition-all duration-300 cursor-pointer transform group-hover:scale-105 group-hover:shadow-md h-20 flex flex-col items-center justify-center group-hover:z-10">
+                            <div className="h-full p-1">
+                              {/* Simplified smaller card with equal height */}
+                              <div className="relative bg-gradient-to-br from-white via-blue-50 to-blue-100 border border-blue-200 rounded-xl p-3 transition-all duration-300 h-20 flex flex-col items-center justify-center">
                                 {/* Content */}
                                 <div className="text-center">
-                                  <div className="text-2xl mb-1 transform group-hover:scale-110 transition-transform duration-300">
+                                  <div className="text-2xl mb-1">
                                     {skill.emoji}
                                   </div>
                                   <div className="text-gray-900 font-semibold text-xs leading-tight">
@@ -431,11 +398,9 @@ This year's theme focuses on creating impactful solutions that can make a real d
 
             {/* Prizes Section with card stack effect */}
             <div className="relative">
-              <div className="absolute -top-2 right-5 w-5 h-5 bg-blue-300 rounded-full opacity-50"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8">
                 <div className="flex items-center gap-4 mb-8">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-yellow-200 rounded-2xl blur-sm opacity-50"></div>
                     <div className="relative w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center">
                       <Trophy className="h-8 w-8 text-white" />
                     </div>
@@ -444,9 +409,8 @@ This year's theme focuses on creating impactful solutions that can make a real d
                 </div>
                 <div className="space-y-6">
                   {hackathon.prizes.map((prize, index) => (
-                    <div key={index} className="relative group">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-yellow-100 rounded-2xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                      <div className={`relative bg-background border-2 border-blue-200 rounded-2xl p-6 transform transition-all duration-300 hover:scale-105 ${
+                    <div key={index} className="relative">
+                      <div className={`relative bg-background border-2 border-blue-200 rounded-2xl p-6 ${
                         index === 0 ? 'border-yellow-300 shadow-yellow-200 shadow-lg' : 
                         index === 1 ? 'border-blue-300 shadow-blue-200 shadow-md' : 
                         'border-blue-200 shadow-blue-100 shadow-sm'
@@ -485,9 +449,7 @@ This year's theme focuses on creating impactful solutions that can make a real d
           <div className="space-y-6">
             {/* Quick Info Card with floating design */}
             <div className="relative">
-              <div className="absolute -top-3 -right-3 w-6 h-6 bg-blue-300 rounded-full opacity-40"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 sticky top-6 overflow-hidden">
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-100 to-transparent rounded-bl-full opacity-60"></div>
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
@@ -523,9 +485,7 @@ This year's theme focuses on creating impactful solutions that can make a real d
 
             {/* Participation Progress with animated design */}
             <div className="relative">
-              <div className="absolute top-3 left-3 w-3 h-3 bg-blue-400 rounded-full"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 overflow-hidden">
-                <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-blue-100 to-transparent rounded-tl-full opacity-50"></div>
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
@@ -560,7 +520,6 @@ This year's theme focuses on creating impactful solutions that can make a real d
 
             {/* Perks with compact layout */}
             <div className="relative">
-              <div className="absolute -top-2 right-8 w-4 h-4 bg-blue-300 rounded-full opacity-30"></div>
               <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
@@ -572,7 +531,7 @@ This year's theme focuses on creating impactful solutions that can make a real d
                   {hackathon.perks.map((perk, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center gap-3 p-2 bg-gradient-to-r from-blue-50 to-background rounded-lg border border-blue-100 hover:shadow-sm transition-all"
+                      className="flex items-center gap-3 p-2 bg-gradient-to-r from-blue-50 to-background rounded-lg border border-blue-100"
                     >
                       <div className="w-5 h-5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <CheckCircle className="h-3 w-3 text-white" />
@@ -586,9 +545,7 @@ This year's theme focuses on creating impactful solutions that can make a real d
 
             {/* Organizer with profile card design */}
             <div className="relative">
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100 to-transparent rounded-3xl opacity-20 transform rotate-1"></div>
-              <div className="relative bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-blue-200 to-transparent rounded-bl-3xl opacity-40"></div>
+              <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 overflow-hidden">
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
@@ -598,7 +555,6 @@ This year's theme focuses on creating impactful solutions that can make a real d
                   </div>
                   <div className="text-center">
                     <div className="relative inline-block mb-4">
-                      <div className="absolute inset-0 bg-blue-200 rounded-3xl blur-md opacity-50"></div>
                       <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mx-auto flex items-center justify-center border-4 border-blue-300 shadow-lg">
                         <Building className="h-12 w-12 text-white" />
                       </div>
