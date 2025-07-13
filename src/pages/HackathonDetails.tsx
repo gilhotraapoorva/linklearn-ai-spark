@@ -1,46 +1,48 @@
-import React, { useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Calendar,
   Clock,
   Users,
   Trophy,
   MapPin,
+  ExternalLink,
   Star,
+  Share2,
   Bookmark,
   Code,
   Target,
   Award,
-  Lightbulb,
-  ArrowLeft,
-  Heart,
-  Building,
+  DollarSign,
+  FileText,
+  CheckCircle,
+  AlertCircle,
   Globe,
   Mail,
-  CheckCircle
+  Phone,
+  Building,
+  Lightbulb,
+  Zap,
+  ArrowLeft,
+  Heart,
+  MessageSquare,
+  Download
 } from "lucide-react";
 
 const HackathonDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [isRegistered, setIsRegistered] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(1247);
   const [isLiked, setIsLiked] = useState(false);
-  const [carouselApi, setCarouselApi] = useState(null);
-
-  // Check if this hackathon is active (for demo, we'll make hack-001 active)
-  const isActive = id === "hack-001";
 
   const hackathon = {
     id: "buildit-2024",
@@ -52,7 +54,9 @@ const HackathonDetails = () => {
     description: "Join the ultimate innovation challenge where creativity meets technology! BuildIT 2024 is a premier hackathon designed to bring together brilliant minds to solve real-world problems through cutting-edge technology solutions.",
     longDescription: `BuildIT 2024 is more than just a hackathon - it's a platform where innovation thrives and future leaders emerge. Over 48 intensive hours, participants will collaborate, innovate, and build solutions that address pressing challenges in various domains including sustainability, healthcare, education, and fintech.
 
-This year's theme focuses on creating impactful solutions that can make a real difference in society. Whether you're a seasoned developer, a creative designer, or a passionate problem-solver, BuildIT provides the perfect environment to showcase your skills and learn from industry experts.`,
+This year's theme focuses on creating impactful solutions that can make a real difference in society. Whether you're a seasoned developer, a creative designer, or a passionate problem-solver, BuildIT provides the perfect environment to showcase your skills and learn from industry experts.
+
+Participants will have access to mentorship from industry professionals, workshops on cutting-edge technologies, and networking opportunities with potential employers and investors. The event promises to be an enriching experience that goes beyond just coding.`,
     
     // Basic Info
     mode: "Hybrid",
@@ -66,8 +70,8 @@ This year's theme focuses on creating impactful solutions that can make a real d
     maxParticipants: 5000,
     
     // Status and Registration
-    status: isActive ? "Active" : "Live",
-    registrationStatus: isActive ? "Active" : "Open",
+    status: "Live",
+    registrationStatus: "Open",
     difficulty: "All Levels",
     
     // Tracks and Themes
@@ -82,41 +86,113 @@ This year's theme focuses on creating impactful solutions that can make a real d
     
     // Skills and Technologies
     preferredSkills: [
-      { name: "React", emoji: "⚛️" },
-      { name: "Node.js", emoji: "🟢" },
-      { name: "Python", emoji: "🐍" },
-      { name: "Machine Learning", emoji: "🤖" },
-      { name: "UI/UX Design", emoji: "🎨" },
-      { name: "Mobile Development", emoji: "📱" },
-      { name: "Blockchain", emoji: "⛓️" },
-      { name: "IoT", emoji: "🌐" },
-      { name: "Data Science", emoji: "📊" },
-      { name: "Cloud Computing", emoji: "☁️" }
+      "React", "Node.js", "Python", "Machine Learning", "UI/UX Design", 
+      "Mobile Development", "Blockchain", "IoT", "Data Science", "Cloud Computing"
     ],
     
     // Prizes and Rewards
-    totalPrizePool: "₹50,000",
+    totalPrizePool: "₹5,00,000",
     prizes: [
-      { position: "1st Place", amount: "₹25,000", perks: ["15,000 XP Points", "Internship Opportunities", "Mentorship Program", "Trophy + Certificate"] },
-      { position: "2nd Place", amount: "₹15,000", perks: ["10,000 XP Points", "Mentorship Program", "Trophy + Certificate"] },
-      { position: "3rd Place", amount: "₹10,000", perks: ["5,000 XP Points", "Trophy + Certificate"] },
+      { position: "1st Place", amount: "₹2,00,000", perks: ["Internship Opportunities", "Mentorship Program", "Trophy + Certificate"] },
+      { position: "2nd Place", amount: "₹1,50,000", perks: ["Mentorship Program", "Trophy + Certificate"] },
+      { position: "3rd Place", amount: "₹1,00,000", perks: ["Trophy + Certificate"] },
+      { position: "Best Innovation", amount: "₹30,000", perks: ["Special Recognition Award"] },
+      { position: "Best Design", amount: "₹20,000", perks: ["Design Tools Subscription"] }
     ],
+    
+    // Schedule
+    schedule: [
+      {
+        day: "Day 1 - March 15",
+        events: [
+          { time: "09:00 AM", event: "Registration & Check-in", type: "registration" },
+          { time: "10:00 AM", event: "Opening Ceremony", type: "ceremony" },
+          { time: "11:00 AM", event: "Problem Statement Release", type: "important" },
+          { time: "12:00 PM", event: "Team Formation & Networking", type: "networking" },
+          { time: "01:00 PM", event: "Lunch Break", type: "break" },
+          { time: "02:00 PM", event: "Hacking Begins!", type: "important" },
+          { time: "04:00 PM", event: "Tech Workshop: AI/ML Basics", type: "workshop" },
+          { time: "08:00 PM", event: "Dinner Break", type: "break" }
+        ]
+      },
+      {
+        day: "Day 2 - March 16",
+        events: [
+          { time: "08:00 AM", event: "Breakfast", type: "break" },
+          { time: "10:00 AM", event: "Mentor Sessions", type: "mentoring" },
+          { time: "01:00 PM", event: "Lunch Break", type: "break" },
+          { time: "03:00 PM", event: "Progress Check & Feedback", type: "evaluation" },
+          { time: "06:00 PM", event: "Workshop: Pitch Preparation", type: "workshop" },
+          { time: "08:00 PM", event: "Dinner & Entertainment", type: "break" }
+        ]
+      },
+      {
+        day: "Day 3 - March 17",
+        events: [
+          { time: "08:00 AM", event: "Breakfast", type: "break" },
+          { time: "10:00 AM", event: "Final Sprint", type: "important" },
+          { time: "12:00 PM", event: "Submission Deadline", type: "deadline" },
+          { time: "01:00 PM", event: "Lunch Break", type: "break" },
+          { time: "02:00 PM", event: "Project Presentations", type: "presentation" },
+          { time: "05:00 PM", event: "Judging & Deliberation", type: "evaluation" },
+          { time: "06:30 PM", event: "Closing Ceremony & Awards", type: "ceremony" }
+        ]
+      }
+    ],
+    
+    // Judges and Mentors
+    judges: [
+      { name: "Dr. Priya Sharma", role: "CTO, TechCorp", company: "TechCorp", image: "/public/placeholder.svg" },
+      { name: "Rahul Gupta", role: "VP Engineering", company: "Innovate Labs", image: "/public/placeholder.svg" },
+      { name: "Sarah Chen", role: "Lead Designer", company: "Design Studio", image: "/public/placeholder.svg" },
+      { name: "Amit Patel", role: "Startup Founder", company: "NextGen Solutions", image: "/public/placeholder.svg" }
+    ],
+    
+    // Requirements and Eligibility
+    eligibility: [
+      "Open to all students and professionals",
+      "Age limit: 18-35 years",
+      "Valid ID proof required",
+      "Teams of 2-4 members preferred",
+      "Individual participation allowed"
+    ],
+    
+    requirements: [
+      "Laptop/Computer with development environment",
+      "Stable internet connection",
+      "Github account for code submission",
+      "Presentation materials (PPT/Demo)",
+      "Original ideas and implementations only"
+    ],
+    
+    // Contact and Support
+    contact: {
+      email: "support@collegecrave.com",
+      phone: "+91 98765 43210",
+      website: "https://collegecrave.com",
+      socialMedia: {
+        twitter: "@collegecrave",
+        linkedin: "college-crave",
+        instagram: "@collegecrave_official"
+      }
+    },
     
     // Perks and Benefits
     perks: [
-      "Free T-shirts and Swag Kit",
-      "Certificate of Participation + 100 XP Points",
-      "Networking with Industry Experts",
-      "Workshop Access"
+      "Industry mentorship throughout the event",
+      "Free meals and accommodation",
+      "Networking with 100+ professionals",
+      "Workshops by industry experts",
+      "Job and internship opportunities",
+      "Swag kit for all participants",
+      "Certificate of participation",
+      "Access to premium development tools"
     ]
   };
 
   const handleRegister = () => {
     setIsRegistered(true);
-  };
-
-  const handleJoin = () => {
-    navigate(`/hackathon/${id}/mcq`);
+    // Here you would typically make an API call to register the user
   };
 
   const handleBookmark = () => {
@@ -128,15 +204,27 @@ This year's theme focuses on creating impactful solutions that can make a real d
     setLikes(isLiked ? likes - 1 : likes + 1);
   };
 
-  // Handle scroll wheel for carousel
-  const handleCarouselWheel = (event) => {
-    event.preventDefault();
-    if (carouselApi) {
-      if (event.deltaY > 0) {
-        carouselApi.scrollNext();
-      } else {
-        carouselApi.scrollPrev();
-      }
+  const getEventTypeColor = (type: string) => {
+    switch (type) {
+      case 'important': return 'text-primary';
+      case 'deadline': return 'text-destructive';
+      case 'ceremony': return 'text-accent';
+      case 'workshop': return 'text-success';
+      case 'break': return 'text-muted-foreground';
+      case 'evaluation': return 'text-warning';
+      default: return 'text-foreground';
+    }
+  };
+
+  const getEventTypeIcon = (type: string) => {
+    switch (type) {
+      case 'important': return <Zap className="h-4 w-4" />;
+      case 'deadline': return <AlertCircle className="h-4 w-4" />;
+      case 'ceremony': return <Award className="h-4 w-4" />;
+      case 'workshop': return <Lightbulb className="h-4 w-4" />;
+      case 'presentation': return <FileText className="h-4 w-4" />;
+      case 'evaluation': return <CheckCircle className="h-4 w-4" />;
+      default: return <Clock className="h-4 w-4" />;
     }
   };
 
@@ -144,436 +232,469 @@ This year's theme focuses on creating impactful solutions that can make a real d
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          className="mb-6 text-muted-foreground hover:text-foreground"
+          className="mb-6"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
 
-        {/* Hero Section with Diagonal Design */}
-        <div className="relative mb-12">
-          <div className="bg-gradient-card shadow-card rounded-3xl border border-border overflow-hidden relative">
-            {/* Diagonal Top Section with enhanced styling */}
-            <div className="relative h-96 bg-gradient-to-br from-primary via-blue-600 to-blue-700">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-blue-600/80 to-blue-700/90"></div>
-              
-              {/* Diagonal overlay */}
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-r from-blue-600/30 to-transparent transform skew-y-1"></div>
-              
-              {/* Floating Status Badge with glow */}
-              <div className="absolute top-6 right-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-lg opacity-30"></div>
-                  <Badge className="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 text-lg font-bold border border-blue-300 shadow-lg">
-                    {hackathon.status} ⚡
-                  </Badge>
+        {/* Hero Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Header Card */}
+            <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300 mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4 mb-4">
+                  <img 
+                    src={hackathon.logo} 
+                    alt="Organizer Logo" 
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary" className="bg-success text-success-foreground">
+                        {hackathon.status}
+                      </Badge>
+                      <Badge variant="outline">{hackathon.difficulty}</Badge>
+                      <Badge variant="outline">{hackathon.mode}</Badge>
+                    </div>
+                    <h1 className="text-3xl font-bold text-foreground mb-2">
+                      {hackathon.title}
+                    </h1>
+                    <p className="text-lg text-muted-foreground mb-3">
+                      {hackathon.subtitle}
+                    </p>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Building className="h-4 w-4" />
+                        {hackathon.organizer}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        {hackathon.location}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        March 15-17, 2024
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Main Content Overlay */}
-              <div className="relative z-10 h-full flex items-end p-8 pb-12">
-                <div className="text-primary-foreground max-w-3xl">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="relative">
-                      <div className="relative w-20 h-20 bg-background/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border-2 border-blue-300/50">
-                        <Building className="h-10 w-10 text-primary-foreground" />
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-primary-foreground text-lg font-semibold mb-1">{hackathon.organizer}</p>
-                      <p className="text-blue-200 text-sm flex items-center gap-1">
-                        <span>📍</span> {hackathon.location}
-                      </p>
-                    </div>
-                  </div>
-                  <h1 className="text-6xl font-black mb-4 text-primary-foreground leading-tight">
-                    {hackathon.title}
-                  </h1>
-                  <p className="text-xl text-blue-100 font-medium leading-relaxed">
-                    {hackathon.subtitle}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Section with enhanced design */}
-            <div className="relative p-8 bg-gradient-to-r from-gradient-card to-blue-50/30">
-              {/* Decorative line */}
-              <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-blue-200 via-primary to-blue-300"></div>
-              
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div className="flex items-center gap-12">
-                  <div className="text-center">
-                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                        {hackathon.participantCount.toLocaleString()}
-                      </div>
-                      <div className="text-muted-foreground text-sm font-medium">Participants</div>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                        {hackathon.duration}
-                      </div>
-                      <div className="text-muted-foreground text-sm font-medium">Duration</div>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="relative bg-background border border-blue-200 rounded-2xl p-4 shadow-sm">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                        {hackathon.totalPrizePool}
-                      </div>
-                      <div className="text-muted-foreground text-sm font-medium">Prize Pool</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-3xl blur-lg opacity-30"></div>
-                    <Button
-                      onClick={isActive ? handleJoin : handleRegister}
-                      className="relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-5 text-lg font-bold rounded-3xl border border-green-300 shadow-xl transform hover:scale-105 transition-all"
-                      disabled={!isActive && isRegistered}
-                    >
-                      {isActive ? (
-                        <>🚀 Join Challenge</>
-                      ) : isRegistered ? (
-                        <>✅ Registered</>
-                      ) : (
-                        <>📝 Register Now</>
-                      )}
-                    </Button>
-                  </div>
-                  
-                  <Button
-                    variant="outline"
+                {/* Action Buttons */}
+                <div className="flex items-center gap-3 mb-4">
+                  <Button 
+                    className="flex-1 bg-primary hover:bg-primary/90"
+                    onClick={handleRegister}
+                    disabled={isRegistered}
+                  >
+                    {isRegistered ? (
+                      <>
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Registered
+                      </>
+                    ) : (
+                      "Register Now"
+                    )}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
                     onClick={handleBookmark}
-                    className="p-4 rounded-2xl border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all"
+                    className={isBookmarked ? "text-primary border-primary" : ""}
                   >
-                    <Bookmark className={`h-5 w-5 ${isBookmarked ? "fill-current text-blue-600" : "text-blue-600"}`} />
+                    <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`} />
                   </Button>
-                  
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
+                    size="icon"
                     onClick={handleLike}
-                    className="p-4 rounded-2xl border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all"
+                    className={isLiked ? "text-destructive border-destructive" : ""}
                   >
-                    <Heart className={`h-5 w-5 ${isLiked ? "fill-current text-red-500" : "text-blue-600"}`} />
-                    <span className="ml-2 text-blue-600 font-medium">{likes}</span>
+                    <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
+                  </Button>
+                  <Button variant="outline" size="icon">
+                    <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content Area */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            {/* About Section with creative layout */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8 relative overflow-hidden">
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="relative">
-                      <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                        <Lightbulb className="h-8 w-8 text-white" />
-                      </div>
-                    </div>
-                    <h2 className="text-3xl font-bold text-foreground">About the Challenge</h2>
-                  </div>
-                  <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                    {hackathon.description}
-                  </p>
-                  <div className="relative bg-gradient-to-r from-blue-50 to-primary/5 border-l-4 border-l-blue-500 rounded-r-2xl p-6 shadow-inner">
-                    <p className="text-foreground leading-relaxed font-medium">
-                      {hackathon.longDescription}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Tracks Section with straight layout */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="relative">
-                    <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                      <Target className="h-8 w-8 text-white" />
-                    </div>
-                  </div>
-                  <h2 className="text-3xl font-bold text-foreground">Challenge Tracks</h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {hackathon.tracks.map((track, index) => (
-                    <div key={index} className="relative">
-                      <div className="relative bg-background border-2 border-blue-100 rounded-2xl p-6">
-                        <div className="flex items-start gap-3">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <div>
-                            <h3 className="text-xl font-bold text-foreground mb-3 text-blue-800">{track.name}</h3>
-                            <p className="text-muted-foreground">{track.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Skills Section with enhanced design */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8 relative overflow-hidden">
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="relative">
-                      <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                        <Code className="h-8 w-8 text-white" />
-                      </div>
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-bold text-foreground">Preferred Technologies</h2>
-                      <p className="text-muted-foreground">Technologies that will give you an edge</p>
-                    </div>
-                  </div>
-                  
-                  {/* Skills Carousel */}
-                  <div className="px-4 py-2" onWheel={handleCarouselWheel}>
-                    <Carousel
-                      opts={{
-                        align: "start",
-                        loop: false,
-                        slidesToScroll: 1,
-                        containScroll: "trimSnaps",
-                      }}
-                      className="w-full"
-                      setApi={setCarouselApi}
-                    >
-                      <CarouselContent className="-ml-1 md:-ml-2">
-                        {hackathon.preferredSkills.map((skill, index) => (
-                          <CarouselItem key={index} className="pl-1 md:pl-2 basis-1/4 md:basis-1/5 lg:basis-1/6">
-                            <div className="h-full p-1">
-                              {/* Simplified smaller card with equal height */}
-                              <div className="relative bg-gradient-to-br from-white via-blue-50 to-blue-100 border border-blue-200 rounded-xl p-3 transition-all duration-300 h-20 flex flex-col items-center justify-center">
-                                {/* Content */}
-                                <div className="text-center">
-                                  <div className="text-2xl mb-1">
-                                    {skill.emoji}
-                                  </div>
-                                  <div className="text-gray-900 font-semibold text-xs leading-tight">
-                                    {skill.name}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious className="left-0 bg-white/80 hover:bg-white shadow-md" />
-                      <CarouselNext className="right-0 bg-white/80 hover:bg-white shadow-md" />
-                    </Carousel>
-                  </div>
-                  
-                  {/* Additional info */}
-                  <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl">
-                    <div className="flex items-center gap-2 text-blue-700">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-medium">Pro tip: Projects using these technologies often score higher in judging!</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Prizes Section with card stack effect */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-border p-8">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="relative">
-                    <div className="relative w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center">
-                      <Trophy className="h-8 w-8 text-white" />
-                    </div>
-                  </div>
-                  <h2 className="text-3xl font-bold text-foreground">Prizes & Rewards</h2>
-                </div>
-                <div className="space-y-6">
-                  {hackathon.prizes.map((prize, index) => (
-                    <div key={index} className="relative">
-                      <div className={`relative bg-background border-2 border-blue-200 rounded-2xl p-6 ${
-                        index === 0 ? 'border-yellow-300 shadow-yellow-200 shadow-lg' : 
-                        index === 1 ? 'border-blue-300 shadow-blue-200 shadow-md' : 
-                        'border-blue-200 shadow-blue-100 shadow-sm'
-                      }`}>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                              index === 0 ? 'bg-yellow-500' : 
-                              index === 1 ? 'bg-blue-500' : 
-                              'bg-blue-400'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <h3 className="text-2xl font-bold text-foreground">{prize.position}</h3>
-                          </div>
-                          <div className="text-3xl font-black bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
-                            {prize.amount}
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                          {prize.perks.map((perk, perkIndex) => (
-                            <div key={perkIndex} className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
-                              {perk}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar with enhanced design */}
-          <div className="space-y-6">
-            {/* Quick Info Card with floating design */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 sticky top-6 overflow-hidden">
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                      <Clock className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-foreground">Event Details</h3>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-background rounded-xl border-l-4 border-l-blue-400 shadow-sm">
-                      <span className="text-muted-foreground font-medium">Mode</span>
-                      <span className="text-blue-700 font-semibold">{hackathon.mode}</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-background rounded-xl border-l-4 border-l-blue-400 shadow-sm">
-                      <span className="text-muted-foreground font-medium">Duration</span>
-                      <span className="text-blue-700 font-semibold">{hackathon.duration}</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-background rounded-xl border-l-4 border-l-blue-400 shadow-sm">
-                      <span className="text-muted-foreground font-medium">Team Size</span>
-                      <span className="text-blue-700 font-semibold">{hackathon.teamSize}</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-background rounded-xl border-l-4 border-l-blue-400 shadow-sm">
-                      <span className="text-muted-foreground font-medium">Difficulty</span>
-                      <span className="text-blue-700 font-semibold">{hackathon.difficulty}</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-background rounded-xl border-l-4 border-l-green-400 shadow-sm">
-                      <span className="text-muted-foreground font-medium">Registration</span>
-                      <span className="text-green-700 font-semibold">{hackathon.registrationStatus}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Participation Progress with animated design */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 overflow-hidden">
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                      <Users className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-foreground">Participation</h3>
-                  </div>
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm text-muted-foreground mb-3">
-                      <span className="font-medium">{hackathon.participantCount.toLocaleString()} registered</span>
-                      <span className="font-medium">{hackathon.maxParticipants.toLocaleString()} max</span>
-                    </div>
-                    <div className="relative w-full bg-blue-100 rounded-full h-4 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full transition-all duration-1000 relative overflow-hidden"
-                        style={{ width: `${(hackathon.participantCount / hackathon.maxParticipants) * 100}%` }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
-                        <div className="absolute top-0 right-0 w-2 h-4 bg-blue-300 animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
-                    <p className="text-blue-700 font-bold text-lg">
-                      {Math.round((hackathon.participantCount / hackathon.maxParticipants) * 100)}% Full
-                    </p>
-                    <p className="text-blue-600 text-sm">Spots filling fast!</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Perks with compact layout */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-                    <Star className="h-4 w-4 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground">Event Perks</h3>
-                </div>
-                <div className="space-y-2">
-                  {hackathon.perks.map((perk, index) => (
-                    <div 
-                      key={index} 
-                      className="flex items-center gap-3 p-2 bg-gradient-to-r from-blue-50 to-background rounded-lg border border-blue-100"
-                    >
-                      <div className="w-5 h-5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="h-3 w-3 text-white" />
-                      </div>
-                      <span className="text-muted-foreground text-sm">{perk}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Organizer with profile card design */}
-            <div className="relative">
-              <div className="bg-gradient-card shadow-card rounded-3xl border border-blue-200 p-6 overflow-hidden">
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                      <Building className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-foreground">Organizer</h3>
+                {/* Stats Bar */}
+                <div className="grid grid-cols-4 gap-4 p-4 bg-background rounded-lg">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">{hackathon.participantCount}</div>
+                    <div className="text-sm text-muted-foreground">Registered</div>
                   </div>
                   <div className="text-center">
-                    <div className="relative inline-block mb-4">
-                      <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mx-auto flex items-center justify-center border-4 border-blue-300 shadow-lg">
-                        <Building className="h-12 w-12 text-white" />
-                      </div>
-                      <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
-                    </div>
-                    <h4 className="text-foreground font-bold text-xl mb-2 text-blue-800">{hackathon.organizer}</h4>
-                    <p className="text-blue-600 text-sm mb-6 font-medium">Event Organizer</p>
-                    <div className="flex justify-center gap-3">
-                      <Button variant="outline" size="sm" className="rounded-xl border-blue-200 hover:bg-blue-50 hover:border-blue-300">
-                        <Mail className="h-4 w-4 text-blue-600" />
-                      </Button>
-                      <Button variant="outline" size="sm" className="rounded-xl border-blue-200 hover:bg-blue-50 hover:border-blue-300">
-                        <Globe className="h-4 w-4 text-blue-600" />
-                      </Button>
-                    </div>
+                    <div className="text-2xl font-bold text-accent">{hackathon.totalPrizePool}</div>
+                    <div className="text-sm text-muted-foreground">Prize Pool</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-success">{hackathon.duration}</div>
+                    <div className="text-sm text-muted-foreground">Duration</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">{likes}</div>
+                    <div className="text-sm text-muted-foreground">Likes</div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+
+            {/* Tabs Content */}
+            <Tabs defaultValue="overview" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-6">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="tracks">Tracks</TabsTrigger>
+                <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                <TabsTrigger value="prizes">Prizes</TabsTrigger>
+                <TabsTrigger value="judges">Judges</TabsTrigger>
+                <TabsTrigger value="rules">Rules</TabsTrigger>
+              </TabsList>
+
+              {/* Overview Tab */}
+              <TabsContent value="overview" className="space-y-6">
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-primary" />
+                      About This Hackathon
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-muted-foreground leading-relaxed">
+                      {hackathon.description}
+                    </p>
+                    <Separator />
+                    <div className="prose prose-sm max-w-none">
+                      {hackathon.longDescription.split('\n\n').map((paragraph, index) => (
+                        <p key={index} className="text-muted-foreground leading-relaxed mb-4">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Code className="h-5 w-5 text-primary" />
+                      Required Skills & Technologies
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {hackathon.preferredSkills.map((skill, index) => (
+                        <Badge key={index} variant="secondary">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Star className="h-5 w-5 text-primary" />
+                      Perks & Benefits
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {hackathon.perks.map((perk, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-success flex-shrink-0" />
+                          <span className="text-sm">{perk}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tracks Tab */}
+              <TabsContent value="tracks" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {hackathon.tracks.map((track, index) => (
+                    <Card key={index} className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Target className="h-5 w-5 text-primary" />
+                          {track.name}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground">{track.description}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Schedule Tab */}
+              <TabsContent value="schedule" className="space-y-6">
+                {hackathon.schedule.map((day, dayIndex) => (
+                  <Card key={dayIndex} className="bg-gradient-card shadow-card">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-primary" />
+                        {day.day}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {day.events.map((event, eventIndex) => (
+                          <div key={eventIndex} className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                            <div className={`flex items-center gap-2 ${getEventTypeColor(event.type)}`}>
+                              {getEventTypeIcon(event.type)}
+                              <span className="font-medium text-sm min-w-[80px]">
+                                {event.time}
+                              </span>
+                            </div>
+                            <Separator orientation="vertical" className="h-6" />
+                            <span className="text-sm flex-1">{event.event}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </TabsContent>
+
+              {/* Prizes Tab */}
+              <TabsContent value="prizes" className="space-y-6">
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-primary" />
+                      Prize Pool: {hackathon.totalPrizePool}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {hackathon.prizes.map((prize, index) => (
+                        <div key={index} className="p-4 bg-background rounded-lg border-l-4 border-primary">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-lg">{prize.position}</h3>
+                            <Badge variant="outline" className="text-lg font-bold">
+                              {prize.amount}
+                            </Badge>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {prize.perks.map((perk, perkIndex) => (
+                              <Badge key={perkIndex} variant="secondary" className="text-xs">
+                                {perk}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Judges Tab */}
+              <TabsContent value="judges" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {hackathon.judges.map((judge, index) => (
+                    <Card key={index} className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="h-16 w-16">
+                            <AvatarImage src={judge.image} alt={judge.name} />
+                            <AvatarFallback>{judge.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-semibold text-lg">{judge.name}</h3>
+                            <p className="text-muted-foreground">{judge.role}</p>
+                            <p className="text-sm text-primary">{judge.company}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Rules Tab */}
+              <TabsContent value="rules" className="space-y-6">
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-primary" />
+                      Eligibility Criteria
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {hackathon.eligibility.map((criteria, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-success flex-shrink-0" />
+                          <span className="text-sm">{criteria}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-card shadow-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-primary" />
+                      Requirements
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {hackathon.requirements.map((requirement, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4 text-warning flex-shrink-0" />
+                          <span className="text-sm">{requirement}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Quick Info */}
+            <Card className="bg-gradient-card shadow-card sticky top-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  Quick Info
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Registration</span>
+                    <Badge variant="secondary" className="bg-success text-success-foreground">
+                      {hackathon.registrationStatus}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Team Size</span>
+                    <span className="text-sm font-medium">{hackathon.teamSize}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Duration</span>
+                    <span className="text-sm font-medium">{hackathon.duration}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Mode</span>
+                    <span className="text-sm font-medium">{hackathon.mode}</span>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">Registration Progress</span>
+                    <span className="text-sm font-medium">
+                      {hackathon.participantCount}/{hackathon.maxParticipants}
+                    </span>
+                  </div>
+                  <Progress 
+                    value={(hackathon.participantCount / hackathon.maxParticipants) * 100} 
+                    className="h-2"
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Starts:</span>
+                    <span className="font-medium">March 15, 2024</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Deadline:</span>
+                    <span className="font-medium text-destructive">March 10, 2024</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Contact Information */}
+            <Card className="bg-gradient-card shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                  Contact & Support
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <a href={`mailto:${hackathon.contact.email}`} className="text-primary hover:underline">
+                    {hackathon.contact.email}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">{hackathon.contact.phone}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Globe className="h-4 w-4 text-muted-foreground" />
+                  <a href={hackathon.contact.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                    Visit Website
+                    <ExternalLink className="h-3 w-3 ml-1 inline" />
+                  </a>
+                </div>
+
+                <Separator />
+
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Brochure
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Organizer Info */}
+            <Card className="bg-gradient-card shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building className="h-5 w-5 text-primary" />
+                  Organizer
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3 mb-3">
+                  <img 
+                    src={hackathon.logo} 
+                    alt="Organizer Logo" 
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
+                  <div>
+                    <h3 className="font-semibold">{hackathon.organizer}</h3>
+                    <p className="text-sm text-muted-foreground">Event Organizer</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="w-full">
+                  View Profile
+                  <ExternalLink className="h-3 w-3 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
