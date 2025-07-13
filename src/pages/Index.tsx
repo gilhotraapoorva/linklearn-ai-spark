@@ -65,13 +65,19 @@ const Index = () => {
           {/* Left Column - Main Content */}
           <div className="xl:col-span-2 space-y-6">
             {/* Weekly Wisdom Quiz (now first) */}
-            <WeeklyWisdomQuiz />
+            <div data-section="weekly-quiz">
+              <WeeklyWisdomQuiz />
+            </div>
 
             {/* Daily Quest */}
-            <DailyQuest />
+            <div data-section="daily-quest">
+              <DailyQuest />
+            </div>
             
             {/* Weekly Hackathon */}
-            <WeeklyHackathon />
+            <div data-section="weekly-hackathon">
+              <WeeklyHackathon />
+            </div>
             
             {/* Skill Graph */}
             <SkillGraph />
