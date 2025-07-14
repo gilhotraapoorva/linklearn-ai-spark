@@ -4,12 +4,18 @@ const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Allow all origins for local dev
+app.use(cors());
+// Allow all origins for local dev
 
 app.post('/api/generate-daily-quest', async (req, res) => {
   try {
+    const { date } = req.body;
+    
+    // Use the date as part of the prompt to ensure consistency
     const prompt = `
-Generate a daily coding quest for a React developer.
+Generate a daily coding quest for a React developer for the date ${date}.
+Use this date as a seed to ensure consistent generation.
+
 Respond in JSON with the following fields:
 - title: a catchy title for the quest
 - description: a short description of the task
@@ -30,7 +36,7 @@ Example:
   "category": "React Optimization"
 }
 
-Now generate a new, unique quest.
+Generate a quest that is deterministic based on the date ${date}. The same date should always generate the same quest.
 `;
 
     const llamaResponse = await fetch('http://localhost:11434/api/generate', {
@@ -39,7 +45,11 @@ Now generate a new, unique quest.
       body: JSON.stringify({
         model: 'llama3',
         prompt,
-        stream: false
+        stream: false,
+        options: {
+          seed: parseInt(date.replace(/-/g, '')), // Convert date to number for seed
+          temperature: 0 // Use temperature 0 for deterministic output
+        }
       })
     });
 

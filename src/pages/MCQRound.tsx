@@ -128,121 +128,6 @@ const mcqQuestions: Question[] = [
     options: ["git branch new-branch", "git checkout -b new-branch", "git switch new-branch", "git create new-branch"],
     correctAnswer: 1,
     category: "Git"
-  },
-  {
-    id: 11,
-    question: "What is the purpose of middleware in Express.js?",
-    options: [
-      "To handle database connections",
-      "To process requests between client and server",
-      "To manage user authentication only",
-      "To optimize performance"
-    ],
-    correctAnswer: 1,
-    category: "Express.js"
-  },
-  {
-    id: 12,
-    question: "Which principle suggests that software entities should be open for extension but closed for modification?",
-    options: [
-      "Single Responsibility Principle",
-      "Open/Closed Principle",
-      "Liskov Substitution Principle",
-      "Interface Segregation Principle"
-    ],
-    correctAnswer: 1,
-    category: "Design Patterns"
-  },
-  {
-    id: 13,
-    question: "What is the primary purpose of Docker containers?",
-    options: [
-      "Database management",
-      "Application packaging and deployment",
-      "Code version control",
-      "Performance monitoring"
-    ],
-    correctAnswer: 1,
-    category: "DevOps"
-  },
-  {
-    id: 14,
-    question: "In JavaScript, what does the 'this' keyword refer to?",
-    options: [
-      "The current function",
-      "The global object",
-      "The object that owns the current code",
-      "The parent function"
-    ],
-    correctAnswer: 2,
-    category: "JavaScript"
-  },
-  {
-    id: 15,
-    question: "What is the main advantage of using microservices architecture?",
-    options: [
-      "Easier to develop initially",
-      "Better scalability and independent deployment",
-      "Requires less infrastructure",
-      "Simpler testing process"
-    ],
-    correctAnswer: 1,
-    category: "Architecture"
-  },
-  {
-    id: 16,
-    question: "Which testing approach tests individual components in isolation?",
-    options: ["Integration testing", "End-to-end testing", "Unit testing", "System testing"],
-    correctAnswer: 2,
-    category: "Testing"
-  },
-  {
-    id: 17,
-    question: "What is the purpose of a CDN (Content Delivery Network)?",
-    options: [
-      "Database replication",
-      "Faster content delivery through geographic distribution",
-      "Code compilation",
-      "User authentication"
-    ],
-    correctAnswer: 1,
-    category: "Web Performance"
-  },
-  {
-    id: 18,
-    question: "In Agile methodology, what is a 'sprint'?",
-    options: [
-      "A type of testing",
-      "A time-boxed iteration of development",
-      "A deployment strategy",
-      "A code review process"
-    ],
-    correctAnswer: 1,
-    category: "Project Management"
-  },
-  {
-    id: 19,
-    question: "What is the primary function of an API Gateway?",
-    options: [
-      "Data storage",
-      "User interface rendering",
-      "Request routing and API management",
-      "Code compilation"
-    ],
-    correctAnswer: 2,
-    category: "System Design"
-  },
-  {
-    id: 20,
-    question: "Which security practice helps prevent SQL injection attacks?",
-    options: [
-      "Using HTTPS",
-      "Parameterized queries/prepared statements",
-      "Input validation only",
-      "Session management"
-    ],
-    correctAnswer: 1,
-    category: "Security"
   }
 ];
 
@@ -251,7 +136,7 @@ const MCQRound = () => {
   const { id } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{ [key: number]: number }>({});
-  const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds (reduced from 30)
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -367,7 +252,7 @@ const MCQRound = () => {
   };
   
   const score = getScore();
-  const passed = score >= 2; // Need 2/20 to pass (for testing)
+  const passed = score >= 2; // Need 2/20 to pass (for testing) - keeping your preferred threshold
 
   const progress = ((currentQuestion + 1) / mcqQuestions.length) * 100;
   const answeredCount = Object.keys(answers).length;
@@ -419,7 +304,7 @@ const MCQRound = () => {
                 <p className="text-gray-600">
                   {passed ? 
                     "You've successfully passed the first round! You can now proceed to the submission phase." :
-                    "You need at least 70% (14/20) to proceed to the next round. Unfortunately, you cannot retake this assessment."
+                    "You need at least 70% (7/10) to proceed to the next round. Unfortunately, you cannot retake this assessment."
                   }
                 </p>
               </div>
