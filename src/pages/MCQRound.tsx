@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -256,6 +256,24 @@ const MCQRound = () => {
   const [showResults, setShowResults] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+  // Check if user has already taken the quiz on component mount
+  useEffect(() => {
+    const quizResultKey = `hackathon_quiz_result_${id}`;
+    const quizResult = localStorage.getItem(quizResultKey);
+    
+    if (quizResult) {
+      // User has already taken the quiz, show results immediately
+      setShowResults(true);
+      setIsSubmitted(true);
+      
+      // Load previous answers and result
+      const savedAnswers = localStorage.getItem(`hackathon_quiz_answers_${id}`);
+      if (savedAnswers) {
+        setAnswers(JSON.parse(savedAnswers));
+      }
+    }
+  }, [id]);
+
   React.useEffect(() => {
     if (timeLeft > 0 && !isSubmitted) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -295,10 +313,36 @@ const MCQRound = () => {
     }
   };
 
+  const calculateScore = () => {
+    let correct = 0;
+    mcqQuestions.forEach(question => {
+      if (answers[question.id] === question.correctAnswer) {
+        correct++;
+      }
+    });
+    return correct;
+  };
+
   const handleSubmit = () => {
     setIsSubmitted(true);
     setShowResults(true);
     setShowConfirmDialog(false);
+    
+    // Save quiz results to localStorage for persistence
+    const score = calculateScore();
+    const passed = score >= 2; // Need 2/20 to pass (for testing)
+    
+    // Save the quiz result (pass/fail)
+    const quizResultKey = `hackathon_quiz_result_${id}`;
+    localStorage.setItem(quizResultKey, passed ? 'passed' : 'failed');
+    
+    // Save the answers for future reference
+    const quizAnswersKey = `hackathon_quiz_answers_${id}`;
+    localStorage.setItem(quizAnswersKey, JSON.stringify(answers));
+    
+    // Save the score for display
+    const quizScoreKey = `hackathon_quiz_score_${id}`;
+    localStorage.setItem(quizScoreKey, score.toString());
   };
 
   const handleSubmitClick = () => {
@@ -313,18 +357,17 @@ const MCQRound = () => {
     setShowConfirmDialog(false);
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    mcqQuestions.forEach(question => {
-      if (answers[question.id] === question.correctAnswer) {
-        correct++;
-      }
-    });
-    return correct;
+  // Calculate score - use saved score if quiz was already taken
+  const getScore = () => {
+    const savedScore = localStorage.getItem(`hackathon_quiz_score_${id}`);
+    if (savedScore && showResults) {
+      return parseInt(savedScore);
+    }
+    return showResults ? calculateScore() : 0;
   };
-
-  const score = showResults ? calculateScore() : 0;
-  const passed = score >= 14; // Need 70% to pass
+  
+  const score = getScore();
+  const passed = score >= 2; // Need 2/20 to pass (for testing)
 
   const progress = ((currentQuestion + 1) / mcqQuestions.length) * 100;
   const answeredCount = Object.keys(answers).length;
@@ -521,16 +564,14 @@ const MCQRound = () => {
           </Button>
 
           <div className="flex gap-2">
-            {currentQuestion === mcqQuestions.length - 1 ? (
-              <Button 
-                onClick={handleSubmitClick}
-                className="bg-blue-600 text-white hover:bg-blue-700"
-                disabled={answeredCount < mcqQuestions.length}
-              >
-                <Target className="h-4 w-4 mr-2" />
-                Submit Test
-              </Button>
-            ) : (
+            <Button 
+              onClick={handleSubmitClick}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              <Target className="h-4 w-4 mr-2" />
+              Submit Test
+            </Button>
+            {currentQuestion < mcqQuestions.length - 1 && (
               <Button 
                 onClick={handleNext}
                 className="bg-blue-600 text-white hover:bg-blue-700"
@@ -578,6 +619,11 @@ const MCQRound = () => {
             </DialogTitle>
             <DialogDescription>
               Are you sure you want to submit your test? Once submitted, you cannot make any changes or retake the assessment.
+              {answeredCount < mcqQuestions.length && (
+                <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-amber-700">
+                  <strong>Warning:</strong> You have {mcqQuestions.length - answeredCount} unanswered question{mcqQuestions.length - answeredCount !== 1 ? 's' : ''}. Unanswered questions will be marked as incorrect.
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">

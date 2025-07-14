@@ -1,8 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Carousel,
   CarouselContent,
@@ -30,12 +40,27 @@ import {
   CheckCircle
 } from "lucide-react";
 
+// Company logos mapping (same as WeeklyHackathon component)
+const companyLogos: Record<string, string> = {
+  Intuit: "/intuit.svg",
+  Google: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+  Microsoft: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+  Amazon: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+  Netflix: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+  Tesla: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg",
+  Spotify: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg",
+  Adobe: "/adobe.svg",
+  Stripe: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Stripe_Logo%2C_revised_2016.svg",
+  Xiaomi: "/xiaomi.svg",
+  Apple: "/apple.svg",
+};
+
 // Hackathon data that matches the cards from WeeklyHackathon component
 const hackathonData = {
   "hack-001": {
     id: "hack-001",
     title: "Build a Real-time Chat App",
-    subtitle: "Create modern messaging solutions with cutting-edge technology",
+    subtitle: "Create modern messaging solutions with cutting-edge real-time technology",
     organizer: "Intuit",
     logo: "/intuit.svg",
     banner: "/public/placeholder.svg",
@@ -56,7 +81,7 @@ This challenge focuses on creating chat applications that solve real business pr
     maxParticipants: 2000,
     
     // Status and Registration
-    status: "Active",
+    status: "active",
     registrationStatus: "Active",
     difficulty: "Intermediate",
     
@@ -104,7 +129,7 @@ This challenge focuses on creating chat applications that solve real business pr
   "hack-002": {
     id: "hack-002",
     title: "AI-Powered Task Manager",
-    subtitle: "Build intelligent productivity solutions with machine learning",
+    subtitle: "Build intelligent productivity solutions with advanced machine learning",
     organizer: "Google",
     logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
     banner: "/public/placeholder.svg",
@@ -123,7 +148,7 @@ This advanced challenge focuses on practical AI applications in productivity sof
     participantCount: 892,
     maxParticipants: 1500,
     
-    status: "Upcoming",
+    status: "upcoming",
     registrationStatus: "Open",
     difficulty: "Advanced",
     
@@ -167,7 +192,7 @@ This advanced challenge focuses on practical AI applications in productivity sof
   "hack-003": {
     id: "hack-003",
     title: "Apple Innovation Challenge",
-    subtitle: "Design next-gen apps for the Apple ecosystem",
+    subtitle: "Design next-generation apps for the complete Apple ecosystem platform",
     organizer: "Apple",
     logo: "/apple.svg",
     banner: "/public/placeholder.svg",
@@ -186,7 +211,7 @@ This challenge focuses on creating user experiences that are uniquely Apple - in
     participantCount: 1563,
     maxParticipants: 2500,
     
-    status: "Upcoming",
+    status: "upcoming",
     registrationStatus: "Open",
     difficulty: "Intermediate",
     
@@ -230,7 +255,7 @@ This challenge focuses on creating user experiences that are uniquely Apple - in
   "hack-004": {
     id: "hack-004",
     title: "Adobe Creative Hack",
-    subtitle: "Design innovative creative tools and solutions",
+    subtitle: "Design innovative creative tools and cutting-edge digital solutions",
     organizer: "Adobe",
     logo: "/adobe.svg",
     banner: "/public/placeholder.svg",
@@ -249,7 +274,7 @@ This beginner-friendly challenge welcomes all skill levels and focuses on innova
     participantCount: 2100,
     maxParticipants: 3000,
     
-    status: "Upcoming",
+    status: "upcoming",
     registrationStatus: "Open",
     difficulty: "Beginner",
     
@@ -312,7 +337,7 @@ This advanced challenge focuses on cutting-edge technologies including AI for au
     participantCount: 980,
     maxParticipants: 1200,
     
-    status: "Upcoming",
+    status: "upcoming",
     registrationStatus: "Open",
     difficulty: "Advanced",
     
@@ -356,7 +381,7 @@ This advanced challenge focuses on cutting-edge technologies including AI for au
   "hack-006": {
     id: "hack-006",
     title: "Xiaomi IoT Sprint",
-    subtitle: "Build smart device integrations and IoT solutions",
+    subtitle: "Build smart device integrations with advanced IoT technology solutions",
     organizer: "Xiaomi",
     logo: "/xiaomi.svg",
     banner: "/public/placeholder.svg",
@@ -375,7 +400,7 @@ This intermediate-level challenge focuses on practical IoT implementations, devi
     participantCount: 1500,
     maxParticipants: 2000,
     
-    status: "Upcoming",
+    status: "upcoming",
     registrationStatus: "Open",
     difficulty: "Intermediate",
     
@@ -420,7 +445,15 @@ This intermediate-level challenge focuses on practical IoT implementations, devi
 const HackathonDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  
+  // State for registration (persistent via localStorage)
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showJoinDialog, setShowJoinDialog] = useState(false);
+  
+  // State for quiz results (persistent via localStorage)
+  const [quizResult, setQuizResult] = useState<'not_taken' | 'passed' | 'failed'>('not_taken');
+  
+  // Other state
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -430,18 +463,44 @@ const HackathonDetails = () => {
   const hackathon = hackathonData[id] || hackathonData["hack-001"];
   
   // Set initial likes based on participant count
-  React.useEffect(() => {
+  useEffect(() => {
     setLikes(hackathon.participantCount);
   }, [hackathon.participantCount]);
 
+  // Load persistent registration state from localStorage
+  useEffect(() => {
+    const registrationKey = `hackathon_registered_${id}`;
+    const isRegisteredStored = localStorage.getItem(registrationKey);
+    if (isRegisteredStored === 'true') {
+      setIsRegistered(true);
+    }
+  }, [id]);
+
+  // Load persistent quiz result state from localStorage
+  useEffect(() => {
+    const quizResultKey = `hackathon_quiz_result_${id}`;
+    const storedQuizResult = localStorage.getItem(quizResultKey);
+    if (storedQuizResult) {
+      setQuizResult(storedQuizResult as 'passed' | 'failed');
+    }
+  }, [id]);
+
   // Check if this hackathon is active
-  const isActive = hackathon.status === "Active";
+  const isActive = hackathon.status === "active";
 
   const handleRegister = () => {
     setIsRegistered(true);
+    // Persist registration state
+    const registrationKey = `hackathon_registered_${id}`;
+    localStorage.setItem(registrationKey, 'true');
   };
 
   const handleJoin = () => {
+    setShowJoinDialog(true);
+  };
+
+  const handleConfirmJoin = () => {
+    setShowJoinDialog(false);
     navigate(`/hackathon/${id}/mcq`);
   };
 
@@ -466,11 +525,16 @@ const HackathonDetails = () => {
     }
   };
 
+  // Scroll to top when component mounts
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
-      {/* <Header /> removed for full-page view */}
+      <Header />
       
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
         {/* Back Button */}
         <Button 
           variant="ghost" 
@@ -484,46 +548,53 @@ const HackathonDetails = () => {
         {/* Hero Section with Diagonal Design */}
         <div className="relative mb-12">
           <div className="bg-gradient-card shadow-card rounded-3xl border border-border overflow-hidden relative">
-            {/* Diagonal Top Section with enhanced styling */}
-            <div className="relative h-96 bg-gradient-to-br from-primary via-blue-600 to-blue-700">
+            {/* Banner Section with flexible height */}
+            <div className="relative min-h-[300px] bg-gradient-to-br from-primary via-blue-600 to-blue-700">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-blue-600/80 to-blue-700/90"></div>
-              
-              {/* Diagonal overlay */}
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-r from-blue-600/30 to-transparent transform skew-y-1"></div>
               
               {/* Floating Status Badge with glow */}
               <div className="absolute top-6 right-6">
                 <div className="relative">
                   <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-lg opacity-30"></div>
                   <Badge className="relative bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 text-lg font-bold border border-blue-300 shadow-lg">
-                    {hackathon.status} ⚡
+                    {hackathon.status.charAt(0).toUpperCase() + hackathon.status.slice(1)} ⚡
                   </Badge>
                 </div>
               </div>
 
               {/* Main Content Overlay */}
-              <div className="relative z-10 h-full flex items-end p-8 pb-12">
-                <div className="text-primary-foreground max-w-3xl">
+              <div className="relative z-10 flex items-end p-8 pb-8 min-h-[300px]">
+                <div className="text-primary-foreground max-w-3xl w-full">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="relative">
-                      <div className="relative w-20 h-20 bg-background/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border-2 border-blue-300/50">
-                        <Building className="h-10 w-10 text-primary-foreground" />
+                    <div className="relative flex-shrink-0">
+                      <div className="relative w-20 h-20 bg-background/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border-2 border-blue-300/50 overflow-hidden">
+                        {hackathon.logo ? (
+                          <img 
+                            src={hackathon.logo} 
+                            alt={`${hackathon.organizer} Logo`}
+                            className="w-12 h-12 object-contain"
+                          />
+                        ) : (
+                          <Building className="h-10 w-10 text-primary-foreground" />
+                        )}
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-primary-foreground text-lg font-semibold mb-1">{hackathon.organizer}</p>
-                      <p className="text-blue-200 text-sm flex items-center gap-1">
-                        <span>📍</span> {hackathon.location}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-primary-foreground text-lg font-semibold mb-1 truncate">{hackathon.organizer}</p>
+                      <p className="text-blue-200 text-sm flex items-center gap-1 truncate">
+                        <span className="flex-shrink-0">📍</span>
+                        <span className="truncate">{hackathon.location}</span>
                       </p>
                     </div>
                   </div>
-                  <h1 className="text-6xl font-black mb-4 text-primary-foreground leading-tight">
-                    {hackathon.title}
-                  </h1>
-                  <p className="text-xl text-blue-100 font-medium leading-relaxed">
-                    {hackathon.subtitle}
-                  </p>
+                  <div className="space-y-4">
+                    <h1 className="text-4xl md:text-5xl xl:text-6xl font-black text-primary-foreground leading-tight">
+                      {hackathon.title}
+                    </h1>
+                    <p className="text-lg xl:text-xl text-blue-100 font-medium leading-relaxed">
+                      {hackathon.subtitle}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -563,14 +634,40 @@ const HackathonDetails = () => {
                 
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-3xl blur-lg opacity-30"></div>
+                    <div className={`absolute inset-0 rounded-3xl blur-lg opacity-30 ${
+                      isActive 
+                        ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                        : isRegistered 
+                          ? 'bg-gradient-to-r from-blue-500 to-blue-600'
+                          : 'bg-gradient-to-r from-green-500 to-green-600'
+                    }`}></div>
                     <Button
-                      onClick={isActive ? handleJoin : handleRegister}
-                      className="relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-5 text-lg font-bold rounded-3xl border border-green-300 shadow-xl transform hover:scale-105 transition-all"
-                      disabled={!isActive && isRegistered}
+                      onClick={
+                        isActive 
+                          ? (quizResult === 'not_taken' ? handleJoin : quizResult === 'passed' ? () => navigate(`/hackathon/${id}/submission`) : null)
+                          : handleRegister
+                      }
+                      className={`relative px-10 py-5 text-lg font-bold rounded-3xl shadow-xl transform hover:scale-105 transition-all ${
+                        isActive 
+                          ? quizResult === 'passed'
+                            ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border border-purple-300'
+                            : quizResult === 'failed'
+                              ? 'bg-gradient-to-r from-red-600 to-red-700 text-white border border-red-300 cursor-not-allowed opacity-75'
+                              : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border border-green-300'
+                          : isRegistered 
+                            ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border border-blue-300 cursor-default'
+                            : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border border-green-300'
+                      }`}
+                      disabled={(!isActive && isRegistered) || (isActive && quizResult === 'failed')}
                     >
                       {isActive ? (
-                        <>🚀 Join Challenge</>
+                        quizResult === 'passed' ? (
+                          <>🏆 Submit Project</>
+                        ) : quizResult === 'failed' ? (
+                          <>❌ Quiz Failed</>
+                        ) : (
+                          <>🚀 Join Challenge</>
+                        )
                       ) : isRegistered ? (
                         <>✅ Registered</>
                       ) : (
@@ -881,10 +978,17 @@ const HackathonDetails = () => {
                   </div>
                   <div className="text-center">
                     <div className="relative inline-block mb-4">
-                      <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mx-auto flex items-center justify-center border-4 border-blue-300 shadow-lg">
-                        <Building className="h-12 w-12 text-white" />
+                      <div className="relative w-24 h-24 bg-white rounded-3xl mx-auto flex items-center justify-center border-4 border-blue-300 shadow-lg overflow-hidden">
+                        {companyLogos[hackathon.organizer] ? (
+                          <img 
+                            src={companyLogos[hackathon.organizer]} 
+                            alt={`${hackathon.organizer} Logo`}
+                            className="w-16 h-16 object-contain"
+                          />
+                        ) : (
+                          <Building className="h-12 w-12 text-blue-600" />
+                        )}
                       </div>
-                      <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                     <h4 className="text-foreground font-bold text-xl mb-2 text-blue-800">{hackathon.organizer}</h4>
                     <p className="text-blue-600 text-sm mb-6 font-medium">Event Organizer</p>
@@ -903,6 +1007,54 @@ const HackathonDetails = () => {
           </div>
         </div>
       </main>
+
+      {/* Join Challenge Confirmation Dialog */}
+      <AlertDialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold text-green-700 flex items-center gap-2">
+              🏆 Join {hackathon.title}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base space-y-3">
+              <p className="text-gray-700">
+                You're about to start the challenge! Here's what to expect:
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-l-blue-400">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-semibold">📝 Quiz Format:</span>
+                    <span className="text-gray-700">20 multiple-choice questions</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-semibold">✅ Pass Requirement:</span>
+                    <span className="text-gray-700">Answer at least 12 questions correctly</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-blue-600 font-semibold">⏱️ Time Limit:</span>
+                    <span className="text-gray-700">30 minutes</span>
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-sm text-gray-600">
+                Once you pass the quiz, you'll advance to the next round where you can start building your project!
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-3">
+            <AlertDialogCancel className="px-6">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmJoin}
+              className="px-6 bg-green-600 hover:bg-green-700"
+            >
+              Start Quiz 🚀
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

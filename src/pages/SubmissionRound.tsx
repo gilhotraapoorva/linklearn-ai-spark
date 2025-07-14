@@ -100,7 +100,7 @@ const SubmissionRound = () => {
     }, 200);
   };
 
-  const isFormValid = projectTitle.trim() && projectDescription.trim() && githubUrl.trim();
+  const isFormValid = projectTitle.trim() && projectDescription.trim();
   const totalFiles = files.length;
   const totalSize = files.reduce((sum, file) => sum + file.size, 0);
 
@@ -313,7 +313,7 @@ const SubmissionRound = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="github" className="text-blue-900">GitHub Repository *</Label>
+                  <Label htmlFor="github" className="text-blue-900">GitHub Repository (Optional)</Label>
                   <div className="flex gap-2">
                     <Github className="h-5 w-5 text-gray-400 mt-2" />
                     <Input
@@ -453,8 +453,8 @@ const SubmissionRound = () => {
                   <span className="text-blue-900">{projectDescription ? '✓' : '✗'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-blue-600">GitHub URL:</span>
-                  <span className="text-blue-900">{githubUrl ? '✓' : '✗'}</span>
+                  <span className="text-blue-600">GitHub URL (Optional):</span>
+                  <span className="text-blue-900">{githubUrl ? '✓' : '○'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-blue-600">Tech Stack:</span>
