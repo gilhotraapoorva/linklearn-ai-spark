@@ -1,73 +1,115 @@
 # LinkLearn - AI-Powered Learning Platform
 
-LinkLearn is an innovative learning platform that combines the power of AI with gamified learning experiences to help developers and professionals upskill effectively.
+LinkLearn is an innovative learning companion that combines the power of AI with gamified learning experiences to help developers and professionals upskill effectively. Built for the LinkedIn HackDay - Linked[Out] hackathon, it bridges the gap between learning and professional credibility.
 
-**URL**: https://lovable.dev/projects/87db53c1-e2f5-49ae-8149-e74304164a55
+## 🚀 Features
 
-## How can I edit this code?
+### Core Functionality
+- **AI-Generated Daily Quests**: Personalized coding challenges powered by Ollama/LLaMA 3
+- **Skill Graph Visualization**: Interactive skill tracking and progress monitoring
+- **Gamification System**: XP tracking, badges, streaks, and achievements
+- **Real-time Dashboard**: Live updates of learning progress and statistics
+- **LinkedIn Integration**: Seamless integration with professional networking
 
-There are several ways of editing your application.
+### Key Components
+- **Personalized SkillGraph Generator**: Visual representation of skills and learning paths
+- **Weekly Hackathons**: Company-sponsored challenges with automated evaluation
+- **AI Reflection Writer**: Automated learning summaries and insights
+- **Timeline of Contributions**: Public portfolio of completed challenges
+- **Skill Auto-Endorsement**: Verified skill validation through completed challenges
 
-**Use Lovable**
+## 🛠️ Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/87db53c1-e2f5-49ae-8149-e74304164a55) and start prompting.
+**Frontend:**
+- React 18 with TypeScript
+- Tailwind CSS & Radix UI components
+- Vite (Build tool & dev server)
+- React Router for navigation
 
-Changes made via Lovable will be committed automatically to this repo.
+**Backend:**
+- Node.js with Express.js
+- Ollama/LLaMA 3 for AI-powered quest generation
 
-**Use your preferred IDE**
+**Database & Authentication:**
+- Firebase Firestore for real-time data synchronization
+- Firebase Auth for user authentication
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🏃‍♂️ Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+- Node.js (v18 or higher)
+- Ollama installed and configured
+- Firebase project setup
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/gilhotraapoorva/linklearn-ai-spark.git
+   cd linklearn-ai-spark
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. **Set up environment variables**
+   - Configure Firebase credentials
+   - Ensure Ollama is properly configured
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Running the Application
+
+1. **Start Ollama service**
+   ```bash
+   ollama serve
+   ```
+
+2. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:5173` (frontend) and the Express server at `http://localhost:3001` (backend).
+
+## 📋 Project Structure
+
+```
+linklearn-ai-spark/
+├── src/
+│   ├── components/          # React components
+│   ├── pages/              # Application pages
+│   ├── lib/                # Utilities and contexts
+│   └── hooks/              # Custom React hooks
+├── public/                 # Static assets
+├── server.cjs             # Express.js backend server
+├── docs/                  # Documentation
+└── package.json           # Dependencies and scripts
 ```
 
-**Edit a file directly in GitHub**
+## 🎯 Key Features Implementation
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### AI-Powered Quest Generation
+- Deterministic daily quest generation using Ollama API
+- Real-time feedback and scoring
 
-**Use GitHub Codespaces**
+### Gamification System
+- XP tracking and level progression
+- Achievement badges with rarity system
+- Daily streak maintenance
+- Visual progress indicators
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Real-time Updates
+- Firebase Firestore for live data synchronization
+- Real-time dashboard updates
+- Instant progress tracking
 
-## What technologies are used for this project?
+## 🏆 Hackathon Information
 
-This project is built with:
+**Event**: LinkedIn HackDay - Linked[Out]  
+**Dates**: July 15-17, 2025  
+**Team**: Anupam Gaurav, Sakshi Priya, Apoorva Na, Nashwan Nashwan, Prateek Mourya, Sriteja Pashya
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/87db53c1-e2f5-49ae-8149-e74304164a55) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+*Built with ❤️ for LinkedIn HackDay - Linked[Out] 2025*
