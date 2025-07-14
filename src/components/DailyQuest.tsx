@@ -9,58 +9,114 @@ import {
   CheckCircle, 
   PlayCircle,
   Trophy,
-  Flame
+  Flame,
+  Calendar,
+  Loader2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { generateDailyQuest } from "@/lib/ollamaService";
+import type { DailyQuest as DailyQuestType } from "@/lib/ollamaService";
 
-interface Quest {
+interface Quest extends DailyQuestType {
   id: string;
-  title: string;
-  description: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  estimatedTime: string;
-  xpReward: number;
-  category: string;
   completed: boolean;
   progress: number;
 }
 
-const todaysQuest: Quest = {
-  id: "quest-001",
-  title: "Refactor React Component for Performance",
-  description: "Take this React component and optimize it by implementing React.memo, useMemo, and useCallback where appropriate. Focus on preventing unnecessary re-renders.",
-  difficulty: "Intermediate",
-  estimatedTime: "15 min",
-  xpReward: 150,
-  category: "React Optimization",
-  completed: false,
-  progress: 0
-};
-
 const DailyQuest = () => {
   const navigate = useNavigate();
-  const [currentQuest, setCurrentQuest] = useState(todaysQuest);
+  const [currentQuest, setCurrentQuest] = useState<Quest | null>(null);
   const [isStarted, setIsStarted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchTodaysQuest();
+  }, []);
+
+  const fetchTodaysQuest = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const quest = await generateDailyQuest();
+      setCurrentQuest({
+        ...quest,
+        id: `quest-${quest.date}`,
+        completed: false,
+        progress: 0
+      });
+    } catch (err) {
+      setError("Failed to load today's quest");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleStartQuest = () => {
+    if (!currentQuest) return;
     navigate(`/quest/${currentQuest.id}`, { 
-      state: { quest: currentQuest } 
+      state: { 
+        quest: {
+          ...currentQuest,
+          // Ensure all required fields are passed
+          title: currentQuest.title,
+          description: currentQuest.description,
+          problem: currentQuest.problem,
+          difficulty: currentQuest.difficulty,
+          estimatedTime: currentQuest.estimatedTime,
+          xpReward: currentQuest.xpReward,
+          category: currentQuest.category,
+          date: currentQuest.date
+        }
+      } 
     });
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner':
-        return 'bg-primary text-primary-foreground';
-      case 'Intermediate':
-        return 'bg-primary/80 text-primary-foreground';
-      case 'Advanced':
-        return 'bg-destructive text-destructive-foreground';
+    switch (difficulty.toLowerCase()) {
+      case 'beginner':
+      case 'easy':
+        return 'bg-green-500 text-white';
+      case 'intermediate':
+      case 'medium':
+        return 'bg-yellow-500 text-white';
+      case 'advanced':
+      case 'hard':
+        return 'bg-red-500 text-white';
       default:
         return 'bg-muted text-muted-foreground';
     }
   };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+        <CardContent className="flex items-center justify-center py-16">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            <p className="text-muted-foreground">Loading today's quest...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error || !currentQuest) {
+    return (
+      <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
+        <CardContent className="flex items-center justify-center py-16">
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-destructive">Failed to load quest</p>
+            <Button onClick={fetchTodaysQuest} variant="outline" size="sm">
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
@@ -78,11 +134,16 @@ const DailyQuest = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+            <Calendar className="h-4 w-4" />
+            <span>Quest for {new Date(currentQuest.date || '').toLocaleDateString()}</span>
+          </div>
+          
           <h3 className="text-lg font-semibold">{currentQuest.title}</h3>
           <p className="text-muted-foreground">{currentQuest.description}</p>
           
           <div className="flex flex-wrap gap-2">
-            <Badge className={getDifficultyColor(currentQuest.difficulty)}>
+            <Badge className={`${getDifficultyColor(currentQuest.difficulty || '')} pointer-events-none`}>
               {currentQuest.difficulty}
             </Badge>
             <Badge variant="outline" className="flex items-center gap-1">

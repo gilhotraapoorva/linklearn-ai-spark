@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,15 +13,29 @@ import {
   ArrowLeft,
   Play,
   RotateCcw,
-  ChevronDown
+  ChevronDown,
+  Loader2
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { generateDailyQuest, DailyQuest } from "../lib/ollamaService";
+import { useUser } from "@/lib/UserContext";
+import { submitQuestSolution } from "@/lib/questActions";
 
 const getDifficultyColor = (difficulty: string) => {
-  // Always return colorless style for difficulty
-  return 'bg-transparent text-foreground border border-border';
+  switch (difficulty.toLowerCase()) {
+    case 'beginner':
+    case 'easy':
+      return 'bg-green-500 text-white border-green-600';
+    case 'intermediate':
+    case 'medium':
+      return 'bg-yellow-500 text-white border-yellow-600';
+    case 'advanced':
+    case 'hard':
+      return 'bg-red-500 text-white border-red-600';
+    default:
+      return 'bg-muted text-muted-foreground border-muted';
+  }
 };
 
 const QuestPage = () => {
@@ -32,14 +46,22 @@ const QuestPage = () => {
   const [quest, setQuest] = useState<DailyQuest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { questId } = useParams();
   const location = useLocation();
+  const { user } = useUser();
 
   useEffect(() => {
-    fetchQuest();
-    // eslint-disable-next-line
-  }, []);
+    if (location.state?.quest) {
+      // Use the quest data passed from the DailyQuest component
+      setQuest(location.state.quest);
+      setLoading(false);
+    } else {
+      // If no quest data in state, fetch it
+      fetchQuest();
+    }
+  }, [location.state]);
 
   const fetchQuest = async () => {
     setLoading(true);
@@ -249,9 +271,19 @@ impl UserList {
     }
   };
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    // Here you would typically send the solution to a backend
+  const handleSubmit = async () => {
+    if (!questId || !solution.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      await submitQuestSolution(user.uid, questId, solution);
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Failed to submit quest:', error);
+      // Toast is already handled in submitQuestSolution
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleRunCode = () => {
@@ -280,16 +312,6 @@ impl UserList {
           >
             <ArrowLeft className="h-4 w-4" />
             Back
-          </Button>
-        </div>
-        <div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={fetchQuest}
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Regenerate"}
           </Button>
         </div>
       </div>
@@ -413,11 +435,18 @@ impl UserList {
                   {!isSubmitted ? (
                     <Button 
                       onClick={handleSubmit}
-                      disabled={!solution.trim()}
+                      disabled={!solution.trim() || isSubmitting}
                       className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
                       size="lg"
                     >
-                      Submit Solution
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        "Submit Solution"
+                      )}
                     </Button>
                   ) : (
                     <Button variant="success" className="w-full shadow-lg" disabled size="lg">
@@ -433,7 +462,7 @@ impl UserList {
                         Great job!
                       </h4>
                       <p className="text-sm text-muted-foreground">
-                        Your solution has been submitted. You'll receive feedback and {quest.xpReward || 150} XP once it's reviewed.
+                        Your solution has been submitted successfully!
                       </p>
                     </div>
                   )}

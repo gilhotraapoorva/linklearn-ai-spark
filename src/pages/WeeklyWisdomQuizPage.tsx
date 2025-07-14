@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
+import { submitQuizCompletion } from "@/lib/questActions";
+import { useUser } from "@/lib/UserContext";
 
 // Multiple question sets for variety
 const questionSets = [
@@ -485,7 +487,9 @@ const WeeklyWisdomQuizPage = () => {
 	const [score, setScore] = useState(0);
 	const [showResult, setShowResult] = useState(false);
 	const [currentQuestionSet, setCurrentQuestionSet] = useState<any>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const navigate = useNavigate();
+	const { user } = useUser();
 
 	// Randomly select a question set when component mounts
 	useEffect(() => {
@@ -506,6 +510,14 @@ const WeeklyWisdomQuizPage = () => {
 			setSelected(null);
 		} else {
 			setShowResult(true);
+			// Check for perfect score and update XP
+			const finalScore = selected === currentQuestionSet.questions[current].answer ? score + 1 : score;
+			if (finalScore === currentQuestionSet.questions.length) {
+				setIsSubmitting(true);
+				submitQuizCompletion(user.uid, finalScore, currentQuestionSet.questions.length)
+					.catch(console.error)
+					.finally(() => setIsSubmitting(false));
+			}
 		}
 	};
 
@@ -664,9 +676,16 @@ const WeeklyWisdomQuizPage = () => {
             <div className="text-lg font-semibold text-[#1D2939] mb-4">You scored {score} out of {currentQuestionSet.questions.length}!</div>
             <div className="mb-6 text-blue-700 text-center text-lg">
               {score === currentQuestionSet.questions.length ? (
-                <span>🌟 Perfect score! You're a true wisdom champion. Keep it up!</span>
+                <div className="space-y-2">
+                  <span>🌟 Perfect score! You're a true wisdom champion!</span>
+                  {isSubmitting ? (
+                    <div className="text-sm text-primary animate-pulse">Updating XP...</div>
+                  ) : (
+                    <div className="text-sm text-success">+100 XP awarded!</div>
+                  )}
+                </div>
               ) : score >= currentQuestionSet.questions.length - 1 ? (
-                <span>👏 Great job! Just a little more for perfection. Try again for a perfect score!</span>
+                <span>👏 Great job! Just a little more for perfection. Try again for a perfect score and earn 100 XP!</span>
               ) : (
                 <span>💡 Keep learning! Every attempt makes you wiser. Give it another shot!</span>
               )}
@@ -675,12 +694,14 @@ const WeeklyWisdomQuizPage = () => {
               <button
                 onClick={handleRetake}
                 className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
+                disabled={isSubmitting}
               >
                 Retake Quiz
               </button>
               <button
                 onClick={() => navigate(-1)}
                 className="bg-[#F9A51A] hover:bg-[#FFD600] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
+                disabled={isSubmitting}
               >
                 Back to Dashboard
               </button>

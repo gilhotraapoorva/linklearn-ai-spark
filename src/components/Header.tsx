@@ -112,7 +112,7 @@ const Header = () => {
     }
   };
 
-  const username = user?.email ? user.email.split("@")[0] : "Guest";
+  const username = user?.email ? user.email.split("@")[0].charAt(0).toUpperCase() + user.email.split("@")[0].slice(1) : "Guest";
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-border shadow-lg">
@@ -211,7 +211,6 @@ const Header = () => {
             <div className="flex items-center gap-2">
               <div className="hidden sm:block text-right">
                 <div className="text-sm font-medium">{username}</div>
-                <div className="text-xs text-muted-foreground">Learning Explorer</div>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

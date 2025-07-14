@@ -11,11 +11,13 @@ import {
   TrendingUp,
   Calendar
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useUser } from "@/lib/UserContext";
+import { useXP } from "@/lib/XPContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface UserStats {
-  level: number;
-  xp: number;
-  xpToNextLevel: number;
   currentStreak: number;
   longestStreak: number;
   questsCompleted: number;
@@ -32,52 +34,41 @@ interface Badge {
   unlocked: boolean;
 }
 
-const userStats: UserStats = {
-  level: 12,
-  xp: 2380,
-  xpToNextLevel: 2500,
-  currentStreak: 7,
-  longestStreak: 21,
-  questsCompleted: 47,
-  hackathonsCompleted: 8,
-  badges: [
-    {
-      id: "first-quest",
-      name: "First Steps",
-      description: "Complete your first quest",
-      icon: "🏯",
-      rarity: "common",
-      unlocked: true
-    },
-    {
-      id: "week-warrior",
-      name: "Week Warrior",
-      description: "7-day quest streak",
-      icon: "🔥",
-      rarity: "rare",
-      unlocked: true
-    },
-    // {
-    //   id: "code-ninja",
-    //   name: "Code Ninja",
-    //   description: "Complete 50 coding quests",
-    //   icon: "🥷",
-    //   rarity: "epic",
-    //   unlocked: false
-    // },
-    // {
-    //   id: "hackathon-hero",
-    //   name: "Hackathon Hero",
-    //   description: "Win 10 hackathons",
-    //   icon: "👑",
-    //   rarity: "legendary",
-    //   unlocked: false
-    // }
-  ]
+const defaultStats: UserStats = {
+  currentStreak: 0,
+  longestStreak: 0,
+  questsCompleted: 0,
+  hackathonsCompleted: 0,
+  badges: []
 };
 
 const GamificationStats = () => {
-  const xpProgress = (userStats.xp / userStats.xpToNextLevel) * 100;
+  const [stats, setStats] = useState<UserStats>(defaultStats);
+  const { user } = useUser();
+  const { xp, level, xpToNextLevel } = useXP();
+  
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    // Subscribe to user stats updates
+    const unsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        
+        setStats({
+          currentStreak: data.streak || 0,
+          longestStreak: data.longestStreak || 0,
+          questsCompleted: Object.keys(data.completedQuests || {}).length,
+          hackathonsCompleted: data.hackathonsCompleted || 0,
+          badges: data.badges || []
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user?.uid]);
+
+  const xpProgress = (xp / xpToNextLevel) * 100;
   
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -106,15 +97,15 @@ const GamificationStats = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center">
-            <div className="text-3xl font-bold text-primary">Level {userStats.level}</div>
+            <div className="text-3xl font-bold text-primary">Level {level}</div>
             <div className="text-muted-foreground">
-              {userStats.xp} / {userStats.xpToNextLevel} XP
+              {xp} / {xpToNextLevel} XP
             </div>
           </div>
           
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span>Progress to Level {userStats.level + 1}</span>
+              <span>Progress to Level {level + 1}</span>
               <span>{Math.round(xpProgress)}%</span>
             </div>
             <div className="relative">
@@ -129,12 +120,12 @@ const GamificationStats = () => {
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="text-center p-3 bg-background rounded-lg">
               <Target className="h-6 w-6 text-primary mx-auto mb-1" />
-              <div className="text-2xl font-bold">{userStats.questsCompleted}</div>
+              <div className="text-2xl font-bold">{stats.questsCompleted}</div>
               <div className="text-xs text-muted-foreground">Quests</div>
             </div>
             <div className="text-center p-3 bg-background rounded-lg flex flex-col items-start justify-center">
               <Zap className="h-6 w-6 text-accent mb-1" />
-              <div className="text-2xl font-bold">{userStats.hackathonsCompleted}</div>
+              <div className="text-2xl font-bold">{stats.hackathonsCompleted}</div>
               <div className="text-xs text-muted-foreground">Hacks</div>
             </div>
           </div>
@@ -153,12 +144,12 @@ const GamificationStats = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-background rounded-lg">
               <Flame className="h-6 w-6 text-gamification-streak mx-auto mb-1" />
-              <div className="text-2xl font-bold">{userStats.currentStreak}</div>
+              <div className="text-2xl font-bold">{stats.currentStreak}</div>
               <div className="text-xs text-muted-foreground">Current Streak</div>
             </div>
             <div className="text-center p-3 bg-background rounded-lg">
               <TrendingUp className="h-6 w-6 text-success mx-auto mb-1" />
-              <div className="text-2xl font-bold">{userStats.longestStreak}</div>
+              <div className="text-2xl font-bold">{stats.longestStreak}</div>
               <div className="text-xs text-muted-foreground">Best Streak</div>
             </div>
           </div>
@@ -169,7 +160,7 @@ const GamificationStats = () => {
               Recent Badges
             </h4>
             <div className="grid grid-cols-2 gap-2">
-              {userStats.badges.map((badge) => (
+              {stats.badges.map((badge) => (
                 <div
                   key={badge.id}
                   className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all duration-200 h-full min-h-[110px] min-w-0 overflow-hidden ${

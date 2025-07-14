@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
+import { useXP } from "@/lib/XPContext";
 
 const xpDataPreview = [
   { day: 'Mon', xp: 63 },
@@ -43,6 +44,7 @@ const barColors = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { xp } = useXP();
   
   const upcomingEvents = [
     // { type: "Quest", title: "Debug Challenge", time: "Tomorrow" },
@@ -177,7 +179,7 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col items-center space-y-3">
-                <div className="text-2xl font-bold text-blue-900">You have <span className="text-yellow-500">achieved</span> <span className="text-yellow-500">2,380 XP!</span></div>
+                <div className="text-2xl font-bold text-blue-900">You have <span className="text-yellow-500">achieved</span> <span className="text-yellow-500">{xp.toLocaleString()} XP!</span></div>
                 <div className="italic text-blue-700 text-sm mb-2">Make your toil count!</div>
                 <Button 
                   variant="default" 
