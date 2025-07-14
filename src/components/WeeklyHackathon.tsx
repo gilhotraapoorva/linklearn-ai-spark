@@ -227,8 +227,16 @@ const WeeklyHackathon = () => {
   }, []);
 
   const getDifficultyColor = (difficulty: string) => {
-    // Make all difficulties colorless
-    return "bg-transparent text-foreground border border-border";
+    switch (difficulty) {
+      case 'Beginner':
+        return 'bg-green-500 text-white';
+      case 'Intermediate':
+        return 'bg-yellow-400 text-white';
+      case 'Advanced':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -408,7 +416,7 @@ const WeeklyHackathon = () => {
                       <Badge
                         className={
                           getDifficultyColor(hackathon.difficulty) +
-                          " px-2 py-0.5 rounded-full text-[10px] font-bold"
+                          " px-2 py-0.5 rounded-full text-[10px] font-bold hover:bg-inherit hover:text-inherit focus:bg-inherit focus:text-inherit"
                         }
                       >
                         {hackathon.difficulty}
@@ -443,9 +451,10 @@ const WeeklyHackathon = () => {
                       variant={hackathon.status === "active" ? "success" : "outline"}
                       size="sm"
                       className={
-                        hackathon.status === "active"
-                          ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700"
-                          : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
+                        (hackathon.status === "active"
+                          ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white"
+                          : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground") +
+                        " hover:bg-inherit hover:text-inherit focus:bg-inherit focus:text-inherit"
                       }
                     >
                       {hackathon.status === "active" ? "Join" : "Register"}

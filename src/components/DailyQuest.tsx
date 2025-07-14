@@ -54,7 +54,11 @@ const DailyQuest = () => {
       case 'Beginner':
         return 'bg-green-500 text-white';
       case 'Intermediate':
+<<<<<<< Updated upstream
         return 'bg-yellow-400 text-black';
+=======
+        return 'bg-yellow-400 text-white';
+>>>>>>> Stashed changes
       case 'Advanced':
         return 'bg-red-500 text-white';
       default:
