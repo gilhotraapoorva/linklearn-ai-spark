@@ -99,11 +99,6 @@ const Index = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           {/* Left Column - Main Content */}
           <div className="xl:col-span-2 space-y-6">
-            {/* Weekly Wisdom Quiz (now first) */}
-            <div data-section="weekly-quiz">
-              <WeeklyWisdomQuiz attempted={quizAttempted} />
-            </div>
-
             {/* Daily Quest */}
             <div data-section="daily-quest">
               <DailyQuest />
@@ -112,6 +107,11 @@ const Index = () => {
             {/* Weekly Hackathon */}
             <div data-section="weekly-hackathon">
               <WeeklyHackathon />
+            </div>
+            
+            {/* Weekly Wisdom Quiz (now above SkillGraph) */}
+            <div data-section="weekly-quiz">
+              <WeeklyWisdomQuiz attempted={quizAttempted} />
             </div>
             
             {/* Skill Graph */}
