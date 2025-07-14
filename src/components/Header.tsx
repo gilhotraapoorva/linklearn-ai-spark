@@ -23,6 +23,7 @@ import {
 import linkedinLogo from '/linkedin.svg';
 import { useUser } from "../lib/UserContext";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { logOut } from "../lib/authActions";
 
 const Header = () => {
@@ -37,6 +38,15 @@ const Header = () => {
   };
 
   const notifications = [
+=======
+import React, { useState } from "react";
+
+const Header = () => {
+  const navigate = useNavigate();
+  const { user } = useUser();
+  // Use state for notifications and unread count
+  const [notifications, setNotifications] = useState([
+>>>>>>> Stashed changes
 =======
 import React, { useState } from "react";
 
