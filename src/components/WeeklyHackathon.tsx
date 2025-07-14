@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import {
   Rocket,
   GitBranch,
 } from "lucide-react";
-import { useState } from "react";
 import placeholderLogo from "/public/placeholder.svg";
 import {
   Dialog,
@@ -24,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { MapPin, Users as UsersIcon, Trophy as TrophyIcon, Calendar as CalendarIcon } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { hackathonEvents } from "./LlamaBot";
 
 interface Hackathon {
   id: string;
@@ -50,7 +50,7 @@ const upcomingHackathons: Hackathon[] = [
     duration: "48 hours",
     participants: 1247,
     prizes: ["LinkedIn Premium (1 month)", "Exclusive Badge", "Career Mentorship"],
-    skills: ["React", "WebSockets", "Node.js", "Database Design"],
+    skills: ["React", "TypeScript", "WebSockets", "Data Structures"],
     startsIn: "1 day ago",
     status: "upcoming",
     company: "Intuit"
@@ -64,7 +64,7 @@ const upcomingHackathons: Hackathon[] = [
     duration: "72 hours",
     participants: 892,
     prizes: ["$500 Cash Prize", "Tech Conference Pass", "AI Workshop Access"],
-    skills: ["Python", "Machine Learning", "React", "API Design"],
+    skills: ["React", "TypeScript", "Data Structures", "Machine Learning"],
     startsIn: "5 days",
     status: "upcoming",
     company: "Google"
@@ -173,6 +173,21 @@ function getRandomCompany(index: number) {
 const WeeklyHackathon = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+
+  // Listen for chatbot state changes
+  useEffect(() => {
+    const unsubscribe = hackathonEvents.listen((data) => {
+      if (data.type === 'chatbotStateChange') {
+        setIsChatbotOpen(data.isOpen);
+      }
+    });
+
+    // Set initial state
+    setIsChatbotOpen(hackathonEvents.isChatbotOpen());
+
+    return unsubscribe;
+  }, []);
 
   const getDifficultyColor = (difficulty: string) => {
     // Make all difficulties colorless
@@ -237,6 +252,14 @@ const WeeklyHackathon = () => {
           <Trophy className="h-5 w-5 text-primary" />
           Upcoming Hackathons
         </CardTitle>
+        {/* Active indicator when chatbot is open */}
+        {isChatbotOpen && (
+          <div className="mt-2 flex items-center gap-2 text-sm">
+            <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-green-600 font-medium">Pixie Analysis Active</span>
+            <span className="text-muted-foreground">- Hover over hackathons for instant insights</span>
+          </div>
+        )}
       </CardHeader>
       <CardContent className="pt-0 pb-2">
         <div
@@ -269,6 +292,23 @@ const WeeklyHackathon = () => {
                 <div
                   className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.07] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
+                  onMouseEnter={() => {
+                    // Only emit hover event if chatbot is open
+                    if (isChatbotOpen) {
+                      hackathonEvents.emit({
+                        type: 'hover',
+                        hackathon: hackathon
+                      });
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    // Only emit hover end event if chatbot is open
+                    if (isChatbotOpen) {
+                      hackathonEvents.emit({
+                        type: 'hoverEnd'
+                      });
+                    }
+                  }}
                   style={{ background: isForYou ? 'linear-gradient(135deg, #fff 0%, #f6faff 60%, #f3f6fb 100%)' : '#fff' }}
                 >
                   <div className="relative z-10 flex flex-col flex-1 min-h-0">
