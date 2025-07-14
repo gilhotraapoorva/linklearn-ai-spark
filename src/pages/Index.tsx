@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
+import { useEffect, useState } from "react";
 
 const xpDataPreview = [
   { day: 'Mon', xp: 63 },
@@ -43,6 +44,18 @@ const barColors = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [quizAttempted, setQuizAttempted] = useState(false);
+
+  useEffect(() => {
+    // For demo: check localStorage for quiz attempt
+    setQuizAttempted(localStorage.getItem("weeklyQuizAttempted") === "true");
+    // Reset on new session (tab close)
+    const handleUnload = () => {
+      localStorage.removeItem("weeklyQuizAttempted");
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
   
   const upcomingEvents = [
     // { type: "Quest", title: "Debug Challenge", time: "Tomorrow" },
@@ -86,7 +99,7 @@ const Index = () => {
           <div className="xl:col-span-2 space-y-6">
             {/* Weekly Wisdom Quiz (now first) */}
             <div data-section="weekly-quiz">
-              <WeeklyWisdomQuiz />
+              <WeeklyWisdomQuiz attempted={quizAttempted} />
             </div>
 
             {/* Daily Quest */}

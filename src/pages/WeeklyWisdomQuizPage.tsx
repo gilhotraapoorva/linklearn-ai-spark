@@ -506,17 +506,8 @@ const WeeklyWisdomQuizPage = () => {
 			setSelected(null);
 		} else {
 			setShowResult(true);
+			localStorage.setItem("weeklyQuizAttempted", "true");
 		}
-	};
-
-	const handleRetake = () => {
-		// Select a new random question set for retake
-		const randomIndex = Math.floor(Math.random() * questionSets.length);
-		setCurrentQuestionSet(questionSets[randomIndex]);
-		setCurrent(0);
-		setSelected(null);
-		setScore(0);
-		setShowResult(false);
 	};
 
 	// Show loading while question set is being selected
@@ -646,6 +637,11 @@ const WeeklyWisdomQuizPage = () => {
             <Sparkles className="h-12 w-12 text-[#FFD600] mb-4 animate-pulse-glow" />
             <div className="text-3xl font-extrabold text-[#1570EF] mb-2">Quiz Complete!</div>
             <div className="text-lg font-semibold text-[#1D2939] mb-4">You scored {score} out of {currentQuestionSet.questions.length}!</div>
+            <div className="text-base font-bold text-[#1570EF] mb-2">
+              {score === currentQuestionSet.questions.length
+                ? 'You earned 100 XP!'
+                : 'You earned 50 XP!'}
+            </div>
             <div className="mb-6 text-blue-700 text-center text-lg">
               {score === currentQuestionSet.questions.length ? (
                 <span>🌟 Perfect score! You're a true wisdom champion. Keep it up!</span>
@@ -656,12 +652,6 @@ const WeeklyWisdomQuizPage = () => {
               )}
             </div>
             <div className="flex gap-4 mt-4">
-              <button
-                onClick={handleRetake}
-                className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
-              >
-                Retake Quiz
-              </button>
               <button
                 onClick={() => navigate(-1)}
                 className="bg-[#F9A51A] hover:bg-[#FFD600] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"

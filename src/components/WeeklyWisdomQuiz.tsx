@@ -17,7 +17,7 @@ const topics = [
 	"Remote Work Best Practices",
 ];
 
-const WeeklyWisdomQuiz = () => {
+const WeeklyWisdomQuiz = ({ attempted = false }: { attempted?: boolean }) => {
 	const navigate = useNavigate();
 	const [isGenerating, setIsGenerating] = useState(false);
 
@@ -75,9 +75,6 @@ const WeeklyWisdomQuiz = () => {
 						<div className="flex items-center gap-1 text-xs text-muted-foreground">
 							<Medal className="h-4 w-4" /> 100 XP
 						</div>
-						<div className="flex items-center gap-1 text-xs text-muted-foreground">
-							<RefreshCcw className="h-4 w-4" /> Retake anytime
-						</div>
 					</div>
 					<div className="text-base font-bold mt-2 mb-2">
 						This week's topic:{" "}
@@ -90,7 +87,7 @@ const WeeklyWisdomQuiz = () => {
 						size="quest"
 						className="w-full font-semibold relative overflow-hidden group/btn"
 						onClick={handleStartQuiz}
-						disabled={isGenerating}
+						disabled={isGenerating || attempted}
 					>
 						<div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
 						<span className="relative z-10 flex items-center gap-2">
@@ -99,6 +96,8 @@ const WeeklyWisdomQuiz = () => {
 									<Loader2 className="h-5 w-5 animate-spin" />
 									Generating AI Quiz...
 								</>
+							) : attempted ? (
+								"Quiz Already Attempted"
 							) : (
 								"Take Quiz Now"
 							)}
