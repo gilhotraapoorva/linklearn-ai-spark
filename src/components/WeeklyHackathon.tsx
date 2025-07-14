@@ -211,6 +211,16 @@ const WeeklyHackathon = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
+  
+  // Track registration state for all hackathons
+  const [registeredHackathons, setRegisteredHackathons] = useState<Set<string>>(new Set());
+  
+  // Track quiz results for active hackathons
+  const [quizResults, setQuizResults] = useState<Record<string, 'not_taken' | 'passed' | 'failed'>>({});
+
+  // Track submission status for hackathons
+  const [submittedHackathons, setSubmittedHackathons] = useState<Set<string>>(new Set());
 
   // Listen for chatbot state changes
   useEffect(() => {
@@ -225,6 +235,50 @@ const WeeklyHackathon = () => {
 
     return unsubscribe;
   }, []);
+
+  // Load registration states from localStorage on component mount
+  useEffect(() => {
+    const loadRegistrationStates = () => {
+      const registered = new Set<string>();
+      const submitted = new Set<string>();
+      const quizStates: Record<string, 'not_taken' | 'passed' | 'failed'> = {};
+      
+      sortedHackathons.forEach((hackathon) => {
+        const registrationKey = `hackathon_registered_${hackathon.id}`;
+        if (localStorage.getItem(registrationKey) === 'true') {
+          registered.add(hackathon.id);
+        }
+        
+        // Load submission state
+        const submissionKey = `hackathon_submitted_${hackathon.id}`;
+        if (localStorage.getItem(submissionKey) === 'true') {
+          submitted.add(hackathon.id);
+        }
+        
+        // Load quiz results for active hackathons
+        if (hackathon.status === 'active') {
+          const quizResultKey = `hackathon_quiz_result_${hackathon.id}`;
+          const storedQuizResult = localStorage.getItem(quizResultKey);
+          quizStates[hackathon.id] = storedQuizResult ? (storedQuizResult as 'passed' | 'failed') : 'not_taken';
+        }
+      });
+      
+      setRegisteredHackathons(registered);
+      setSubmittedHackathons(submitted);
+      setQuizResults(quizStates);
+    };
+
+    loadRegistrationStates();
+  }, []);
+
+  const handleRegister = (hackathonId: string) => {
+    // Update local state
+    setRegisteredHackathons(prev => new Set([...prev, hackathonId]));
+    
+    // Persist to localStorage
+    const registrationKey = `hackathon_registered_${hackathonId}`;
+    localStorage.setItem(registrationKey, 'true');
+  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -251,8 +305,6 @@ const WeeklyHackathon = () => {
         return "bg-muted text-muted-foreground";
     }
   };
-
-  const [selectedHackathon, setSelectedHackathon] = React.useState<Hackathon | null>(null);
 
   const handleHackathonClick = (hackathon: Hackathon) => {
     // Navigate to hackathon details page
@@ -450,14 +502,59 @@ const WeeklyHackathon = () => {
                     <Button
                       variant={hackathon.status === "active" ? "success" : "outline"}
                       size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card click
+                        if (hackathon.status === "active") {
+                          // For active hackathons, handle based on quiz and submission state
+                          const quizResult = quizResults[hackathon.id] || 'not_taken';
+                          const isSubmitted = submittedHackathons.has(hackathon.id);
+                          
+                          if (isSubmitted) {
+                            // Navigate to view submission
+                            navigate(`/hackathon/${hackathon.id}/submission`);
+                          } else if (quizResult === 'passed') {
+                            // Navigate to submission page
+                            navigate(`/hackathon/${hackathon.id}/submission`);
+                          } else if (quizResult === 'not_taken') {
+                            // Navigate to details page to join challenge
+                            handleHackathonClick(hackathon);
+                          }
+                          // If failed, do nothing (disabled state)
+                        } else if (!registeredHackathons.has(hackathon.id)) {
+                          // For upcoming hackathons, handle registration
+                          handleRegister(hackathon.id);
+                        }
+                        // If already registered, do nothing (disabled state)
+                      }}
                       className={
-                        (hackathon.status === "active"
-                          ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white"
-                          : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground") +
-                        " hover:bg-inherit hover:text-inherit focus:bg-inherit focus:text-inherit"
+                        hackathon.status === "active"
+                          ? (submittedHackathons.has(hackathon.id)
+                              ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700"
+                              : quizResults[hackathon.id] === 'passed' 
+                                ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-purple-600 text-white hover:bg-purple-700"
+                                : quizResults[hackathon.id] === 'failed'
+                                  ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-red-600 text-white cursor-not-allowed opacity-75"
+                                  : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700")
+                          : registeredHackathons.has(hackathon.id)
+                            ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-blue-600 text-white cursor-default"
+                            : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
+                      }
+                      disabled={
+                        (hackathon.status !== "active" && registeredHackathons.has(hackathon.id)) ||
+                        (hackathon.status === "active" && quizResults[hackathon.id] === 'failed')
                       }
                     >
-                      {hackathon.status === "active" ? "Join" : "Register"}
+                      {hackathon.status === "active" 
+                        ? (submittedHackathons.has(hackathon.id)
+                            ? "📄 View Submission"
+                            : quizResults[hackathon.id] === 'passed'
+                              ? "🏆 Submit"
+                              : quizResults[hackathon.id] === 'failed'
+                                ? "❌ Failed"
+                                : "Join")
+                        : registeredHackathons.has(hackathon.id) 
+                          ? "✅ Registered" 
+                          : "Register"}
                     </Button>
                   </div>
                   {/* Subtle animated rainbow border on hover */}
@@ -573,8 +670,16 @@ const WeeklyHackathon = () => {
               Skills: {selectedHackathon?.skills?.join(", ")}
             </div>
           </div>
-          {/* Register/Enter Button at Center Bottom */}
-          <div className="absolute left-0 right-0 bottom-0 flex justify-center pb-6">
+          {/* Registration Status and Button */}
+          <div className="absolute left-0 right-0 bottom-0 flex flex-col items-center pb-6">
+            {selectedHackathon && registeredHackathons.has(selectedHackathon.id) && (
+              <div className="flex items-center text-green-600 mb-2">
+                <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm font-medium">Already Registered</span>
+              </div>
+            )}
             <Button 
               size="lg" 
               className={`bg-primary text-primary-foreground px-8 py-3 rounded-full shadow-lg`}
