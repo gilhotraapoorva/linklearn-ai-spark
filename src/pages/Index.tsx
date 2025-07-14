@@ -20,6 +20,26 @@ import {
   Star
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
+
+const xpDataPreview = [
+  { day: 'Mon', xp: 63 },
+  { day: 'Tue', xp: 156 },
+  { day: 'Wed', xp: 189 },
+  { day: 'Thu', xp: 136 },
+  { day: 'Fri', xp: 145 },
+  { day: 'Sat', xp: 144 },
+  { day: 'Sun', xp: 170 },
+];
+const barColors = [
+  '#2563EB', // Mon - blue
+  '#22C55E', // Tue - green
+  '#F59E42', // Wed - orange
+  '#F43F5E', // Thu - red
+  '#A21CAF', // Fri - purple
+  '#FACC15', // Sat - yellow
+  '#06B6D4', // Sun - teal
+];
 
 const Index = () => {
   const navigate = useNavigate();
@@ -98,10 +118,22 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {/* <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Target className="h-4 w-4 mr-2" />
-                  Generate New Quest
-                </Button> */}
+                {/* XP Bar Chart Preview */}
+                <div className="w-full flex flex-col items-center mb-2 pt-6">
+                  <div className="w-full" style={{ height: 90 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={xpDataPreview} barCategoryGap={18}>
+                        <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: '#2563EB' }} />
+                        <Bar dataKey="xp" radius={[10, 10, 0, 0]} >
+                          {xpDataPreview.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={barColors[index]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="text-xs text-primary font-medium mt-1">Daily XP earned this week</div>
+                </div>
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -109,7 +141,7 @@ const Index = () => {
                   onClick={handleViewProgressReport}
                 >
                   <TrendingUp className="h-4 w-4 mr-2" />
-                  View Progress Report
+                  View Detailed Progress Report
                 </Button>
                 {/* <Button variant="outline" size="sm" className="w-full justify-start">
                   <Users className="h-4 w-4 mr-2" />

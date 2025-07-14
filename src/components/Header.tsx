@@ -213,12 +213,23 @@ const Header = () => {
                 <div className="text-sm font-medium">{username}</div>
                 <div className="text-xs text-muted-foreground">Learning Explorer</div>
               </div>
-              <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={username} />
-                <AvatarFallback className="bg-gradient-primary text-primary-foreground">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <span>
+                    <Avatar className="h-8 w-8 ring-2 ring-primary/20 cursor-pointer">
+                      <AvatarImage src="/placeholder-avatar.jpg" alt={username} />
+                      <AvatarFallback className="bg-gradient-primary text-primary-foreground">
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => alert('Signed out!')} className="text-destructive">
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
