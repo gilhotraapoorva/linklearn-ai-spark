@@ -468,7 +468,7 @@ const WeeklyHackathon = () => {
                       <Badge
                         className={
                           getDifficultyColor(hackathon.difficulty) +
-                          " px-2 py-0.5 rounded-full text-[10px] font-bold hover:bg-inherit hover:text-inherit focus:bg-inherit focus:text-inherit"
+                          " px-2 py-0.5 rounded-full text-[10px] font-bold"
                         }
                       >
                         {hackathon.difficulty}

@@ -29,8 +29,8 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   
-  // Use state for notifications and unread count
-  const [notifications, setNotifications] = useState([
+  // Load notifications from localStorage or use defaults
+  const defaultNotifications = [
     {
       id: 1,
       icon: Clock,
@@ -82,8 +82,25 @@ const Header = () => {
         }, 100);
       }
     }
-  ]);
-  const [unreadCount, setUnreadCount] = useState(notifications.length);
+  ];
+
+  // Initialize notifications state from localStorage
+  const [notifications, setNotifications] = useState(() => {
+    const savedNotificationsCleared = localStorage.getItem('notifications_cleared');
+    return savedNotificationsCleared === 'true' ? [] : defaultNotifications;
+  });
+
+  const [unreadCount, setUnreadCount] = useState(() => {
+    const savedNotificationsCleared = localStorage.getItem('notifications_cleared');
+    return savedNotificationsCleared === 'true' ? 0 : defaultNotifications.length;
+  });
+
+  // Function to mark all notifications as read and persist the state
+  const markAllAsRead = () => {
+    setUnreadCount(0);
+    setNotifications([]);
+    localStorage.setItem('notifications_cleared', 'true');
+  };
   
   const userStats = {
     name: "Alex Johnson",
@@ -198,7 +215,7 @@ const Header = () => {
                     })}
                   </div>
                   <div className="px-4 py-3 border-t border-border">
-                    <Button variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground" onClick={() => { setUnreadCount(0); setNotifications([]); }}>
+                    <Button variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground" onClick={markAllAsRead}>
                       Mark all as read
                     </Button>
                   </div>

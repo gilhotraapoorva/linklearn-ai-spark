@@ -551,7 +551,7 @@ const HackathonDetails = () => {
         <Button 
           variant="ghost" 
           className="mb-6 text-muted-foreground hover:text-foreground"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/')}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
