@@ -128,7 +128,7 @@ const Index = () => {
             <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
+                  <TrendingUp className="h-5 w-5 text-primary" />
                   Progress Report
                 </CardTitle>
               </CardHeader>

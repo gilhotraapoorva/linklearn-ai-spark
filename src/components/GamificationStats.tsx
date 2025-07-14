@@ -91,7 +91,7 @@ const GamificationStats = () => {
       <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-accent" />
+            <Star className="h-5 w-5 text-accent" />
             Level & Experience
           </CardTitle>
         </CardHeader>
@@ -136,7 +136,7 @@ const GamificationStats = () => {
       <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <Flame className="h-5 w-5 text-gamification-streak" />
+            <Trophy className="h-5 w-5 text-yellow-500" />
             Streaks & Achievements
           </CardTitle>
         </CardHeader>

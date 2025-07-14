@@ -122,7 +122,9 @@ const DailyQuest = () => {
     <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
+          <div className="flex items-center justify-center w-5 h-5 text-primary animate-pulse-glow">
+            <span className="text-lg font-bold">&lt;/&gt;</span>
+          </div>
           Daily Dev Dose
           {currentQuest.completed && (
             <Badge className="bg-gradient-success text-success-foreground">

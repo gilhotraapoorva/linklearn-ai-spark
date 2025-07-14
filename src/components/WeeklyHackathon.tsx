@@ -450,6 +450,19 @@ const WeeklyHackathon = () => {
                             <span className="block text-xs font-semibold text-primary mb-1">This hackathon matches your skillset.</span>
                           </TooltipContent>
                         </Tooltip>
+                      ) : hackathon.company === 'Tesla' ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="bottom" 
+                            align="center" 
+                            className="w-48 text-left z-[99999] drop-shadow-2xl"
+                          >
+                            <span className="block text-xs font-semibold text-primary mb-1">This hackathon matches your skillset.</span>
+                          </TooltipContent>
+                        </Tooltip>
                       ) : isForYou && (
                         <Tooltip>
                           <TooltipTrigger asChild>
