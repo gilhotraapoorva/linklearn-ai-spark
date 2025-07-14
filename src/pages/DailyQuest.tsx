@@ -20,8 +20,16 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { generateDailyQuest, DailyQuest } from "../lib/ollamaService";
 
 const getDifficultyColor = (difficulty: string) => {
-  // Always return colorless style for difficulty
-  return 'bg-transparent text-foreground border border-border';
+  switch (difficulty) {
+    case 'Beginner':
+      return 'bg-green-500 text-white';
+    case 'Intermediate':
+      return 'bg-yellow-400 text-black';
+    case 'Advanced':
+      return 'bg-red-500 text-white';
+    default:
+      return 'bg-muted text-muted-foreground';
+  }
 };
 
 const QuestPage = () => {

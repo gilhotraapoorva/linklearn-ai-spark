@@ -22,10 +22,11 @@ import {
 } from "lucide-react";
 import linkedinLogo from '/linkedin.svg';
 import { useUser } from "../lib/UserContext";
+import { logOut } from "../lib/authActions";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   
   const userStats = {
     name: "Alex Johnson",
@@ -225,7 +226,14 @@ const Header = () => {
                   </span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem onClick={() => alert('Signed out!')} className="text-destructive">
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      await logOut();
+                      setUser(null);
+                      navigate("/auth-demo");
+                    }}
+                    className="text-destructive"
+                  >
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
