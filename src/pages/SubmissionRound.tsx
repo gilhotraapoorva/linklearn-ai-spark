@@ -45,6 +45,33 @@ const SubmissionRound = () => {
   const [newTech, setNewTech] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [submissionData, setSubmissionData] = useState<any>(null);
+
+  // Check if project was already submitted on component mount
+  React.useEffect(() => {
+    const submissionKey = `hackathon_submitted_${id}`;
+    const submissionDataKey = `hackathon_submission_data_${id}`;
+    const isAlreadySubmitted = localStorage.getItem(submissionKey) === 'true';
+    
+    if (isAlreadySubmitted) {
+      setIsSubmitted(true);
+      setUploadProgress(100);
+      
+      // Load submission data
+      const storedData = localStorage.getItem(submissionDataKey);
+      if (storedData) {
+        const data = JSON.parse(storedData);
+        setSubmissionData(data);
+        // Also populate form fields for viewing
+        setProjectTitle(data.projectTitle || '');
+        setProjectDescription(data.projectDescription || '');
+        setGithubUrl(data.githubUrl || '');
+        setLiveUrl(data.liveUrl || '');
+        setVideoUrl(data.videoUrl || '');
+        setTechStack(data.techStack || []);
+      }
+    }
+  }, [id]);
 
   // Deadline: 2 days from now
   const deadline = new Date();
@@ -93,6 +120,25 @@ const SubmissionRound = () => {
         if (prev >= 100) {
           clearInterval(interval);
           setIsSubmitted(true);
+          
+          // Save submission state and data to localStorage
+          const submissionKey = `hackathon_submitted_${id}`;
+          const submissionDataKey = `hackathon_submission_data_${id}`;
+          const submissionData = {
+            projectTitle,
+            projectDescription,
+            githubUrl,
+            liveUrl,
+            videoUrl,
+            techStack,
+            files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            submittedAt: new Date().toISOString(),
+            submissionId: `HSB-${Date.now().toString().slice(-6)}`
+          };
+          
+          localStorage.setItem(submissionKey, 'true');
+          localStorage.setItem(submissionDataKey, JSON.stringify(submissionData));
+          
           return 100;
         }
         return prev + 10;
@@ -142,23 +188,127 @@ const SubmissionRound = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
-                <h3 className="font-semibold text-blue-900 mb-3">Submission Details</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-blue-600">Project Title:</span>
-                    <p className="font-medium text-blue-900">{projectTitle}</p>
+                <h3 className="font-semibold text-blue-900 mb-4">Submission Details</h3>
+                <div className="space-y-4">
+                  {/* Project Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-blue-600 font-medium">Project Title:</span>
+                      <p className="font-semibold text-blue-900 text-lg">{submissionData?.projectTitle || projectTitle}</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-600 font-medium">Submission ID:</span>
+                      <p className="font-mono text-blue-900">{submissionData?.submissionId || `HSB-${Date.now().toString().slice(-6)}`}</p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-blue-600">Submission ID:</span>
-                    <p className="font-mono text-blue-900">HSB-{Date.now().toString().slice(-6)}</p>
+
+                  {/* Project Description */}
+                  {(submissionData?.projectDescription || projectDescription) && (
+                    <div>
+                      <span className="text-blue-600 font-medium">Project Description:</span>
+                      <p className="text-blue-900 mt-1 p-3 bg-white rounded border text-sm">
+                        {submissionData?.projectDescription || projectDescription}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* URLs Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-blue-700 font-medium">Project Links:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {(submissionData?.githubUrl || githubUrl) && (
+                        <div className="flex items-center gap-2 p-3 bg-white rounded border">
+                          <Github className="h-4 w-4 text-gray-600" />
+                          <div>
+                            <span className="text-blue-600 text-xs font-medium">GitHub:</span>
+                            <a 
+                              href={submissionData?.githubUrl || githubUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="block text-blue-700 hover:text-blue-800 text-sm truncate"
+                            >
+                              {submissionData?.githubUrl || githubUrl}
+                            </a>
+                          </div>
+                          <ExternalLink className="h-3 w-3 text-gray-400" />
+                        </div>
+                      )}
+                      {(submissionData?.liveUrl || liveUrl) && (
+                        <div className="flex items-center gap-2 p-3 bg-white rounded border">
+                          <ExternalLink className="h-4 w-4 text-gray-600" />
+                          <div>
+                            <span className="text-blue-600 text-xs font-medium">Live Demo:</span>
+                            <a 
+                              href={submissionData?.liveUrl || liveUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="block text-blue-700 hover:text-blue-800 text-sm truncate"
+                            >
+                              {submissionData?.liveUrl || liveUrl}
+                            </a>
+                          </div>
+                          <ExternalLink className="h-3 w-3 text-gray-400" />
+                        </div>
+                      )}
+                      {(submissionData?.videoUrl || videoUrl) && (
+                        <div className="flex items-center gap-2 p-3 bg-white rounded border md:col-span-2">
+                          <FileText className="h-4 w-4 text-gray-600" />
+                          <div>
+                            <span className="text-blue-600 text-xs font-medium">Demo Video:</span>
+                            <a 
+                              href={submissionData?.videoUrl || videoUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="block text-blue-700 hover:text-blue-800 text-sm truncate"
+                            >
+                              {submissionData?.videoUrl || videoUrl}
+                            </a>
+                          </div>
+                          <ExternalLink className="h-3 w-3 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-blue-600">Files Uploaded:</span>
-                    <p className="font-medium text-blue-900">{totalFiles} files</p>
-                  </div>
-                  <div>
-                    <span className="text-blue-600">Submitted On:</span>
-                    <p className="font-medium text-blue-900">{new Date().toLocaleDateString()}</p>
+
+                  {/* Tech Stack */}
+                  {(submissionData?.techStack?.length > 0 || techStack.length > 0) && (
+                    <div>
+                      <span className="text-blue-600 font-medium">Technologies Used:</span>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {(submissionData?.techStack || techStack).map((tech: string, index: number) => (
+                          <Badge 
+                            key={index} 
+                            className="bg-blue-100 text-blue-800 hover:bg-blue-200"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Files and Submission Time */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t border-blue-200">
+                    <div>
+                      <span className="text-blue-600 font-medium">Files Uploaded:</span>
+                      <p className="text-blue-900 font-semibold">{submissionData?.files?.length || totalFiles} files</p>
+                    </div>
+                    <div>
+                      <span className="text-blue-600 font-medium">Submitted On:</span>
+                      <p className="text-blue-900 font-semibold">
+                        {submissionData?.submittedAt 
+                          ? new Date(submissionData.submittedAt).toLocaleDateString()
+                          : new Date().toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-blue-600 font-medium">Submitted At:</span>
+                      <p className="text-blue-900 font-semibold">
+                        {submissionData?.submittedAt 
+                          ? new Date(submissionData.submittedAt).toLocaleTimeString()
+                          : new Date().toLocaleTimeString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

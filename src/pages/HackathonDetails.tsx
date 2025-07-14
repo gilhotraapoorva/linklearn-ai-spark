@@ -453,6 +453,9 @@ const HackathonDetails = () => {
   // State for quiz results (persistent via localStorage)
   const [quizResult, setQuizResult] = useState<'not_taken' | 'passed' | 'failed'>('not_taken');
   
+  // State for submission status (persistent via localStorage)
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
   // Other state
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -482,6 +485,15 @@ const HackathonDetails = () => {
     const storedQuizResult = localStorage.getItem(quizResultKey);
     if (storedQuizResult) {
       setQuizResult(storedQuizResult as 'passed' | 'failed');
+    }
+  }, [id]);
+
+  // Load persistent submission state from localStorage
+  useEffect(() => {
+    const submissionKey = `hackathon_submitted_${id}`;
+    const submissionState = localStorage.getItem(submissionKey);
+    if (submissionState === 'true') {
+      setIsSubmitted(true);
     }
   }, [id]);
 
@@ -644,16 +656,20 @@ const HackathonDetails = () => {
                     <Button
                       onClick={
                         isActive 
-                          ? (quizResult === 'not_taken' ? handleJoin : quizResult === 'passed' ? () => navigate(`/hackathon/${id}/submission`) : null)
+                          ? isSubmitted
+                            ? () => navigate(`/hackathon/${id}/submission`)
+                            : (quizResult === 'not_taken' ? handleJoin : quizResult === 'passed' ? () => navigate(`/hackathon/${id}/submission`) : null)
                           : handleRegister
                       }
                       className={`relative px-10 py-5 text-lg font-bold rounded-3xl shadow-xl transform hover:scale-105 transition-all ${
                         isActive 
-                          ? quizResult === 'passed'
-                            ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border border-purple-300'
-                            : quizResult === 'failed'
-                              ? 'bg-gradient-to-r from-red-600 to-red-700 text-white border border-red-300 cursor-not-allowed opacity-75'
-                              : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border border-green-300'
+                          ? isSubmitted
+                            ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border border-blue-300'
+                            : quizResult === 'passed'
+                              ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white border border-purple-300'
+                              : quizResult === 'failed'
+                                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white border border-red-300 cursor-not-allowed opacity-75'
+                                : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border border-green-300'
                           : isRegistered 
                             ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border border-blue-300 cursor-default'
                             : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border border-green-300'
@@ -661,7 +677,9 @@ const HackathonDetails = () => {
                       disabled={(!isActive && isRegistered) || (isActive && quizResult === 'failed')}
                     >
                       {isActive ? (
-                        quizResult === 'passed' ? (
+                        isSubmitted ? (
+                          <>📄 View Submission</>
+                        ) : quizResult === 'passed' ? (
                           <>🏆 Submit Project</>
                         ) : quizResult === 'failed' ? (
                           <>❌ Quiz Failed</>

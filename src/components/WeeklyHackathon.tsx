@@ -219,6 +219,9 @@ const WeeklyHackathon = () => {
   // Track quiz results for active hackathons
   const [quizResults, setQuizResults] = useState<Record<string, 'not_taken' | 'passed' | 'failed'>>({});
 
+  // Track submission status for hackathons
+  const [submittedHackathons, setSubmittedHackathons] = useState<Set<string>>(new Set());
+
   // Listen for chatbot state changes
   useEffect(() => {
     const unsubscribe = hackathonEvents.listen((data) => {
@@ -237,12 +240,19 @@ const WeeklyHackathon = () => {
   useEffect(() => {
     const loadRegistrationStates = () => {
       const registered = new Set<string>();
+      const submitted = new Set<string>();
       const quizStates: Record<string, 'not_taken' | 'passed' | 'failed'> = {};
       
       sortedHackathons.forEach((hackathon) => {
         const registrationKey = `hackathon_registered_${hackathon.id}`;
         if (localStorage.getItem(registrationKey) === 'true') {
           registered.add(hackathon.id);
+        }
+        
+        // Load submission state
+        const submissionKey = `hackathon_submitted_${hackathon.id}`;
+        if (localStorage.getItem(submissionKey) === 'true') {
+          submitted.add(hackathon.id);
         }
         
         // Load quiz results for active hackathons
@@ -254,6 +264,7 @@ const WeeklyHackathon = () => {
       });
       
       setRegisteredHackathons(registered);
+      setSubmittedHackathons(submitted);
       setQuizResults(quizStates);
     };
 
@@ -486,9 +497,14 @@ const WeeklyHackathon = () => {
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent card click
                         if (hackathon.status === "active") {
-                          // For active hackathons, handle based on quiz result
+                          // For active hackathons, handle based on quiz and submission state
                           const quizResult = quizResults[hackathon.id] || 'not_taken';
-                          if (quizResult === 'passed') {
+                          const isSubmitted = submittedHackathons.has(hackathon.id);
+                          
+                          if (isSubmitted) {
+                            // Navigate to view submission
+                            navigate(`/hackathon/${hackathon.id}/submission`);
+                          } else if (quizResult === 'passed') {
                             // Navigate to submission page
                             navigate(`/hackathon/${hackathon.id}/submission`);
                           } else if (quizResult === 'not_taken') {
@@ -504,11 +520,13 @@ const WeeklyHackathon = () => {
                       }}
                       className={
                         hackathon.status === "active"
-                          ? (quizResults[hackathon.id] === 'passed' 
-                              ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-purple-600 text-white hover:bg-purple-700"
-                              : quizResults[hackathon.id] === 'failed'
-                                ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-red-600 text-white cursor-not-allowed opacity-75"
-                                : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700")
+                          ? (submittedHackathons.has(hackathon.id)
+                              ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700"
+                              : quizResults[hackathon.id] === 'passed' 
+                                ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-purple-600 text-white hover:bg-purple-700"
+                                : quizResults[hackathon.id] === 'failed'
+                                  ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-red-600 text-white cursor-not-allowed opacity-75"
+                                  : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-green-600 text-white hover:bg-green-700")
                           : registeredHackathons.has(hackathon.id)
                             ? "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-blue-600 text-white cursor-default"
                             : "w-full mt-1 flex-shrink-0 text-xs py-1 px-2 h-7 font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
@@ -519,11 +537,13 @@ const WeeklyHackathon = () => {
                       }
                     >
                       {hackathon.status === "active" 
-                        ? (quizResults[hackathon.id] === 'passed'
-                            ? "🏆 Submit"
-                            : quizResults[hackathon.id] === 'failed'
-                              ? "❌ Failed"
-                              : "Join")
+                        ? (submittedHackathons.has(hackathon.id)
+                            ? "📄 View Submission"
+                            : quizResults[hackathon.id] === 'passed'
+                              ? "🏆 Submit"
+                              : quizResults[hackathon.id] === 'failed'
+                                ? "❌ Failed"
+                                : "Join")
                         : registeredHackathons.has(hackathon.id) 
                           ? "✅ Registered" 
                           : "Register"}
