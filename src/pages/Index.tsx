@@ -135,8 +135,8 @@ const Index = () => {
                   <div className="text-xs text-primary font-medium mt-1">Daily XP earned this week</div>
                 </div>
                 <Button 
-                  variant="outline" 
-                  size="sm" 
+                  variant="quest" 
+                  size="quest" 
                   className="w-full justify-start"
                   onClick={handleViewProgressReport}
                 >

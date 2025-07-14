@@ -117,18 +117,6 @@ const RedeemXP = () => {
 						</Card>
 					))}
 				</div>
-				<div className="flex flex-col items-center justify-center mt-8">
-					<span className="text-4xl font-extrabold text-blue-500 drop-shadow-glow animate-pulse-glow mb-2">
-						1000 XP
-					</span>
-					<Button
-						variant="primary"
-						size="lg"
-						className="w-full max-w-xs font-bold bg-primary text-white hover:bg-primary/90 rounded-xl shadow-lg text-lg"
-					>
-						Redeem XP
-					</Button>
-				</div>
 			</div>
 		</div>
 	);

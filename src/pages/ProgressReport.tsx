@@ -290,10 +290,10 @@ const ProgressReport = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 size="sm" 
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-2 hover:bg-blue-50 transition-colors"
+                className="flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back
@@ -304,11 +304,19 @@ const ProgressReport = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-900"
+              >
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
               </Button>
-              <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-900"
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -327,7 +335,7 @@ const ProgressReport = () => {
                 variant={selectedTimeframe === timeframe ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setSelectedTimeframe(timeframe)}
-                className={selectedTimeframe === timeframe ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50'}
+                className={selectedTimeframe === timeframe ? 'bg-blue-600 text-white' : 'border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-900'}
               >
                 {timeframe.charAt(0).toUpperCase() + timeframe.slice(1)}
               </Button>

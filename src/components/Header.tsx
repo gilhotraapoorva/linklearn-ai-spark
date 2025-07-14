@@ -121,14 +121,14 @@ const Header = () => {
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8" />
+              <a href="/" className="flex items-center gap-2 group" style={{ textDecoration: 'none' }}>
+                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8 group-hover:scale-105 transition-transform" />
+                <div className="flex items-center gap-1">
+                  <span className="text-xl font-bold text-foreground">Learning</span>
+                  <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
+                  <span className="text-xl font-bold text-primary">Companion</span>
+                </div>
               </a>
-              <div className="flex items-center gap-1">
-                <span className="text-xl font-bold text-foreground">Learning</span>
-                <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
-                <span className="text-xl font-bold text-primary">Companion</span>
-              </div>
             </div>
           </div>
 
