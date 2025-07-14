@@ -107,7 +107,12 @@ const RedeemXP = () => {
 								<div className="text-base text-muted-foreground mb-2">
 									{option.description}
 								</div>
-								<div className="font-bold text-lg text-blue-700 drop-shadow-[0_0_8px_rgba(37,112,239,0.5)] animate-pulse-glow">{option.xp.toLocaleString()} XP</div>
+								<div className="relative flex items-center justify-center">
+									<span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+									<span className="w-24 h-10 rounded-full bg-blue-200 opacity-60 blur-xl"></span>
+									</span>
+									<span className="relative font-bold text-lg text-blue-700">{option.xp.toLocaleString()} <span className="font-extrabold">XP</span></span>
+								</div>
 							</div>
 							<CardContent className="flex-shrink-0 w-full flex justify-center mt-auto pt-2">
 								<Button variant="default" className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold rounded-full px-8 py-3 shadow-lg text-lg w-full max-w-xs">
