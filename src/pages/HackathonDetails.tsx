@@ -30,86 +30,412 @@ import {
   CheckCircle
 } from "lucide-react";
 
-const HackathonDetails = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [likes, setLikes] = useState(1247);
-  const [isLiked, setIsLiked] = useState(false);
-  const [carouselApi, setCarouselApi] = useState(null);
-
-  // Check if this hackathon is active (for demo, we'll make hack-001 active)
-  const isActive = id === "hack-001";
-
-  const hackathon = {
-    id: "buildit-2024",
-    title: "BuildIT: Innovation Challenge 2024",
-    subtitle: "Build Tomorrow's Solutions Today",
-    organizer: "College Crave Pvt Ltd",
-    logo: "/public/placeholder.svg",
+// Hackathon data that matches the cards from WeeklyHackathon component
+const hackathonData = {
+  "hack-001": {
+    id: "hack-001",
+    title: "Build a Real-time Chat App",
+    subtitle: "Create modern messaging solutions with cutting-edge technology",
+    organizer: "Intuit",
+    logo: "/intuit.svg",
     banner: "/public/placeholder.svg",
-    description: "Join the ultimate innovation challenge where creativity meets technology! BuildIT 2024 is a premier hackathon designed to bring together brilliant minds to solve real-world problems through cutting-edge technology solutions.",
-    longDescription: `BuildIT 2024 is more than just a hackathon - it's a platform where innovation thrives and future leaders emerge. Over 48 intensive hours, participants will collaborate, innovate, and build solutions that address pressing challenges in various domains including sustainability, healthcare, education, and fintech.
+    description: "Join Intuit's premier hackathon focused on building real-time chat applications. Create modern messaging solutions that can handle thousands of concurrent users with seamless performance.",
+    longDescription: `Intuit's Real-time Chat App Challenge is designed to push the boundaries of modern communication technology. Over 48 intensive hours, you'll build scalable chat applications using the latest web technologies including WebSockets, real-time databases, and modern UI frameworks.
 
-This year's theme focuses on creating impactful solutions that can make a real difference in society. Whether you're a seasoned developer, a creative designer, or a passionate problem-solver, BuildIT provides the perfect environment to showcase your skills and learn from industry experts.`,
+This challenge focuses on creating chat applications that solve real business problems - from customer support systems to team collaboration tools. You'll work with industry-standard technologies and receive mentorship from Intuit's engineering teams.`,
     
     // Basic Info
     mode: "Hybrid",
-    location: "IIT Delhi & Online",
+    location: "Intuit Campus, Mountain View & Online",
     startDate: "2024-03-15",
     endDate: "2024-03-17",
     registrationDeadline: "2024-03-10",
     duration: "48 hours",
     teamSize: "2-4 members",
-    participantCount: 2847,
-    maxParticipants: 5000,
+    participantCount: 1247,
+    maxParticipants: 2000,
     
     // Status and Registration
-    status: isActive ? "Active" : "Live",
-    registrationStatus: isActive ? "Active" : "Open",
-    difficulty: "All Levels",
+    status: "Active",
+    registrationStatus: "Active",
+    difficulty: "Intermediate",
     
     // Tracks and Themes
     tracks: [
-      { name: "Healthcare Innovation", description: "Digital health solutions for better patient care" },
-      { name: "Sustainable Technology", description: "Green tech solutions for environmental challenges" },
-      { name: "FinTech Revolution", description: "Financial technology for inclusive banking" },
-      { name: "Education Technology", description: "Innovative learning solutions for all ages" },
-      { name: "Smart Cities", description: "IoT and AI solutions for urban development" },
-      { name: "Open Innovation", description: "Creative solutions to any real-world problem" }
+      { name: "Real-time Messaging", description: "Build scalable chat systems with WebSocket technology" },
+      { name: "Customer Support Chat", description: "Create AI-powered customer service chat solutions" },
+      { name: "Team Collaboration", description: "Build workplace communication tools" },
+      { name: "Mobile Chat Apps", description: "Develop cross-platform mobile messaging apps" },
+      { name: "Voice & Video Integration", description: "Add multimedia communication features" },
+      { name: "Security & Privacy", description: "Implement end-to-end encryption solutions" }
     ],
     
     // Skills and Technologies
     preferredSkills: [
       { name: "React", emoji: "⚛️" },
+      { name: "WebSockets", emoji: "🔗" },
       { name: "Node.js", emoji: "🟢" },
-      { name: "Python", emoji: "🐍" },
-      { name: "Machine Learning", emoji: "🤖" },
+      { name: "Database Design", emoji: "🗄️" },
       { name: "UI/UX Design", emoji: "🎨" },
-      { name: "Mobile Development", emoji: "📱" },
-      { name: "Blockchain", emoji: "⛓️" },
-      { name: "IoT", emoji: "🌐" },
-      { name: "Data Science", emoji: "📊" },
-      { name: "Cloud Computing", emoji: "☁️" }
+      { name: "Real-time APIs", emoji: "⚡" },
+      { name: "JavaScript", emoji: "📜" },
+      { name: "MongoDB", emoji: "🍃" },
+      { name: "Redis", emoji: "🔴" },
+      { name: "Socket.io", emoji: "🔌" }
     ],
     
     // Prizes and Rewards
-    totalPrizePool: "₹50,000",
+    totalPrizePool: "LinkedIn Premium & Mentorship",
     prizes: [
-      { position: "1st Place", amount: "₹25,000", perks: ["15,000 XP Points", "Internship Opportunities", "Mentorship Program", "Trophy + Certificate"] },
-      { position: "2nd Place", amount: "₹15,000", perks: ["10,000 XP Points", "Mentorship Program", "Trophy + Certificate"] },
-      { position: "3rd Place", amount: "₹10,000", perks: ["5,000 XP Points", "Trophy + Certificate"] },
+      { position: "1st Place", amount: "LinkedIn Premium (1 year)", perks: ["20,000 XP Points", "Intuit Internship Fast-track", "1-on-1 Mentorship", "Winner Certificate"] },
+      { position: "2nd Place", amount: "LinkedIn Premium (6 months)", perks: ["15,000 XP Points", "Career Guidance Session", "Certificate"] },
+      { position: "3rd Place", amount: "LinkedIn Premium (3 months)", perks: ["10,000 XP Points", "Certificate"] },
     ],
     
     // Perks and Benefits
     perks: [
-      "Free T-shirts and Swag Kit",
-      "Certificate of Participation + 100 XP Points",
-      "Networking with Industry Experts",
-      "Workshop Access"
+      "Intuit Swag Kit & T-shirts",
+      "Certificate of Participation + 500 XP Points",
+      "Networking with Intuit Engineers",
+      "WebSocket & Real-time Development Workshop"
     ]
-  };
+  },
+
+  "hack-002": {
+    id: "hack-002",
+    title: "AI-Powered Task Manager",
+    subtitle: "Build intelligent productivity solutions with machine learning",
+    organizer: "Google",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    banner: "/public/placeholder.svg",
+    description: "Join Google's AI hackathon to build next-generation task management systems powered by artificial intelligence and machine learning.",
+    longDescription: `Google's AI-Powered Task Manager Challenge brings together the best minds to create intelligent productivity solutions. Over 72 hours, you'll leverage Google's AI tools and APIs to build task managers that understand user behavior, predict priorities, and automate workflow optimization.
+
+This advanced challenge focuses on practical AI applications in productivity software. You'll work with Google Cloud AI services, TensorFlow, and modern web frameworks to create solutions that genuinely improve how people manage their work and personal tasks.`,
+    
+    mode: "Online",
+    location: "Google Campus, Sunnyvale & Virtual",
+    startDate: "2024-03-20",
+    endDate: "2024-03-23",
+    registrationDeadline: "2024-03-15",
+    duration: "72 hours",
+    teamSize: "2-5 members",
+    participantCount: 892,
+    maxParticipants: 1500,
+    
+    status: "Upcoming",
+    registrationStatus: "Open",
+    difficulty: "Advanced",
+    
+    tracks: [
+      { name: "Smart Task Prioritization", description: "AI algorithms for intelligent task ranking" },
+      { name: "Natural Language Processing", description: "Voice and text-based task input systems" },
+      { name: "Predictive Analytics", description: "ML models for deadline and workload prediction" },
+      { name: "Workflow Automation", description: "AI-driven task automation and suggestions" },
+      { name: "Team Collaboration AI", description: "Intelligent team task distribution systems" },
+      { name: "Personal Productivity AI", description: "Personalized productivity enhancement tools" }
+    ],
+    
+    preferredSkills: [
+      { name: "Python", emoji: "🐍" },
+      { name: "Machine Learning", emoji: "🤖" },
+      { name: "TensorFlow", emoji: "🧠" },
+      { name: "React", emoji: "⚛️" },
+      { name: "API Design", emoji: "🔌" },
+      { name: "Google Cloud", emoji: "☁️" },
+      { name: "NLP", emoji: "💬" },
+      { name: "Data Science", emoji: "📊" },
+      { name: "Flask/Django", emoji: "🐍" },
+      { name: "JavaScript", emoji: "📜" }
+    ],
+    
+    totalPrizePool: "$500 + Tech Benefits",
+    prizes: [
+      { position: "1st Place", amount: "$500 Cash Prize", perks: ["25,000 XP Points", "Google Internship Interview", "AI Conference Pass", "Winner Trophy"] },
+      { position: "2nd Place", amount: "Tech Conference Pass", perks: ["20,000 XP Points", "Google Cloud Credits", "Certificate"] },
+      { position: "3rd Place", amount: "AI Workshop Access", perks: ["15,000 XP Points", "Google AI Course Access", "Certificate"] },
+    ],
+    
+    perks: [
+      "Google Swag Package",
+      "Certificate of Participation + 750 XP Points",
+      "Access to Google AI Workshops",
+      "Networking with Google AI Engineers"
+    ]
+  },
+
+  "hack-003": {
+    id: "hack-003",
+    title: "Apple Innovation Challenge",
+    subtitle: "Design next-gen apps for the Apple ecosystem",
+    organizer: "Apple",
+    logo: "/apple.svg",
+    banner: "/public/placeholder.svg",
+    description: "Design and build next-generation apps or solutions for the Apple ecosystem. Create innovative experiences across iOS, macOS, watchOS, and more.",
+    longDescription: `Apple's Innovation Challenge invites developers to push the boundaries of what's possible within the Apple ecosystem. Over 36 intensive hours, you'll create applications that showcase the power of Swift, SwiftUI, and Apple's latest frameworks.
+
+This challenge focuses on creating user experiences that are uniquely Apple - intuitive, beautiful, and powerful. Whether you're building for iPhone, iPad, Mac, Apple Watch, or Apple TV, your solution should demonstrate innovative use of Apple technologies and design principles.`,
+    
+    mode: "Hybrid",
+    location: "Apple Park, Cupertino & Online",
+    startDate: "2024-03-25",
+    endDate: "2024-03-27",
+    registrationDeadline: "2024-03-20",
+    duration: "36 hours",
+    teamSize: "1-4 members",
+    participantCount: 1563,
+    maxParticipants: 2500,
+    
+    status: "Upcoming",
+    registrationStatus: "Open",
+    difficulty: "Intermediate",
+    
+    tracks: [
+      { name: "iOS Excellence", description: "Outstanding iPhone and iPad applications" },
+      { name: "macOS Innovation", description: "Next-generation Mac applications" },
+      { name: "watchOS Health & Fitness", description: "Apple Watch health and wellness apps" },
+      { name: "AR/VR Experiences", description: "Immersive experiences with ARKit and Vision Pro" },
+      { name: "Cross-Platform Magic", description: "Seamless experiences across Apple devices" },
+      { name: "Accessibility Champions", description: "Apps that showcase inclusive design" }
+    ],
+    
+    preferredSkills: [
+      { name: "Swift", emoji: "🦉" },
+      { name: "SwiftUI", emoji: "🎨" },
+      { name: "iOS", emoji: "📱" },
+      { name: "Xcode", emoji: "🔨" },
+      { name: "UI/UX", emoji: "✨" },
+      { name: "Core Data", emoji: "💾" },
+      { name: "ARKit", emoji: "🥽" },
+      { name: "HealthKit", emoji: "❤️" },
+      { name: "CloudKit", emoji: "☁️" },
+      { name: "React", emoji: "⚛️" }
+    ],
+    
+    totalPrizePool: "MacBook + App Store Feature",
+    prizes: [
+      { position: "1st Place", amount: "MacBook Air M3", perks: ["30,000 XP Points", "App Store Feature", "Apple Developer Program", "WWDC Invitation"] },
+      { position: "2nd Place", amount: "iPad Pro + Apple Pencil", perks: ["25,000 XP Points", "App Store Promotion", "Apple Swag Package"] },
+      { position: "3rd Place", amount: "Apple Watch Ultra", perks: ["20,000 XP Points", "Apple Developer Swag", "Certificate"] },
+    ],
+    
+    perks: [
+      "Apple Developer Kit",
+      "Certificate of Participation + 1000 XP Points",
+      "Exclusive Apple Swag",
+      "Access to Apple Engineering Sessions"
+    ]
+  },
+
+  "hack-004": {
+    id: "hack-004",
+    title: "Adobe Creative Hack",
+    subtitle: "Design innovative creative tools and solutions",
+    organizer: "Adobe",
+    logo: "/adobe.svg",
+    banner: "/public/placeholder.svg",
+    description: "Design innovative creative tools and solutions that empower creators worldwide. Build applications that enhance the creative workflow.",
+    longDescription: `Adobe's Creative Hack challenges designers and developers to reimagine the future of creativity. Over 24 hours, you'll build tools, plugins, or applications that enhance the creative process using Adobe's APIs, SDKs, and cutting-edge design technologies.
+
+This beginner-friendly challenge welcomes all skill levels and focuses on innovation in design and creativity. Whether you're building Photoshop plugins, Illustrator extensions, or completely new creative applications, your solution should inspire and empower creators.`,
+    
+    mode: "Online",
+    location: "Adobe Headquarters, San Jose & Virtual",
+    startDate: "2024-03-18",
+    endDate: "2024-03-19",
+    registrationDeadline: "2024-03-13",
+    duration: "24 hours",
+    teamSize: "1-3 members",
+    participantCount: 2100,
+    maxParticipants: 3000,
+    
+    status: "Upcoming",
+    registrationStatus: "Open",
+    difficulty: "Beginner",
+    
+    tracks: [
+      { name: "Creative Plugins", description: "Enhance Adobe Creative Suite with custom plugins" },
+      { name: "Design Automation", description: "Tools that automate repetitive design tasks" },
+      { name: "AI-Powered Creativity", description: "Integrate Adobe Sensei for intelligent design" },
+      { name: "Collaborative Design", description: "Tools for team-based creative workflows" },
+      { name: "Mobile Creativity", description: "Creative apps for tablets and smartphones" },
+      { name: "Accessibility in Design", description: "Make creative tools more inclusive" }
+    ],
+    
+    preferredSkills: [
+      { name: "UI/UX", emoji: "🎨" },
+      { name: "Photoshop", emoji: "🖼️" },
+      { name: "Illustrator", emoji: "✏️" },
+      { name: "JavaScript", emoji: "📜" },
+      { name: "CSS", emoji: "🎭" },
+      { name: "HTML", emoji: "🌐" },
+      { name: "React", emoji: "⚛️" },
+      { name: "Adobe APIs", emoji: "🔌" },
+      { name: "Design Systems", emoji: "📐" },
+      { name: "Figma", emoji: "🎯" }
+    ],
+    
+    totalPrizePool: "Adobe CC + Mentorship",
+    prizes: [
+      { position: "1st Place", amount: "Adobe CC License (1 year)", perks: ["15,000 XP Points", "Adobe Design Mentorship", "Featured in Adobe Gallery", "Winner Certificate"] },
+      { position: "2nd Place", amount: "Adobe CC License (6 months)", perks: ["12,000 XP Points", "Adobe Workshop Access", "Certificate"] },
+      { position: "3rd Place", amount: "Adobe Stock Credits", perks: ["8,000 XP Points", "Adobe Creative Swag", "Certificate"] },
+    ],
+    
+    perks: [
+      "Adobe Creative Cloud Trial",
+      "Certificate of Participation + 300 XP Points",
+      "Adobe Design Resources",
+      "Creative Community Access"
+    ]
+  },
+
+  "hack-005": {
+    id: "hack-005",
+    title: "Tesla Mobility Challenge",
+    subtitle: "Develop next-generation mobility and transportation solutions",
+    organizer: "Tesla",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg",
+    banner: "/public/placeholder.svg",
+    description: "Develop next-generation mobility and transportation solutions that shape the future of sustainable transport and autonomous systems.",
+    longDescription: `Tesla's Mobility Challenge brings together innovators to solve the future of transportation. Over 60 hours, you'll develop solutions for autonomous driving, sustainable mobility, energy management, and smart transportation systems.
+
+This advanced challenge focuses on cutting-edge technologies including AI for autonomous systems, energy optimization, and sustainable transportation solutions. You'll work with Tesla's engineering principles to create solutions that could genuinely impact the future of mobility.`,
+    
+    mode: "Hybrid",
+    location: "Tesla Gigafactory, Austin & Online",
+    startDate: "2024-03-22",
+    endDate: "2024-03-25",
+    registrationDeadline: "2024-03-17",
+    duration: "60 hours",
+    teamSize: "2-4 members",
+    participantCount: 980,
+    maxParticipants: 1200,
+    
+    status: "Upcoming",
+    registrationStatus: "Open",
+    difficulty: "Advanced",
+    
+    tracks: [
+      { name: "Autonomous Driving AI", description: "Machine learning for self-driving capabilities" },
+      { name: "Energy Optimization", description: "Battery and energy management systems" },
+      { name: "Smart Charging Networks", description: "Intelligent EV charging infrastructure" },
+      { name: "Sustainable Mobility", description: "Eco-friendly transportation solutions" },
+      { name: "Fleet Management", description: "AI-powered vehicle fleet optimization" },
+      { name: "Safety & Security", description: "Advanced safety systems for vehicles" }
+    ],
+    
+    preferredSkills: [
+      { name: "AI", emoji: "🤖" },
+      { name: "Python", emoji: "🐍" },
+      { name: "Computer Vision", emoji: "👁️" },
+      { name: "Embedded Systems", emoji: "🔧" },
+      { name: "C++", emoji: "⚡" },
+      { name: "Machine Learning", emoji: "🧠" },
+      { name: "IoT", emoji: "🌐" },
+      { name: "Data Analytics", emoji: "📊" },
+      { name: "Simulation", emoji: "🎮" },
+      { name: "Hardware", emoji: "🔩" }
+    ],
+    
+    totalPrizePool: "$1000 + Tesla Opportunities",
+    prizes: [
+      { position: "1st Place", amount: "$1000 + Tesla Internship", perks: ["35,000 XP Points", "Tesla Campus Visit", "Engineering Mentorship", "Tesla Merchandise"] },
+      { position: "2nd Place", amount: "$500", perks: ["25,000 XP Points", "Tesla Engineering Session", "Certificate"] },
+      { position: "3rd Place", amount: "Tesla Swag Package", perks: ["20,000 XP Points", "Tesla Innovation Workshop", "Certificate"] },
+    ],
+    
+    perks: [
+      "Tesla Innovation Kit",
+      "Certificate of Participation + 1000 XP Points",
+      "Access to Tesla Engineers",
+      "Sustainable Tech Workshop"
+    ]
+  },
+
+  "hack-006": {
+    id: "hack-006",
+    title: "Xiaomi IoT Sprint",
+    subtitle: "Build smart device integrations and IoT solutions",
+    organizer: "Xiaomi",
+    logo: "/xiaomi.svg",
+    banner: "/public/placeholder.svg",
+    description: "Build smart device integrations and IoT solutions that connect seamlessly with Xiaomi's ecosystem of smart devices and services.",
+    longDescription: `Xiaomi's IoT Sprint challenges developers to create innovative Internet of Things solutions using Xiaomi's smart device ecosystem. Over 30 hours, you'll build applications that integrate with smart homes, wearables, and IoT devices.
+
+This intermediate-level challenge focuses on practical IoT implementations, device connectivity, and smart home automation. You'll work with Xiaomi's IoT platform and APIs to create solutions that enhance daily life through connected technology.`,
+    
+    mode: "Hybrid",
+    location: "Xiaomi Campus, Beijing & Online",
+    startDate: "2024-03-28",
+    endDate: "2024-03-30",
+    registrationDeadline: "2024-03-23",
+    duration: "30 hours",
+    teamSize: "2-4 members",
+    participantCount: 1500,
+    maxParticipants: 2000,
+    
+    status: "Upcoming",
+    registrationStatus: "Open",
+    difficulty: "Intermediate",
+    
+    tracks: [
+      { name: "Smart Home Automation", description: "Intelligent home device orchestration" },
+      { name: "Wearable Technology", description: "Health and fitness device applications" },
+      { name: "IoT Security", description: "Secure device communication protocols" },
+      { name: "Voice Assistant Integration", description: "Smart speaker and voice control systems" },
+      { name: "Environmental Monitoring", description: "Smart sensors for air quality and environment" },
+      { name: "Mobile IoT Apps", description: "Mobile applications for device control" }
+    ],
+    
+    preferredSkills: [
+      { name: "IoT", emoji: "�" },
+      { name: "Android", emoji: "🤖" },
+      { name: "Java", emoji: "☕" },
+      { name: "Cloud APIs", emoji: "☁️" },
+      { name: "MQTT", emoji: "📡" },
+      { name: "React Native", emoji: "📱" },
+      { name: "Python", emoji: "�" },
+      { name: "Bluetooth", emoji: "📶" },
+      { name: "WiFi Protocols", emoji: "📡" },
+      { name: "Sensor Integration", emoji: "🔍" }
+    ],
+    
+    totalPrizePool: "Xiaomi Gadgets + Cash",
+    prizes: [
+      { position: "1st Place", amount: "Xiaomi Flagship Phone + $300", perks: ["18,000 XP Points", "Xiaomi IoT Starter Kit", "Internship Opportunity", "Winner Certificate"] },
+      { position: "2nd Place", amount: "Xiaomi Laptop + $200", perks: ["15,000 XP Points", "Xiaomi Smart Home Kit", "Certificate"] },
+      { position: "3rd Place", amount: "Xiaomi Wearables Bundle", perks: ["12,000 XP Points", "Xiaomi Gadget Package", "Certificate"] },
+    ],
+    
+    perks: [
+      "Xiaomi Smart Device Kit",
+      "Certificate of Participation + 600 XP Points",
+      "IoT Development Resources",
+      "Smart Home Workshop Access"
+    ]
+  }
+};
+
+const HackathonDetails = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [carouselApi, setCarouselApi] = useState(null);
+
+  // Get hackathon data based on ID, fallback to default if not found
+  const hackathon = hackathonData[id] || hackathonData["hack-001"];
+  
+  // Set initial likes based on participant count
+  React.useEffect(() => {
+    setLikes(hackathon.participantCount);
+  }, [hackathon.participantCount]);
+
+  // Check if this hackathon is active
+  const isActive = hackathon.status === "Active";
 
   const handleRegister = () => {
     setIsRegistered(true);
