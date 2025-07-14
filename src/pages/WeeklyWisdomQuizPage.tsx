@@ -625,22 +625,6 @@ const WeeklyWisdomQuizPage = () => {
 						<span className="flex items-center gap-1 text-[#1570EF] font-medium">
 							<span role="img" aria-label="trophy">🏆</span> Earn 100 XP for a perfect score!
 						</span>
-						<span className="flex items-center gap-1 text-[#667085]">
-							<svg
-								width="16"
-								height="16"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									d="M12 4v1m0 15v-1m8-7h-1M5 12H4m13.657-6.343l-.707.707M6.343 17.657l-.707-.707m12.728 0l-.707.707M6.343 6.343l-.707-.707"
-									stroke="#667085"
-									strokeWidth="2"
-									strokeLinecap="round"
-								/>
-							</svg>{" "}
-							Retake anytime
-						</span>
 					</div>
 					{/* Next Button */}
 					<button
