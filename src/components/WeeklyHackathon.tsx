@@ -424,7 +424,20 @@ const WeeklyHackathon = () => {
                       <span className="text-xs font-bold text-primary/90 tracking-widest uppercase bg-primary/10 px-2 py-0.5 rounded-lg shadow-inner backdrop-blur-md">
                         {hackathon.company}
                       </span>
-                      {hackathon.company === 'Apple' ? (
+                      {hackathon.company === 'Intuit' ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="bottom" 
+                            align="center" 
+                            className="w-48 text-left z-[99999] drop-shadow-2xl"
+                          >
+                            <span className="block text-xs font-semibold text-primary mb-1">This hackathon matches your skillset.</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : hackathon.company === 'Apple' ? (
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Star className="h-5 w-5 text-green-500 cursor-pointer ml-1 z-[999999]" />
