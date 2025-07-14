@@ -22,40 +22,15 @@ import {
 } from "lucide-react";
 import linkedinLogo from '/linkedin.svg';
 import { useUser } from "../lib/UserContext";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import { logOut } from "../lib/authActions";
+import React, { useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   
-  const userStats = {
-    name: "Alex Johnson",
-    // level: 12,
-    // currentStreak: 7,
-    notifications: 3
-  };
-
-  const notifications = [
-=======
-import React, { useState } from "react";
-
-const Header = () => {
-  const navigate = useNavigate();
-  const { user } = useUser();
   // Use state for notifications and unread count
   const [notifications, setNotifications] = useState([
->>>>>>> Stashed changes
-=======
-import React, { useState } from "react";
-
-const Header = () => {
-  const navigate = useNavigate();
-  const { user } = useUser();
-  // Use state for notifications and unread count
-  const [notifications, setNotifications] = useState([
->>>>>>> Stashed changes
     {
       id: 1,
       icon: Clock,
