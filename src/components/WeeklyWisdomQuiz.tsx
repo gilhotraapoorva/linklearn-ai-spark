@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Clock, Medal, RefreshCcw, Cpu, Bot } from "lucide-react";
-import React from "react";
+import { Sparkles, Clock, Medal, RefreshCcw, Cpu, Bot, Loader2 } from "lucide-react";
+import React, { useState } from "react";
 
 const topics = [
 	"Diversity & Inclusion",
@@ -10,16 +10,25 @@ const topics = [
 	"Ethical AI Use",
 	"Growth Mindset",
 	"Effective Communication",
-	"Psychological Safety",
-	"Sustainability in Tech",
-	"Conflict Resolution",
+	"Leadership Skills",
+	"Time Management",
+	"Problem Solving",
+	"Innovation & Creativity",
+	"Remote Work Best Practices",
 ];
 
 const WeeklyWisdomQuiz = () => {
 	const navigate = useNavigate();
+	const [isGenerating, setIsGenerating] = useState(false);
+
 	const handleStartQuiz = () => {
-		navigate("/weekly-wisdom-quiz");
+		setIsGenerating(true);
+		// Simulate AI generation time
+		setTimeout(() => {
+			navigate("/weekly-wisdom-quiz");
+		}, 2000); // 2 second delay to show the loading state
 	};
+
 	return (
 		<div className="relative group">
 			{/* Glowing neon border effect */}
@@ -73,7 +82,7 @@ const WeeklyWisdomQuiz = () => {
 					<div className="text-base font-bold mt-2 mb-2">
 						This week's topic:{" "}
 						<span className="font-normal italic">
-							Building Inclusive Teams
+							Randomly selected from our wisdom collection!
 						</span>
 					</div>
 					<Button
@@ -81,12 +90,57 @@ const WeeklyWisdomQuiz = () => {
 						size="quest"
 						className="w-full font-semibold relative overflow-hidden group/btn"
 						onClick={handleStartQuiz}
+						disabled={isGenerating}
 					>
 						<div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
-						<span className="relative z-10">Take Quiz Now</span>
+						<span className="relative z-10 flex items-center gap-2">
+							{isGenerating ? (
+								<>
+									<Loader2 className="h-5 w-5 animate-spin" />
+									Generating AI Quiz...
+								</>
+							) : (
+								"Take Quiz Now"
+							)}
+						</span>
 					</Button>
 				</CardContent>
 			</Card>
+
+			{/* AI Generation Loading Overlay */}
+			{isGenerating && (
+				<div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+					<div className="bg-white rounded-2xl p-8 shadow-2xl max-w-md mx-4 text-center">
+						<div className="relative mb-6">
+							<div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 rounded-full blur-lg opacity-30"></div>
+							<div className="relative bg-gradient-to-r from-primary to-purple-600 p-4 rounded-full w-16 h-16 mx-auto flex items-center justify-center">
+								<Cpu className="h-8 w-8 text-white" />
+							</div>
+						</div>
+						
+						<h3 className="text-2xl font-bold text-gray-800 mb-2">AI Generating Your Quiz</h3>
+						<p className="text-gray-600 mb-6">Creating personalized wisdom questions just for you...</p>
+						
+						<div className="flex items-center justify-center gap-3 mb-6">
+							<div className="flex space-x-1">
+								<div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+								<div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+								<div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+							</div>
+						</div>
+						
+						<div className="bg-gradient-to-r from-primary/10 to-purple-600/10 rounded-lg p-4 border border-primary/20">
+							<div className="flex items-center gap-2 text-primary font-semibold">
+								<Bot className="h-4 w-4" />
+								AI Generated Content
+							</div>
+							<p className="text-sm text-gray-600 mt-1">
+								Each quiz is uniquely crafted by our AI to provide relevant insights
+							</p>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

@@ -115,20 +115,20 @@ const Header = () => {
   const username = user?.email ? user.email.split("@")[0] : "Guest";
 
   return (
-    <header className="bg-white/90 backdrop-blur border-b border-border shadow-lg">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-border shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8" />
+              <a href="/" className="flex items-center gap-2 group" style={{ textDecoration: 'none' }}>
+                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8 group-hover:scale-105 transition-transform" />
+                <div className="flex items-center gap-1">
+                  <span className="text-xl font-bold text-foreground">Learning</span>
+                  <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
+                  <span className="text-xl font-bold text-primary">Companion</span>
+                </div>
               </a>
-              <div className="flex items-center gap-1">
-                <span className="text-xl font-bold text-foreground">Learning</span>
-                <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
-                <span className="text-xl font-bold text-primary">Companion</span>
-              </div>
             </div>
           </div>
 
@@ -213,12 +213,23 @@ const Header = () => {
                 <div className="text-sm font-medium">{username}</div>
                 <div className="text-xs text-muted-foreground">Learning Explorer</div>
               </div>
-              <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={username} />
-                <AvatarFallback className="bg-gradient-primary text-primary-foreground">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <span>
+                    <Avatar className="h-8 w-8 ring-2 ring-primary/20 cursor-pointer">
+                      <AvatarImage src="/placeholder-avatar.jpg" alt={username} />
+                      <AvatarFallback className="bg-gradient-primary text-primary-foreground">
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => alert('Signed out!')} className="text-destructive">
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

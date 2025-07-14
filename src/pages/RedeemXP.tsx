@@ -77,18 +77,20 @@ const RedeemXP = () => {
 	return (
 		<div className="min-h-screen w-full flex flex-col items-center py-12 px-2 bg-gradient-to-br from-yellow-50 via-blue-50 to-white relative overflow-x-hidden">
 			<DecorativeBg />
-			<div className="w-full max-w-4xl rounded-2xl shadow-xl bg-white/80 border border-blue-100 p-10 relative z-10">
-				<Button
-					variant="ghost"
-					className="mb-8 flex items-center gap-2 absolute left-10 top-10"
-					onClick={() => navigate(-1)}
-				>
-					<ArrowLeft className="h-4 w-4" /> Back
-				</Button>
+			<div className="fixed top-0 left-0 w-full z-30 bg-white/90 border-b border-blue-100 flex items-center px-0 md:px-10 pt-8 pb-4" style={{ borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }}>
+				<div className="max-w-4xl w-full mx-auto flex items-center">
+					<Button
+						variant="ghost"
+						className="flex items-center gap-2"
+						onClick={() => navigate(-1)}
+					>
+						<ArrowLeft className="h-4 w-4" /> Back
+					</Button>
+					<h1 className="text-2xl font-extrabold text-blue-900 ml-6 tracking-tight">Redeem Your XP</h1>
+				</div>
+			</div>
+			<div className="w-full max-w-4xl rounded-2xl shadow-xl bg-white/80 border border-blue-100 p-10 relative z-10 mt-28">
 				<div className="flex flex-col items-center mb-12 mt-2">
-					<h1 className="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">
-						Redeem Your XP
-					</h1>
 					<p className="text-blue-700 mb-2 italic text-lg">
 						Turn your hard-earned XP into real rewards. Make your toil count!
 					</p>
@@ -107,7 +109,12 @@ const RedeemXP = () => {
 								<div className="text-base text-muted-foreground mb-2">
 									{option.description}
 								</div>
-								<div className="font-bold text-lg text-blue-700 drop-shadow-[0_0_8px_rgba(37,112,239,0.5)] animate-pulse-glow">{option.xp.toLocaleString()} XP</div>
+								<div className="relative flex items-center justify-center">
+									<span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+									<span className="w-24 h-10 rounded-full bg-blue-200 opacity-60 blur-xl"></span>
+									</span>
+									<span className="relative font-bold text-lg text-blue-700">{option.xp.toLocaleString()} <span className="font-extrabold">XP</span></span>
+								</div>
 							</div>
 							<CardContent className="flex-shrink-0 w-full flex justify-center mt-auto pt-2">
 								<Button variant="default" className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold rounded-full px-8 py-3 shadow-lg text-lg w-full max-w-xs">
@@ -116,18 +123,6 @@ const RedeemXP = () => {
 							</CardContent>
 						</Card>
 					))}
-				</div>
-				<div className="flex flex-col items-center justify-center mt-8">
-					<span className="text-4xl font-extrabold text-blue-500 drop-shadow-glow animate-pulse-glow mb-2">
-						1000 XP
-					</span>
-					<Button
-						variant="primary"
-						size="lg"
-						className="w-full max-w-xs font-bold bg-primary text-white hover:bg-primary/90 rounded-xl shadow-lg text-lg"
-					>
-						Redeem XP
-					</Button>
 				</div>
 			</div>
 		</div>

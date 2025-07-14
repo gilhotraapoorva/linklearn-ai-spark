@@ -273,10 +273,10 @@ impl UserList {
       <div className="h-16 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-6 shadow-sm">
         <div className="flex items-center gap-4">
           <Button 
-            variant="ghost" 
+            variant="outline" 
             size="sm" 
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -366,7 +366,7 @@ impl UserList {
                       size="sm" 
                       onClick={handleRunCode}
                       disabled={isRunning || !solution.trim()}
-                      className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 hover:bg-primary/20 transition-all duration-200"
+                      className=""
                     >
                       <Play className="h-4 w-4 mr-2" />
                       {isRunning ? "Running..." : "Run Code"}
@@ -375,7 +375,7 @@ impl UserList {
                       variant="outline" 
                       size="sm" 
                       onClick={handleReset}
-                      className="bg-gradient-to-r from-muted/20 to-muted/10 border-border/50 hover:bg-muted/30 transition-all duration-200"
+                      className=""
                     >
                       <RotateCcw className="h-4 w-4 mr-2" />
                       Reset

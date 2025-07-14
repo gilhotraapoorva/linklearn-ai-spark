@@ -38,13 +38,14 @@ interface Hackathon {
   startsIn: string;
   status: "upcoming" | "active" | "completed";
   company: string;
+  location: string;
 }
 
 const upcomingHackathons: Hackathon[] = [
   {
     id: "hack-001",
     title: "Build a Real-time Chat App",
-    description: "Create a modern chat application with real-time messaging capabilities",
+    description: "Create modern messaging solutions with cutting-edge technology",
     theme: "Real-time Applications",
     difficulty: "Intermediate",
     duration: "48 hours",
@@ -53,12 +54,13 @@ const upcomingHackathons: Hackathon[] = [
     skills: ["React", "TypeScript", "WebSockets", "Data Structures"],
     startsIn: "1 day ago",
     status: "upcoming",
-    company: "Intuit"
+    company: "Intuit",
+    location: "Mountain View, CA"
   },
   {
     id: "hack-002",
     title: "AI-Powered Task Manager",
-    description: "Build an intelligent task management system using AI",
+    description: "Build intelligent productivity solutions with machine learning",
     theme: "AI & Productivity",
     difficulty: "Advanced",
     duration: "72 hours",
@@ -67,21 +69,23 @@ const upcomingHackathons: Hackathon[] = [
     skills: ["React", "TypeScript", "Data Structures", "Machine Learning"],
     startsIn: "5 days",
     status: "upcoming",
-    company: "Google"
+    company: "Google",
+    location: "Sunnyvale, CA"
   },
   {
     id: "hack-003",
     title: "Apple Innovation Challenge",
-    description: "Design and build next-gen apps or solutions for the Apple ecosystem.",
+    description: "Design next-gen apps for the Apple ecosystem",
     theme: "Apple Ecosystem",
     difficulty: "Intermediate",
     duration: "36 hours",
     participants: 1563,
-    prizes: ["MacBook Air", "App Store Feature", "Apple Developer Swag"],
-    skills: ["Swift", "iOS", "UI/UX", "React"],
+    prizes: ["MacBook Air M3", "App Store Feature", "Apple Developer Program"],
+    skills: ["Swift", "SwiftUI", "iOS", "UI/UX"],
     startsIn: "1 week",
     status: "upcoming",
-    company: "Apple"
+    company: "Apple",
+    location: "Cupertino, CA"
   },
   {
     id: "hack-004",
@@ -91,11 +95,12 @@ const upcomingHackathons: Hackathon[] = [
     difficulty: "Beginner",
     duration: "24 hours",
     participants: 2100,
-    prizes: ["Adobe CC License", "Mentorship", "Swag"],
-    skills: ["UI/UX", "Photoshop", "Illustrator"],
+    prizes: ["Adobe CC License (1 year)", "Adobe Design Mentorship", "Featured in Adobe Gallery"],
+    skills: ["UI/UX", "Photoshop", "Illustrator", "JavaScript"],
     startsIn: "3 days",
     status: "upcoming",
-    company: "Adobe"
+    company: "Adobe",
+    location: "San Jose, CA"
   },
   {
     id: "hack-005",
@@ -105,11 +110,12 @@ const upcomingHackathons: Hackathon[] = [
     difficulty: "Advanced",
     duration: "60 hours",
     participants: 980,
-    prizes: ["Tesla Internship", "$1000", "Tesla Swag"],
-    skills: ["AI", "Python", "Embedded"],
+    prizes: ["$1000 + Tesla Internship", "Tesla Campus Visit", "Engineering Mentorship"],
+    skills: ["AI", "Python", "Computer Vision", "Embedded Systems"],
     startsIn: "4 days",
     status: "upcoming",
-    company: "Tesla"
+    company: "Tesla",
+    location: "Austin, TX"
   },
   {
     id: "hack-006",
@@ -119,17 +125,48 @@ const upcomingHackathons: Hackathon[] = [
     difficulty: "Intermediate",
     duration: "30 hours",
     participants: 1500,
-    prizes: ["Xiaomi Gadgets", "Cash Prize", "Certificate"],
-    skills: ["IoT", "Android", "Cloud"],
+    prizes: ["Xiaomi Flagship Phone + $300", "Xiaomi IoT Starter Kit", "Internship Opportunity"],
+    skills: ["IoT", "Android", "Java", "Cloud APIs"],
     startsIn: "6 days",
     status: "upcoming",
-    company: "Xiaomi"
+    company: "Xiaomi",
+    location: "Beijing, China"
   }
 ];
 
-// Set the first hackathon as live (active)
-if (upcomingHackathons.length > 0) {
-  upcomingHackathons[0].status = "active";
+// Function to parse time string and return numeric value for sorting
+const parseTimeToMinutes = (timeStr: string): number => {
+  if (timeStr === "Active now") return 0;
+  
+  const timeMatch = timeStr.match(/(\d+)\s*(day|days|week|weeks|hour|hours)/i);
+  if (!timeMatch) return 999999; // Put unparseable times at the end
+  
+  const [, value, unit] = timeMatch;
+  const numValue = parseInt(value);
+  
+  switch (unit.toLowerCase()) {
+    case 'hour':
+    case 'hours':
+      return numValue * 60;
+    case 'day':
+    case 'days':
+      return numValue * 24 * 60;
+    case 'week':
+    case 'weeks':
+      return numValue * 7 * 24 * 60;
+    default:
+      return 999999;
+  }
+};
+
+// Sort hackathons by time remaining (soonest first)
+const sortedHackathons = [...upcomingHackathons].sort((a, b) => {
+  return parseTimeToMinutes(a.startsIn) - parseTimeToMinutes(b.startsIn);
+});
+
+// Set the first hackathon (soonest) as live (active)
+if (sortedHackathons.length > 0) {
+  sortedHackathons[0].status = "active";
 }
 
 // Mock data for upcoming hackathons
@@ -246,7 +283,7 @@ const WeeklyHackathon = () => {
 
   // Render horizontally scrollable cards
   const renderCarousel = () => (
-    <Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-none w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible">
+    <Card className="bg-gradient-card shadow-lg p-2 mb-2 border border-border rounded-xl w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-neutral-900">
           <Trophy className="h-5 w-5 text-primary" />
@@ -261,17 +298,23 @@ const WeeklyHackathon = () => {
           </div>
         )}
       </CardHeader>
-      <CardContent className="pt-0 pb-2">
+      <CardContent className="pt-0 pb-1 px-6 overflow-visible">
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto overflow-y-visible pb-2 cursor-grab select-none min-h-[220px] w-full"
-          style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', userSelect: isDragging.current ? 'none' : 'auto' }}
+          className="flex gap-4 overflow-x-auto overflow-y-visible pb-2 pt-4 px-2 cursor-grab select-none min-h-[280px] w-full"
+          style={{ 
+            WebkitOverflowScrolling: 'touch', 
+            scrollBehavior: 'smooth', 
+            userSelect: isDragging.current ? 'none' : 'auto',
+            margin: '-16px',
+            padding: '16px 16px 8px 16px'
+          }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
           onMouseUp={onMouseUp}
           onMouseMove={onMouseMove}
         >
-          {upcomingHackathons.map((hackathon, idx) => {
+          {sortedHackathons.map((hackathon, idx) => {
             const logo = companyLogos[hackathon.company] || placeholderLogo;
             // User skills for matching
             const userSkills = [
@@ -288,9 +331,9 @@ const WeeklyHackathon = () => {
             // For the third hackathon (idx === 2), check for skill match
             const isForYou = idx === 2 && normalizedHackathonSkills.some(skill => normalizedUserSkills.some(userSkill => skill.includes(userSkill.split(" ")[0])));
             return (
-              <div key={hackathon.id} className="w-[300px] h-[210px] flex-shrink-0">
+              <div key={hackathon.id} className="w-[340px] h-[240px] flex-shrink-0 p-2">
                 <div
-                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.07] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
                   onMouseEnter={() => {
                     // Only emit hover event if chatbot is open
@@ -487,7 +530,7 @@ const WeeklyHackathon = () => {
               <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
                 <MapPin className="h-6 w-6 text-blue-500 mb-2" />
                 <div className="text-xs text-blue-600">Location</div>
-                <div className="font-bold text-base text-blue-600">Delhi, India</div>
+                <div className="font-bold text-base text-blue-600">{selectedHackathon?.location}</div>
               </div>
               <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center">
                 <UsersIcon className="h-6 w-6 text-blue-500 mb-2" />
