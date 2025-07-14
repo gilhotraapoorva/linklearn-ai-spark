@@ -22,14 +22,14 @@ const redeemOptions = [
 	},
 	{
 		id: 2,
-		title: "Unlock Any LinkedIn Learning Course",
-		description: "Access any course of your choice on LinkedIn Learning.",
+		title: "Unlock Any LinkLearn Course",
+		description: "Access any course of your choice on LinkLearn platform.",
 		xp: 1000,
 		icon: (
 			<div className="min-w-[96px] h-16 flex items-center justify-center">
 				<img
 					src="/linkedin-learning-seeklogo.svg"
-					alt="LinkedIn Learning"
+					alt="LinkLearn"
 					className="h-16 max-w-[120px] object-contain"
 				/>
 			</div>

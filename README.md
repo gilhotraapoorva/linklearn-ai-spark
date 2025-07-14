@@ -1,6 +1,6 @@
-# Welcome to your Lovable project
+# LinkLearn - AI-Powered Learning Platform
 
-## Project info
+LinkLearn is an innovative learning platform that combines the power of AI with gamified learning experiences to help developers and professionals upskill effectively.
 
 **URL**: https://lovable.dev/projects/87db53c1-e2f5-49ae-8149-e74304164a55
 

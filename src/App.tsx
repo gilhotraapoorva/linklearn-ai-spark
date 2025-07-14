@@ -21,6 +21,7 @@ import WeeklyWisdomQuizPage from "./pages/WeeklyWisdomQuizPage";
 import RedeemXP from "./pages/RedeemXP";
 import AuthDemo from "./pages/AuthDemo";
 import Dashboard from "./pages/Dashboard";
+import LinkedInHome from "./pages/LinkedInHome";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -62,12 +63,17 @@ const App = () => (
               {/* Protected routes */}
               <Route path="/" element={
                 <ProtectedRoute>
+                  <LinkedInHome />
+                </ProtectedRoute>
+              } />
+              <Route path="/learning-companion" element={
+                <ProtectedRoute>
                   <Index />
                 </ProtectedRoute>
               } />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
-                  <Navigate to="/" replace />
+                  <Navigate to="/learning-companion" replace />
                 </ProtectedRoute>
               } />
               <Route path="/quest/:questId" element={
@@ -103,11 +109,6 @@ const App = () => (
               <Route path="/redeem-xp" element={
                 <ProtectedRoute>
                   <RedeemXP />
-                </ProtectedRoute>
-              } />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
                 </ProtectedRoute>
               } />
 

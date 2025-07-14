@@ -141,15 +141,25 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <a href="/" className="flex items-center gap-2 group" style={{ textDecoration: 'none' }}>
-                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-8 w-8 group-hover:scale-105 transition-transform" />
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 hover:bg-blue-50"
+              >
+                <img src={linkedinLogo} alt="LinkedIn Logo" className="h-6 w-6" />
+                <span className="text-sm font-medium text-blue-600">Home</span>
+              </Button>
+              
+              <div className="h-6 w-px bg-gray-300"></div>
+              
+              <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
-                  <span className="text-xl font-bold text-foreground">Learning</span>
+                  <span className="text-xl font-bold text-foreground">Link</span>
                   <Sparkles className="h-5 w-5 text-primary animate-pulse-glow" />
-                  <span className="text-xl font-bold text-primary">Companion</span>
+                  <span className="text-xl font-bold text-primary">Learn</span>
                 </div>
-              </a>
+              </div>
             </div>
           </div>
 
