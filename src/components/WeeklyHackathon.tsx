@@ -13,7 +13,7 @@ import {
   Rocket,
   GitBranch,
 } from "lucide-react";
-import placeholderLogo from "/public/placeholder.svg";
+// Use '/placeholder.svg' directly as the image src
 import {
   Dialog,
   DialogContent,
@@ -315,7 +315,7 @@ const WeeklyHackathon = () => {
           onMouseMove={onMouseMove}
         >
           {sortedHackathons.map((hackathon, idx) => {
-            const logo = companyLogos[hackathon.company] || placeholderLogo;
+            const logo = companyLogos[hackathon.company] || '/placeholder.svg';
             // User skills for matching
             const userSkills = [
               "React Development",
@@ -488,7 +488,7 @@ const WeeklyHackathon = () => {
             {/* Company logo in the background, top-left */}
             {selectedHackathon && (
               <img
-                src={companyLogos[selectedHackathon.company] || placeholderLogo}
+                src={companyLogos[selectedHackathon.company] || '/placeholder.svg'}
                 alt="Company Logo"
                 className="absolute left-6 top-6 h-12 w-12 rounded-full bg-white/80 shadow-lg border-2 border-white z-10"
                 style={{objectFit: 'contain'}}
