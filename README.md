@@ -70,7 +70,15 @@ LinkLearn is an innovative learning companion that combines the power of AI with
    npm run dev
    ```
 
-The application will be available at `http://localhost:5173` (frontend) and the Express server at `http://localhost:3001` (backend).
+The application will be available at `http://localhost:8080`.
+
+### Demo Credentials
+For testing purposes, use these credentials:
+- **Email**: `john@gmail.com`
+- **Password**: `1234567`
+
+## 🎥 Demo Video
+Watch our demo video: [LinkLearn Demo](https://drive.google.com/file/d/17YhBONWEBg8dBoira9fGTwFFJop4Jj2e/view?usp=drive_link)
 
 ## 📋 Project Structure
 
