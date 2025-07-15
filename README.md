@@ -106,11 +106,12 @@ Watch our demo video: [LinkLearn Demo](https://drive.google.com/file/d/17YhBONWE
    ```
 
 The application will be available at `http://localhost:8080`.
+After logging in, click on the left of your LinkedIn page to access LinkLearn through the 'Start Learning' button present in the LinkLearn section.
 
 ### Demo Credentials
 For testing purposes, use these credentials:
-- **Email**: `john@gmail.com`
-- **Password**: `1234567`
+- **Email**: `alex@gmail.com`
+- **Password**: `a1s2d3f4`
 
 ## 📋 Project Structure
 
