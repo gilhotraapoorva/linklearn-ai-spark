@@ -18,6 +18,9 @@ LinkLearn is an innovative learning companion that combines the power of AI with
 - **Timeline of Contributions**: Public portfolio of completed challenges
 - **Skill Auto-Endorsement**: Verified skill validation through completed challenges
 
+## 🎥 Demo Video
+Watch our demo video: [LinkLearn Demo](https://drive.google.com/file/d/17YhBONWEBg8dBoira9fGTwFFJop4Jj2e/view?usp=drive_link)
+
 ## 🛠️ Technology Stack
 
 **Frontend:**
@@ -38,8 +41,32 @@ LinkLearn is an innovative learning companion that combines the power of AI with
 
 ### Prerequisites
 - Node.js (v18 or higher)
-- Ollama installed and configured
+- **Ollama with LLaMA 3** (see installation steps below)
 - Firebase project setup
+
+### Ollama Installation
+
+1. **Download and Install Ollama**
+   - Visit [https://ollama.ai](https://ollama.ai) and download Ollama for your OS
+   - Or use the command line:
+   ```bash
+   # On Linux
+   curl -fsSL https://ollama.ai/install.sh | sh
+   
+   # On Mac and Windows
+   # Download the installer from https://ollama.ai
+   ```
+
+2. **Install LLaMA 3 Model**
+   ```bash
+   ollama pull llama3
+   ```
+
+3. **Verify Installation**
+   ```bash
+   ollama list
+   ```
+   You should see `llama3` in the list of available models.
 
 ### Installation
 
@@ -60,10 +87,18 @@ LinkLearn is an innovative learning companion that combines the power of AI with
 
 ### Running the Application
 
-1. **Start Ollama service**
+1. **Check if Ollama is running** (it usually starts automatically)
+   ```bash
+   # Verify Ollama is running
+   ollama list
+   ```
+   
+   If you get an error, start Ollama manually:
    ```bash
    ollama serve
    ```
+   
+   **Note**: If you see "address already in use" error, Ollama is already running and you can proceed to step 2.
 
 2. **Start the development server**
    ```bash
@@ -76,9 +111,6 @@ The application will be available at `http://localhost:8080`.
 For testing purposes, use these credentials:
 - **Email**: `john@gmail.com`
 - **Password**: `1234567`
-
-## 🎥 Demo Video
-Watch our demo video: [LinkLearn Demo](https://drive.google.com/file/d/17YhBONWEBg8dBoira9fGTwFFJop4Jj2e/view?usp=drive_link)
 
 ## 📋 Project Structure
 
