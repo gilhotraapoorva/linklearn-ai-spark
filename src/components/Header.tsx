@@ -24,7 +24,8 @@ import {
   BookOpen,
   Clock,
   Target,
-  Rocket
+  Rocket,
+  Trophy
 } from "lucide-react";
 
 const Header = () => {
@@ -140,7 +141,7 @@ const Header = () => {
       style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}
     >
       <div className="global-nav__content">
-        <div className="flex items-center h-[52px] max-w-[1128px] mx-auto px-10">
+        <div className="flex items-center h-[52px] max-w-[1128px] mx-auto pl-0 pr-4">
           
           {/* Left section - Logo and Search */}
           <div className="flex items-center space-x-4 flex-shrink-0">
@@ -216,9 +217,9 @@ const Header = () => {
               {/* Home */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link global-nav__primary-link--active flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer"
+                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                   style={{ 
-                    color: '#191919',
+                    color: 'rgba(0,0,0,0.6)',
                     fontSize: '12px',
                     fontWeight: '400',
                     lineHeight: '1.33333'
@@ -241,17 +242,13 @@ const Header = () => {
                     </svg>
                   </div>
                   <span className="global-nav__primary-link-text">Home</span>
-                  <div 
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-current"
-                    style={{ width: '100%' }}
-                  ></div>
                 </a>
               </li>
 
               {/* My Network */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                   style={{ 
                     color: 'rgba(0,0,0,0.6)',
                     fontSize: '12px',
@@ -282,9 +279,9 @@ const Header = () => {
               {/* Hackathons */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                  className="global-nav__primary-link global-nav__primary-link--active flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer"
                   style={{ 
-                    color: 'rgba(0,0,0,0.6)',
+                    color: '#191919',
                     fontSize: '12px',
                     fontWeight: '400',
                     lineHeight: '1.33333'
@@ -301,25 +298,20 @@ const Header = () => {
                   }}
                 >
                   <div className="global-nav__icon-ivm mb-1">
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      data-supported-dps="24x24" 
-                      fill="currentColor" 
-                      className="w-6 h-6"
-                      focusable="false"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
+                    <Trophy className="w-6 h-6" />
                   </div>
                   <span className="global-nav__primary-link-text">Hackathons</span>
+                  <div 
+                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-current"
+                    style={{ width: '100%' }}
+                  ></div>
                 </a>
               </li>
 
               {/* Jobs */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                   style={{ 
                     color: 'rgba(0,0,0,0.6)',
                     fontSize: '12px',
@@ -350,7 +342,7 @@ const Header = () => {
               {/* Messaging */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                   style={{ 
                     color: 'rgba(0,0,0,0.6)',
                     fontSize: '12px',
@@ -383,7 +375,7 @@ const Header = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <a 
-                      className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                      className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                       style={{ 
                         color: 'rgba(0,0,0,0.6)',
                         fontSize: '12px',
@@ -462,7 +454,7 @@ const Header = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button 
-                      className="global-nav__primary-link global-nav__primary-link-me-menu-trigger flex flex-col items-center justify-center h-[52px] px-2 text-center border-none bg-transparent cursor-pointer hover:text-gray-900"
+                      className="global-nav__primary-link global-nav__primary-link-me-menu-trigger flex flex-col items-center justify-center h-[52px] px-1 text-center border-none bg-transparent cursor-pointer hover:text-gray-900"
                       style={{ 
                         color: 'rgba(0,0,0,0.6)',
                         fontSize: '12px',
@@ -518,7 +510,7 @@ const Header = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button 
-                      className="global-nav__primary-link global-nav__primary-link-app-launcher-menu-trigger flex flex-col items-center justify-center h-[52px] px-2 text-center border-none bg-transparent cursor-pointer hover:text-gray-900"
+                      className="global-nav__primary-link global-nav__primary-link-app-launcher-menu-trigger flex flex-col items-center justify-center h-[52px] px-1 text-center border-none bg-transparent cursor-pointer hover:text-gray-900"
                       style={{ 
                         color: 'rgba(0,0,0,0.6)',
                         fontSize: '12px',
@@ -570,7 +562,7 @@ const Header = () => {
               {/* Learning */}
               <li className="global-nav__primary-item">
                 <a 
-                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-2 text-center no-underline relative cursor-pointer hover:text-gray-900"
+                  className="global-nav__primary-link flex flex-col items-center justify-center h-[52px] px-1 text-center no-underline relative cursor-pointer hover:text-gray-900"
                   style={{ 
                     color: 'rgba(0,0,0,0.6)',
                     fontSize: '12px',

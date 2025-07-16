@@ -1,8 +1,10 @@
+import Header from "@/components/Header";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { submitQuizCompletion } from "@/lib/questActions";
 import { useUser } from "@/lib/UserContext";
+import { Button } from "@/components/ui/button";
 
 // Multiple question sets for variety
 const questionSets = [
@@ -486,218 +488,207 @@ const WeeklyWisdomQuizPage = () => {
 	const [selected, setSelected] = useState<number | null>(null);
 	const [score, setScore] = useState(0);
 	const [showResult, setShowResult] = useState(false);
-	const [currentQuestionSet, setCurrentQuestionSet] = useState<any>(null);
+	const [currentSet, setCurrentSet] = useState(questionSets[0]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [quizCompleted, setQuizCompleted] = useState(false);
 	const navigate = useNavigate();
 	const { user } = useUser();
 
-	// Randomly select a question set when component mounts
 	useEffect(() => {
 		const randomIndex = Math.floor(Math.random() * questionSets.length);
-		setCurrentQuestionSet(questionSets[randomIndex]);
+		setCurrentSet(questionSets[randomIndex]);
 	}, []);
 
-	const handleOption = (idx: number) => {
-		setSelected(idx);
+	const handleOptionClick = (optionIndex: number) => {
+		if (selected !== null) return; // Ignore clicks if already selected
+		if (optionIndex === currentSet.questions[current].answer) {
+			setScore(score + 1);
+		}
+		setSelected(optionIndex);
 	};
 
-	const handleNext = () => {
-		if (!currentQuestionSet) return;
-		
-		if (selected === currentQuestionSet.questions[current].answer) setScore(score + 1);
-		if (current < currentQuestionSet.questions.length - 1) {
+	const handleNextQuestion = () => {
+		if (selected === null) return; // Ignore if no option is selected
+		if (current < currentSet.questions.length - 1) {
 			setCurrent(current + 1);
 			setSelected(null);
 		} else {
 			setShowResult(true);
-			localStorage.setItem("weeklyQuizAttempted", "true");
-			// Check for perfect score and update XP
-			const finalScore = selected === currentQuestionSet.questions[current].answer ? score + 1 : score;
-			if (finalScore === currentQuestionSet.questions.length) {
-				setIsSubmitting(true);
-				submitQuizCompletion(user.uid, finalScore, currentQuestionSet.questions.length)
-					.catch(console.error)
-					.finally(() => setIsSubmitting(false));
+			setQuizCompleted(true);
+			if (user) {
+				submitQuizCompletion(user.uid, score, currentSet.questions.length);
 			}
 		}
 	};
 
-	const handleRetake = () => {
+	const handleRestartQuiz = () => {
 		setCurrent(0);
 		setScore(0);
 		setSelected(null);
 		setShowResult(false);
-		// Don't remove localStorage item here to keep track that quiz was attempted
+		setQuizCompleted(false);
 	};
 
-	// Show loading while question set is being selected
-	if (!currentQuestionSet) {
-		return (
-			<div className="flex justify-center items-center min-h-[90vh] bg-background">
-				<div className="text-center">
-					<Sparkles className="h-12 w-12 text-[#1570EF] mb-4 animate-pulse-glow" />
-					<div className="text-xl font-semibold text-[#1D2939]">Loading your quiz...</div>
-				</div>
-			</div>
-		);
-	}
-
 	return (
-		<div className="flex justify-center items-center min-h-[90vh] bg-background relative overflow-x-hidden">
-      <DecorativeBg />
-			<div className="w-full max-w-3xl mx-auto rounded-3xl shadow-2xl overflow-hidden bg-white relative z-10 p-2 md:p-8">
-        {/* Header */}
-				<div className="bg-[#1570EF] px-8 pt-8 pb-4 text-white text-center rounded-t-3xl relative">
-					{/* Back Button */}
-					<button
+		<>
+			<Header />
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-white flex items-center justify-center p-4 pt-20">
+				<div className="w-full max-w-2xl mx-auto">
+					<Button
 						onClick={() => navigate(-1)}
-						className="absolute left-6 top-8 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 text-white"
-						aria-label="Go back"
+						variant="outline"
+						className="mb-8"
 					>
-						<ArrowLeft className="h-5 w-5" />
-					</button>
-					
-					<div className="flex items-center justify-center gap-2 mb-2">
-						<span className="inline-block">
-							<svg
-								width="28"
-								height="28"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									d="M12 2v2m6.364 1.636l-1.414 1.414M22 12h-2m-1.636 6.364l-1.414-1.414M12 22v-2m-6.364-1.636l1.414-1.414M2 12h2m1.636-6.364l1.414 1.414"
-									stroke="#FFD600"
-									strokeWidth="2"
-									strokeLinecap="round"
-								/>
-							</svg>
-						</span>
-						<span className="text-2xl font-extrabold drop-shadow-lg">
-							Weekly Wisdom Quiz
-						</span>
-					</div>
-					<div className="text-lg font-semibold mb-2">
-						Topic: {" "}
-						<span className="text-[#FFD600] font-bold">
-							{currentQuestionSet.topic}
-						</span>
-					</div>
-					<div className="flex justify-center">
-						<div className="bg-[#2563EB] bg-opacity-80 text-white text-sm rounded-xl px-4 py-2 font-medium flex items-center gap-2 shadow-inner">
-							<span role="img" aria-label="plant">🪴</span> Grow your soft skills and earn XP every week!
+						<ArrowLeft className="h-4 w-4" /> Back
+					</Button>
+					<div className="bg-white rounded-2xl shadow-2xl border border-gray-200/80 overflow-hidden">
+						<div className="p-8">
+							{/* Header */}
+							<div className="bg-[#1570EF] px-8 pt-8 pb-4 text-white text-center rounded-t-3xl relative">
+								<div className="flex items-center justify-center gap-2 mb-2">
+									<span className="inline-block">
+										<svg
+											width="28"
+											height="28"
+											fill="none"
+											viewBox="0 0 24 24"
+										>
+											<path
+												d="M12 2v2m6.364 1.636l-1.414 1.414M22 12h-2m-1.636 6.364l-1.414-1.414M12 22v-2m-6.364-1.636l1.414-1.414M2 12h2m1.636-6.364l1.414 1.414"
+												stroke="#FFD600"
+												strokeWidth="2"
+												strokeLinecap="round"
+											/>
+										</svg>
+									</span>
+									<span className="text-2xl font-extrabold drop-shadow-lg">
+										Weekly Wisdom Quiz
+									</span>
+								</div>
+								<div className="text-lg font-semibold mb-2">
+									Topic: {" "}
+									<span className="text-[#FFD600] font-bold">
+										{currentSet.topic}
+									</span>
+								</div>
+								<div className="flex justify-center">
+									<div className="bg-[#2563EB] bg-opacity-80 text-white text-sm rounded-xl px-4 py-2 font-medium flex items-center gap-2 shadow-inner">
+										<span role="img" aria-label="plant">🪴</span> Grow your soft skills and earn XP every week!
+									</div>
+								</div>
+							</div>
+							{/* Quiz Body or Result */}
+							{!showResult ? (
+								<div className="px-8 py-10">
+									{/* Question Number */}
+									<div className="flex items-center gap-2 mb-4">
+										<span className="inline-block w-2 h-2 rounded-full bg-[#1570EF] animate-pulse"></span>
+										<span className="text-[#1570EF] font-semibold">
+											Question {current + 1} of {currentSet.questions.length}
+										</span>
+									</div>
+									{/* Question Text */}
+									<div className="mb-6 text-2xl font-bold text-[#1D2939]">
+										{currentSet.questions[current].q}
+									</div>
+									{/* Options */}
+									<div className="space-y-4 mb-8">
+										{currentSet.questions[current].options.map((opt: string, idx: number) => (
+											<button
+												key={idx}
+												onClick={() => handleOptionClick(idx)}
+												className={`w-full text-base py-3 rounded-xl border-2 transition-all duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1570EF] bg-white text-[#344054] ${
+													selected === idx
+														? "border-[#1570EF] ring-2 ring-[#1570EF] bg-[#EFF8FF]"
+														: "border-[#D1E9FF] hover:border-[#1570EF] hover:bg-[#F0F6FF]"
+												}
+											`}
+											>
+												{opt}
+											</button>
+										))}
+									</div>
+									{/* Progress Bar */}
+									<div className="w-full h-2 rounded-full bg-[#EFF8FF] mb-4">
+										<div
+											className="h-2 rounded-full bg-[#1570EF] transition-all duration-500"
+											style={{
+												width: `${((current + (selected !== null ? 1 : 0)) /
+													currentSet.questions.length) *
+													100}%`,
+											}}
+										/>
+									</div>
+									{/* XP and Retake Info */}
+									<div className="flex items-center justify-between mb-6 text-sm">
+										<span className="flex items-center gap-1 text-[#1570EF] font-medium">
+											<span role="img" aria-label="trophy">🏆</span> Earn 100 XP for a perfect score!
+										</span>
+									</div>
+									{/* Next Button */}
+									<button
+										onClick={handleNextQuestion}
+										disabled={selected === null}
+										className={`w-full py-4 rounded-xl text-lg font-bold shadow-md transition-all duration-200 ${
+											selected === null
+												? "bg-[#B2DDFF] text-white cursor-not-allowed"
+												: "bg-[#1570EF] text-white hover:bg-[#2563EB]"
+										}`}
+									>
+										{current === currentSet.questions.length - 1
+											? "Finish Quiz"
+											: "Next Question"}
+									</button>
+								</div>
+							) : (
+								<div className="flex flex-col items-center justify-center px-8 py-16 min-h-[400px]">
+									<Sparkles className="h-12 w-12 text-[#FFD600] mb-4 animate-pulse-glow" />
+									<div className="text-3xl font-extrabold text-[#1570EF] mb-2">Quiz Complete!</div>
+									<div className="text-lg font-semibold text-[#1D2939] mb-4">You scored {score} out of {currentSet.questions.length}!</div>
+									<div className="text-base font-bold text-[#1570EF] mb-2">
+										{score === currentSet.questions.length
+											? 'You earned 100 XP!'
+											: 'You earned 50 XP!'}
+									</div>
+									<div className="mb-6 text-blue-700 text-center text-lg">
+										{score === currentSet.questions.length ? (
+											<div className="space-y-2">
+												<span>🌟 Perfect score! You're a true wisdom champion!</span>
+												{isSubmitting ? (
+													<div className="text-sm text-primary animate-pulse">Updating XP...</div>
+												) : (
+													<div className="text-sm text-success">+100 XP awarded!</div>
+												)}
+											</div>
+										) : score >= currentSet.questions.length - 1 ? (
+											<span>👏 Great job! Just a little more for perfection. Try again for a perfect score and earn 100 XP!</span>
+										) : (
+											<span>💡 Keep learning! Every attempt makes you wiser. Give it another shot!</span>
+										)}
+									</div>
+									<div className="flex gap-4 mt-4">
+										<button
+											onClick={handleRestartQuiz}
+											className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
+											disabled={isSubmitting}
+										>
+											Retake Quiz
+										</button>
+										<button
+											onClick={() => navigate(-1)}
+											className="bg-[#F9A51A] hover:bg-[#FFD600] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
+											disabled={isSubmitting}
+										>
+											Back to Dashboard
+										</button>
+									</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
-        {/* Quiz Body or Result */}
-        {!showResult ? (
-				<div className="px-8 py-10">
-					{/* Question Number */}
-					<div className="flex items-center gap-2 mb-4">
-						<span className="inline-block w-2 h-2 rounded-full bg-[#1570EF] animate-pulse"></span>
-						<span className="text-[#1570EF] font-semibold">
-							Question {current + 1} of {currentQuestionSet.questions.length}
-						</span>
-					</div>
-					{/* Question Text */}
-					<div className="mb-6 text-2xl font-bold text-[#1D2939]">
-						{currentQuestionSet.questions[current].q}
-					</div>
-					{/* Options */}
-					<div className="space-y-4 mb-8">
-						{currentQuestionSet.questions[current].options.map((opt: string, idx: number) => (
-							<button
-								key={idx}
-								onClick={() => handleOption(idx)}
-								className={`w-full text-base py-3 rounded-xl border-2 transition-all duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1570EF] bg-white text-[#344054] ${
-									selected === idx
-										? "border-[#1570EF] ring-2 ring-[#1570EF] bg-[#EFF8FF]"
-										: "border-[#D1E9FF] hover:border-[#1570EF] hover:bg-[#F0F6FF]"
-								}
-							`}
-							>
-								{opt}
-							</button>
-						))}
-					</div>
-					{/* Progress Bar */}
-					<div className="w-full h-2 rounded-full bg-[#EFF8FF] mb-4">
-						<div
-							className="h-2 rounded-full bg-[#1570EF] transition-all duration-500"
-							style={{
-								width: `${((current + (selected !== null ? 1 : 0)) /
-									currentQuestionSet.questions.length) *
-									100}%`,
-							}}
-						/>
-					</div>
-					{/* XP and Retake Info */}
-					<div className="flex items-center justify-between mb-6 text-sm">
-						<span className="flex items-center gap-1 text-[#1570EF] font-medium">
-							<span role="img" aria-label="trophy">🏆</span> Earn 100 XP for a perfect score!
-						</span>
-					</div>
-					{/* Next Button */}
-					<button
-						onClick={handleNext}
-						disabled={selected === null}
-						className={`w-full py-4 rounded-xl text-lg font-bold shadow-md transition-all duration-200 ${
-							selected === null
-								? "bg-[#B2DDFF] text-white cursor-not-allowed"
-								: "bg-[#1570EF] text-white hover:bg-[#2563EB]"
-						}`}
-					>
-						{current === currentQuestionSet.questions.length - 1
-							? "Finish Quiz"
-							: "Next Question"}
-					</button>
-				</div>
-        ) : (
-          <div className="flex flex-col items-center justify-center px-8 py-16 min-h-[400px]">
-            <Sparkles className="h-12 w-12 text-[#FFD600] mb-4 animate-pulse-glow" />
-            <div className="text-3xl font-extrabold text-[#1570EF] mb-2">Quiz Complete!</div>
-            <div className="text-lg font-semibold text-[#1D2939] mb-4">You scored {score} out of {currentQuestionSet.questions.length}!</div>
-            <div className="text-base font-bold text-[#1570EF] mb-2">
-              {score === currentQuestionSet.questions.length
-                ? 'You earned 100 XP!'
-                : 'You earned 50 XP!'}
-            </div>
-            <div className="mb-6 text-blue-700 text-center text-lg">
-              {score === currentQuestionSet.questions.length ? (
-                <div className="space-y-2">
-                  <span>🌟 Perfect score! You're a true wisdom champion!</span>
-                  {isSubmitting ? (
-                    <div className="text-sm text-primary animate-pulse">Updating XP...</div>
-                  ) : (
-                    <div className="text-sm text-success">+100 XP awarded!</div>
-                  )}
-                </div>
-              ) : score >= currentQuestionSet.questions.length - 1 ? (
-                <span>👏 Great job! Just a little more for perfection. Try again for a perfect score and earn 100 XP!</span>
-              ) : (
-                <span>💡 Keep learning! Every attempt makes you wiser. Give it another shot!</span>
-              )}
-            </div>
-            <div className="flex gap-4 mt-4">
-              <button
-                onClick={handleRetake}
-                className="bg-[#1570EF] hover:bg-[#2563EB] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
-                disabled={isSubmitting}
-              >
-                Retake Quiz
-              </button>
-              <button
-                onClick={() => navigate(-1)}
-                className="bg-[#F9A51A] hover:bg-[#FFD600] text-white font-bold py-3 px-8 rounded-xl shadow-md text-lg transition-all duration-200"
-                disabled={isSubmitting}
-              >
-                Back to Dashboard
-              </button>
-            </div>
-          </div>
-        )}
 			</div>
-		</div>
+		</>
 	);
 };
 
