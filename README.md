@@ -110,7 +110,7 @@ After logging in, click on the left of your LinkedIn page to access LinkLearn th
 
 ### Demo Credentials
 For testing purposes, use these credentials:
-- **Email**: `alex@gmail.com`
+- **Email**: `anupam@example.com`
 - **Password**: `a1s2d3f4`
 
 ## 📋 Project Structure

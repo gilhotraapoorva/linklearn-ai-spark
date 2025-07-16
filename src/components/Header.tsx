@@ -103,7 +103,7 @@ const Header = () => {
   };
   
   const userStats = {
-    name: "Alex Johnson",
+    name: "Anupam",
     // level: 12,
     // currentStreak: 7,
     notifications: 3

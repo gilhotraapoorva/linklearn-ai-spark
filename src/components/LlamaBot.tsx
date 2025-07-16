@@ -177,7 +177,7 @@ const potentialPartners: TeamMember[] = [
     avatar: "👨‍💻"
   },
   {
-    name: "Alex Kim",
+    name: "Anupam",
     skills: ["System Design", "Cloud", "Microservices", "AWS"],
     level: 87,
     avatar: "👩‍💻"

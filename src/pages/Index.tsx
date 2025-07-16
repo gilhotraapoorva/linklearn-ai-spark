@@ -87,7 +87,7 @@ const Index = () => {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back, Alex! 
+            Welcome back, Anupam! 
             <Sparkles className="inline-block ml-2 h-6 w-6 text-primary animate-pulse-glow" />
           </h1>
           <p className="text-muted-foreground">
