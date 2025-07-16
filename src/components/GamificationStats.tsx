@@ -85,6 +85,26 @@ const GamificationStats = () => {
     }
   };
 
+  // Add hardcoded recent badges from ProgressReport week
+  const staticRecentBadges = [
+    {
+      id: "quest-streak",
+      name: "Week Warrior",
+      description: "Completed 7-day quest streak",
+      icon: "🔥",
+      rarity: "epic",
+      unlocked: true
+    },
+    {
+      id: "react-master",
+      name: "React Rookie",
+      description: "Completed 10 React challenges",
+      icon: "⚛️",
+      rarity: "rare",
+      unlocked: true
+    }
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Level & XP Card */}
@@ -118,12 +138,12 @@ const GamificationStats = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 pt-2">
-            <div className="text-center p-3 bg-background rounded-lg">
+            <div className="flex flex-col items-center justify-center p-1 rounded-lg border border-gray-200 bg-white min-h-[70px] mt-3">
               <Target className="h-6 w-6 text-primary mx-auto mb-1" />
               <div className="text-2xl font-bold">{stats.questsCompleted}</div>
               <div className="text-xs text-muted-foreground">Quests</div>
             </div>
-            <div className="text-center p-3 bg-background rounded-lg flex flex-col items-start justify-center">
+            <div className="flex flex-col items-center justify-center p-1 rounded-lg border border-gray-200 bg-white min-h-[70px] mt-3">
               <Zap className="h-6 w-6 text-accent mb-1" />
               <div className="text-2xl font-bold">{stats.hackathonsCompleted}</div>
               <div className="text-xs text-muted-foreground">Hacks</div>
@@ -160,25 +180,27 @@ const GamificationStats = () => {
               Recent Badges
             </h4>
             <div className="grid grid-cols-2 gap-2">
+              {/* Show static recent badges first, then user badges */}
+              {staticRecentBadges.map((badge) => (
+                <div
+                  key={badge.id}
+                  className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all duration-200 h-full min-h-[70px] min-w-0 overflow-hidden border-gray-200 bg-white`}
+                >
+                  <div className="text-2xl mb-1">{badge.icon}</div>
+                  <div className="text-xs font-medium text-center w-full break-normal whitespace-normal">{badge.name}</div>
+                </div>
+              ))}
               {stats.badges.map((badge) => (
                 <div
                   key={badge.id}
-                  className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all duration-200 h-full min-h-[110px] min-w-0 overflow-hidden ${
+                  className={`flex flex-col items-center justify-center p-1 rounded-lg border transition-all duration-200 h-full min-h-[70px] min-w-0 overflow-hidden ${
                     badge.unlocked
-                      ? 'border-primary bg-primary/5 hover:bg-primary/10'
+                      ? 'border-gray-200 bg-white'
                       : 'border-muted bg-muted/20 opacity-50'
                   }`}
                 >
                   <div className="text-2xl mb-1">{badge.icon}</div>
-                  <div className="text-xs font-medium break-words text-center w-full">{badge.name}</div>
-                  {(badge.rarity === 'epic' || badge.rarity === 'legendary') && (
-                    <Badge 
-                      className={`text-xs mt-1 ${getRarityColor(badge.rarity)} flex items-center justify-center w-full max-w-[80px] mx-auto truncate`}
-                      variant="secondary"
-                    >
-                      {badge.rarity}
-                    </Badge>
-                  )}
+                  <div className="text-xs font-medium text-center w-full break-normal whitespace-normal">{badge.name}</div>
                 </div>
               ))}
             </div>

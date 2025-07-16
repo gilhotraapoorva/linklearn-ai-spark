@@ -393,7 +393,7 @@ const WeeklyHackathon = () => {
             return (
               <div key={hackathon.id} className="w-[340px] h-[240px] flex-shrink-0 p-2">
                 <div
-                  className={`rounded-2xl shadow-2xl border-0 p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/60 hover:border-2 hover:ring-4 hover:ring-primary/10 cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
+                  className={`rounded-2xl shadow-2xl border border-gray-200 bg-white p-4 h-full flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:scale-[1.05] hover:shadow-2xl cursor-pointer ${isForYou ? 'shine-outline-for-you' : ''}`}
                   onClick={() => setSelectedHackathon(hackathon)}
                   onMouseEnter={() => {
                     // Only emit hover event if chatbot is open

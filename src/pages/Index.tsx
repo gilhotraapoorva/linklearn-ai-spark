@@ -175,7 +175,7 @@ const Index = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {insights.map((insight, index) => (
-                  <div key={index} className="flex items-start gap-2 p-3 bg-background rounded-lg">
+                  <div key={index} className="flex items-start gap-2 p-2 rounded-lg border border-gray-200 bg-white">
                     <Lightbulb className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{insight}</span>
                   </div>
