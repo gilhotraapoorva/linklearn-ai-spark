@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Header from "@/components/Header";
 import { 
   Clock, 
   Star, 
@@ -300,24 +301,27 @@ impl UserList {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-hidden">
-      {/* Header */}
-      <div className="h-16 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-6 shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <div className="h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-hidden pt-16">
+        {/* Header with Back Button */}
+        <div className="h-16 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content - Fixed Height */}
-      <div className="h-[calc(100vh-4rem)] flex">
+        {/* Main Content - Fixed Height */}
+        <div className="h-[calc(100vh-8rem)] flex">{/* Adjusted height to account for navbar and header */}
         {/* Problem Statement Card - Left Side */}
         <div className="w-1/2 h-full border-r border-border/50">
           <Card className="h-full rounded-none border-0 shadow-none bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
@@ -471,6 +475,7 @@ impl UserList {
             </CardContent>
           </Card>
         </div>
+      </div>
       </div>
     </div>
   );
