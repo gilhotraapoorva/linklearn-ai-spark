@@ -247,6 +247,7 @@ const overviewStatsMap = {
 };
 
 const ProgressReport = () => {
+  const navigate = useNavigate();
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'quarter'>('week');
   const activityData = weeklyActivityDataMap[timeframe];
   const palette = getPalette(activityData.length);

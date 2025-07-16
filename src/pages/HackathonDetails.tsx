@@ -579,7 +579,7 @@ const HackathonDetails = () => {
                 <div className="text-primary-foreground max-w-3xl w-full">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="relative flex-shrink-0">
-                      <div className="relative w-20 h-20 bg-background/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border-2 border-blue-300/50 overflow-hidden">
+                      <div className="relative w-20 h-20 bg-transparent rounded-3xl flex items-center justify-center border-2 border-blue-300/50 overflow-hidden">
                         {hackathon.logo ? (
                           <img 
                             src={hackathon.logo} 
