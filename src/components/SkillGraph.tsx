@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Target, Zap, Brain } from "lucide-react";
+import { TrendingUp, Target, Zap, Brain, ChartNoAxesCombined } from "lucide-react";
 
 interface Skill {
   name: string;
@@ -50,7 +50,7 @@ const SkillGraph = () => {
     <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Brain className="h-5 w-5 text-primary" />
+          <ChartNoAxesCombined className="h-5 w-5 text-primary" />
           Your Skill Graph
         </CardTitle>
       </CardHeader>

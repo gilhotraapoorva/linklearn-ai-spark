@@ -120,28 +120,15 @@ const DailyQuest = () => {
 
   return (
     <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-5 h-5 text-primary animate-pulse-glow">
-            <span className="text-lg font-bold">&lt;/&gt;</span>
-          </div>
-          Daily Dev Dose
-          {currentQuest.completed && (
-            <Badge className="bg-gradient-success text-success-foreground">
-              <Trophy className="h-3 w-3 mr-1" />
-              Completed!
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
+      {/* CardHeader with heading removed */}
       <CardContent className="space-y-4">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2 mt-2">
             <Calendar className="h-4 w-4" />
-            <span>Quest for {new Date(currentQuest.date || '').toLocaleDateString()}</span>
+            <span>Today's Quest</span>
           </div>
+          <h2 className="text-2xl font-bold mb-1">{currentQuest.title}</h2>
           
-          <h3 className="text-lg font-semibold">{currentQuest.title}</h3>
           <p className="text-muted-foreground">{currentQuest.description}</p>
           
           <div className="flex flex-wrap gap-2">

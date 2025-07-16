@@ -111,7 +111,6 @@ const GamificationStats = () => {
       <Card className="bg-gradient-card shadow-card hover:shadow-hover transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-accent" />
             Level & Experience
           </CardTitle>
         </CardHeader>
