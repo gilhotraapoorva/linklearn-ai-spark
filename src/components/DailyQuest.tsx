@@ -32,20 +32,46 @@ const DailyQuest = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchTodaysQuest();
+    const today = new Date().toISOString().slice(0, 10);
+    const localKey = `quest-${today}`;
+    // Remove any old quest data (optional: clear all keys that start with 'quest-' except today)
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('quest-') && key !== localKey) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    const cachedQuest = localStorage.getItem(localKey);
+    if (cachedQuest) {
+      try {
+        const quest = JSON.parse(cachedQuest);
+        // Check if the quest date matches today
+        if (quest.date === today) {
+          setCurrentQuest(quest);
+          setIsLoading(false);
+          return;
+        } else {
+          // Date mismatch, erase and fetch new
+          localStorage.removeItem(localKey);
+        }
+      } catch (e) {
+        // Parsing error, erase and fetch new
+        localStorage.removeItem(localKey);
+      }
+    }
+    // If not found or invalid, fetch new
+    fetchTodaysQuestAndCache(localKey, today);
   }, []);
 
-  const fetchTodaysQuest = async () => {
+  // Helper to fetch and cache today's quest
+  const fetchTodaysQuestAndCache = async (localKey: string, today: string) => {
     try {
       setIsLoading(true);
       setError(null);
       const quest = await generateDailyQuest();
-      setCurrentQuest({
-        ...quest,
-        id: `quest-${quest.date}`,
-        completed: false,
-        progress: 0
-      });
+      const questWithDate = { ...quest, id: `quest-${today}`, date: today, completed: false, progress: 0 };
+      localStorage.setItem(localKey, JSON.stringify(questWithDate));
+      setCurrentQuest(questWithDate);
     } catch (err) {
       setError("Failed to load today's quest");
       console.error(err);
@@ -109,7 +135,7 @@ const DailyQuest = () => {
         <CardContent className="flex items-center justify-center py-16">
           <div className="flex flex-col items-center gap-4">
             <p className="text-destructive">Failed to load quest</p>
-            <Button onClick={fetchTodaysQuest} variant="outline" size="sm">
+            <Button onClick={() => fetchTodaysQuestAndCache(`quest-${new Date().toISOString().slice(0, 10)}`, new Date().toISOString().slice(0, 10))} variant="outline" size="sm">
               Try Again
             </Button>
           </div>

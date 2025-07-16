@@ -66,8 +66,8 @@ const Index = () => {
   ];
 
   const insights = [
-    "Your React skills improved 15% this week!",
-    "You're on track to reach Level 13 by next month",
+    "Your React skills improved 7% this week!",
+    "You're on track to reach Level 2 by next month",
     "Consider exploring System Design - it's trending in your network"
   ];
 
@@ -108,13 +108,13 @@ const Index = () => {
               <WeeklyHackathon />
             </div>
             
-            {/* Weekly Wisdom Quiz (now above SkillGraph) */}
+            {/* Skill Graph */}
+            <SkillGraph />
+
+            {/* Weekly Wisdom Quiz (moved to bottom) */}
             <div data-section="weekly-quiz">
               <WeeklyWisdomQuiz attempted={quizAttempted} />
             </div>
-            
-            {/* Skill Graph */}
-            <SkillGraph />
           </div>
 
           {/* Right Column - Stats & Info */}

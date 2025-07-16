@@ -291,6 +291,7 @@ const LlamaBot = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isOpen && chatbotRef.current && !chatbotRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setIsIconHovered(false); // Hide tooltip when Pixie is closed
       }
     };
 
@@ -601,10 +602,9 @@ const LlamaBot = () => {
               </div>
             </Button>
           {isIconHovered && (
-            <div className="absolute bottom-full right-0 mb-2 bg-background/95 backdrop-blur-sm border-2 border-primary/30 rounded-xl shadow-lg text-base w-48 animate-fade-in">
-              <div className="whitespace-pre-line text-center text-sm py-1">
-                🦙 Hi! I'm Pixie, your{'\n'}AI hackathon helper!
-              </div>
+            <div className="absolute bottom-full right-0 mb-2 bg-white/90 border border-gray-200 rounded-lg shadow-lg w-56 animate-fade-in p-3 flex items-center gap-3">
+              <span className="text-2xl">👋</span>
+              <span className="text-sm font-semibold text-blue-900">Hi! I'm Pixie, your AI hackathon helper!</span>
             </div>
           )}
         </div>
@@ -634,7 +634,10 @@ const LlamaBot = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsIconHovered(false); // Hide tooltip when Pixie is closed
+                  }}
                   className="h-10 w-10 p-0"
                 >
                   <X className="h-5 w-5" />
