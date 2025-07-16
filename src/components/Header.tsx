@@ -140,11 +140,10 @@ const Header = () => {
       className="global-nav fixed top-0 left-0 w-full z-50 bg-white shadow-sm"
       style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}
     >
-      <div className="global-nav__content">
-        <div className="flex items-center h-[52px] max-w-[1128px] mx-auto pl-0 pr-4">
-          
-          {/* Left section - Logo and Search */}
-          <div className="flex items-center space-x-4 flex-shrink-0">
+      <div className="flex items-center h-[52px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Left section - Logo and Search */}
+        <div className="flex items-center space-x-4 flex-shrink-0">
             <a 
               href="/"
               onClick={(e) => {
@@ -298,7 +297,11 @@ const Header = () => {
                   }}
                 >
                   <div className="global-nav__icon-ivm mb-1">
-                    <Trophy className="w-6 h-6" />
+                    <img 
+                      src="/hackathon.jpg" 
+                      alt="Hackathons" 
+                      className="w-6 h-6 object-cover rounded"
+                    />
                   </div>
                   <span className="global-nav__primary-link-text">Hackathons</span>
                   <div 
@@ -467,9 +470,9 @@ const Header = () => {
                         width="24" 
                         height="24" 
                         alt={username}
-                        className="global-nav__me-photo w-6 h-6 rounded-full mb-1 bg-gray-400"
+                        src="/anupam.jpeg"
+                        className="global-nav__me-photo w-6 h-6 rounded-full mb-1 object-cover"
                         style={{ 
-                          background: 'linear-gradient(180deg, #cacaca 0%, #adadad 100%)',
                           border: 'none'
                         }}
                       />
@@ -599,7 +602,6 @@ const Header = () => {
           </nav>
 
         </div>
-      </div>
     </header>
   );
 };

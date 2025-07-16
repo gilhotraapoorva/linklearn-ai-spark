@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -301,138 +300,180 @@ impl UserList {
   };
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4 pt-20">
-        <div className="w-full max-w-4xl mx-auto">
+    <div className="h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-hidden">
+      {/* Header */}
+      <div className="h-16 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-6 shadow-sm">
+        <div className="flex items-center gap-4">
           <Button 
-            variant="ghost" 
-            className="mb-6 text-sm text-gray-600 hover:text-gray-900"
+            variant="outline" 
+            size="sm" 
             onClick={() => navigate(-1)}
+            className="flex items-center gap-2"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            <ArrowLeft className="h-4 w-4" />
+            Back
           </Button>
+        </div>
+      </div>
 
-          {loading && (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-            </div>
-          )}
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          
-          {quest && !loading && (
-            <Card className="w-full shadow-lg border-gray-200 rounded-xl overflow-hidden">
-              <CardContent className="p-0">
-                <div className="grid grid-cols-1 md:grid-cols-3">
-                  {/* Left Panel: Quest Details */}
-                  <div className="col-span-1 bg-white p-8 border-r border-gray-200 flex flex-col">
-                    <div className="flex-grow">
-                      <div className="flex items-center mb-4">
-                        <Trophy className="h-8 w-8 text-yellow-500 mr-3" />
-                        <h1 className="text-2xl font-bold text-gray-800">Daily AI Quest</h1>
-                      </div>
-                      <Badge 
-                        className={`mb-4 text-sm font-semibold px-3 py-1 rounded-full border-2 ${getDifficultyColor(quest.difficulty)}`}
-                      >
-                        {quest.difficulty}
-                      </Badge>
-                      <h2 className="text-xl font-semibold text-gray-700 mb-2">{quest.title}</h2>
-                      <p className="text-gray-600 mb-6 text-sm leading-relaxed">{quest.description}</p>
-                      
-                      <div className="space-y-4 text-sm">
-                        <div className="flex items-center text-gray-600">
-                          <Star className="h-5 w-5 mr-3 text-yellow-400" />
-                          <span>{quest.xpReward} XP</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Clock className="h-5 w-5 mr-3 text-blue-500" />
-                          <span>{quest.estimatedTime}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Code className="h-5 w-5 mr-3 text-green-500" />
-                          <span>Topic: {quest.category}</span>
-                        </div>
+      {/* Main Content - Fixed Height */}
+      <div className="h-[calc(100vh-4rem)] flex">
+        {/* Problem Statement Card - Left Side */}
+        <div className="w-1/2 h-full border-r border-border/50">
+          <Card className="h-full rounded-none border-0 shadow-none bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
+            <CardContent className="h-full overflow-y-auto p-6 space-y-6">
+              {loading ? (
+                <div className="flex items-center justify-center h-full text-lg">Loading quest...</div>
+              ) : error ? (
+                <div className="flex items-center justify-center h-full text-destructive">{error}</div>
+              ) : quest ? (
+                <div className="space-y-4 animate-in slide-in-from-left-4 duration-500">
+                  <div className="space-y-4">
+                    <div className="space-y-3">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                        {quest.title}
+                      </h2>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className={`${getDifficultyColor(quest.difficulty || "Intermediate")} shadow-md pointer-events-none`}>
+                          {quest.difficulty || "Intermediate"}
+                        </Badge>
+                        <Badge variant="outline" className="flex items-center gap-1 bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30 shadow-md">
+                          <Clock className="h-3 w-3 text-primary" />
+                          {quest.estimatedTime || "15 min"}
+                        </Badge>
+                        <Badge className="flex items-center gap-1 bg-white text-foreground border border-border shadow-md">
+                          <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                          {quest.xpReward || 150} XP
+                        </Badge>
                       </div>
                     </div>
-                    <div className="mt-8">
-                      <Button 
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105"
-                        onClick={() => {
-                          const element = document.getElementById("solution-section");
-                          if (element) {
-                            element.scrollIntoView({ behavior: 'smooth' });
-                          }
-                        }}
-                      >
-                        <Lightbulb className="mr-2 h-5 w-5" />
-                        Attempt Challenge
-                      </Button>
-                    </div>
+                    <p className="text-muted-foreground leading-relaxed text-base">
+                      {quest.description}
+                    </p>
                   </div>
 
-                  {/* Right Panel: Solution Submission */}
-                  <div id="solution-section" className="col-span-2 bg-gray-50 p-8">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Submit Your Solution</h3>
-                    <div className="bg-white p-6 rounded-lg shadow-inner border border-gray-200">
-                      <div className="flex justify-between items-center mb-4">
-                        <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                          <SelectTrigger className="w-[220px] bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500">
-                            <SelectValue placeholder="Select language" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {languages.map(lang => (
-                              <SelectItem key={lang.value} value={lang.value}>
-                                <span className="mr-2">{lang.icon}</span>{lang.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" onClick={() => setSolution("")} disabled={isSubmitting}>
-                            <RotateCcw className="mr-2 h-4 w-4" />
-                            Reset
-                          </Button>
-                          <Button 
-                            variant="secondary" 
-                            size="sm" 
-                            onClick={() => setIsRunning(true)} 
-                            disabled={isRunning || isSubmitting}
-                          >
-                            <Play className="mr-2 h-4 w-4" />
-                            {isRunning ? "Running..." : "Run Code"}
-                          </Button>
-                        </div>
-                      </div>
-                      <Textarea
-                        placeholder={getPlaceholder(selectedLanguage)}
-                        value={solution}
-                        onChange={(e) => setSolution(e.target.value)}
-                        className="w-full h-64 p-4 border rounded-md bg-gray-900 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled={isSubmitting}
-                      />
-                      <Button 
-                        className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 flex items-center justify-center"
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        ) : (
-                          <CheckCircle className="mr-2 h-5 w-5" />
-                        )}
-                        {isSubmitting ? "Submitting..." : "Submit Solution"}
-                      </Button>
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                      <div className="w-1 h-6 bg-primary rounded-full"></div>
+                      Component
+                    </h3>
+                    <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-6 rounded-xl border border-border/50 shadow-inner">
+                      <pre className="text-sm overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed text-foreground/90">
+                        <code>{quest.problem}</code>
+                      </pre>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ) : null}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Code Editor Card - Right Side */}
+        <div className="w-1/2 h-full">
+          <Card className="h-full rounded-none border-0 shadow-none bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
+            <CardContent className="h-full flex flex-col p-6">
+              <div className="flex-1 flex flex-col space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Code className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">Solution</h3>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleRunCode}
+                      disabled={isRunning || !solution.trim()}
+                      className=""
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      {isRunning ? "Running..." : "Run Code"}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleReset}
+                      className=""
+                    >
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      Reset
+                    </Button>
+                  </div>
+                  <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                    <SelectTrigger className="w-48 bg-gradient-to-r from-muted/30 to-muted/10 border-border/50">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card/95 backdrop-blur-sm border-border/50">
+                      {languages.map((language) => (
+                        <SelectItem key={language.value} value={language.value}>
+                          <div className="flex items-center gap-2">
+                            <span>{language.icon}</span>
+                            <span>{language.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex-1 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl border border-border/50 shadow-inner relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-50"></div>
+                  <Textarea
+                    placeholder={getPlaceholder(selectedLanguage)}
+                    value={solution}
+                    onChange={(e) => setSolution(e.target.value)}
+                    className="w-full h-full border-0 bg-transparent font-mono text-sm resize-none focus:ring-0 rounded-none leading-6 p-4 relative z-10"
+                    disabled={isSubmitted}
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  {!isSubmitted ? (
+                    <Button 
+                      onClick={handleSubmit}
+                      disabled={!solution.trim() || isSubmitting}
+                      className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                      size="lg"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        "Submit Solution"
+                      )}
+                    </Button>
+                  ) : (
+                    <Button variant="success" className="w-full shadow-lg" disabled size="lg">
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Submitted!
+                    </Button>
+                  )}
+
+                  {isSubmitted && (
+                    <div className="p-4 bg-gradient-to-br from-success/10 to-success/5 border border-success/20 rounded-xl shadow-sm animate-in slide-in-from-bottom-4 duration-500">
+                      <h4 className="font-semibold text-success mb-2 flex items-center gap-2">
+                        <Trophy className="h-4 w-4" />
+                        Great job!
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Your solution has been submitted successfully!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default QuestPage;
+export default QuestPage; 

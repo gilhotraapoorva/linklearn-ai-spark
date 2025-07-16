@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 244 242 237; /* #F4F2ED converted to HSL */
     --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
@@ -131,6 +131,32 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background-color: #F4F2ED !important;
+    min-height: 100vh;
+  }
+  
+  html {
+    background-color: #F4F2ED !important;
+  }
+  
+  /* Ensure all main content areas have the background */
+  #root {
+    background-color: #F4F2ED !important;
+    min-height: 100vh;
+  }
+  
+  main {
+    background-color: #F4F2ED !important;
+  }
+  
+  /* Override any bg-background classes */
+  .bg-background {
+    background-color: #F4F2ED !important;
+  }
+  
+  /* Override min-h-screen containers */
+  .min-h-screen {
+    background-color: #F4F2ED !important;
   }
 }
 
@@ -181,9 +207,21 @@ All colors MUST be HSL.
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1128px;
+  max-width: 1280px; /* Updated to match max-w-7xl */
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 1rem; /* Updated to match responsive padding */
+}
+
+@media (min-width: 640px) {
+  .global-nav__content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .global-nav__content {
+    padding: 0 2rem;
+  }
 }
 
 .global-nav__branding-logo svg {
