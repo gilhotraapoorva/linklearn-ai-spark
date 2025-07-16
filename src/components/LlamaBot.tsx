@@ -601,8 +601,10 @@ const LlamaBot = () => {
               </div>
             </Button>
           {isIconHovered && (
-            <div className="absolute bottom-full right-0 mb-2 bg-background/95 backdrop-blur-sm border-2 border-primary/30 rounded-xl p-6 shadow-lg text-base max-w-80 animate-fade-in">
-              🦙 Hi! I'm Pixie, your AI hackathon helper! Click to explore personalized recommendations and get instant insights!
+            <div className="absolute bottom-full right-0 mb-2 bg-background/95 backdrop-blur-sm border-2 border-primary/30 rounded-xl shadow-lg text-base w-48 animate-fade-in">
+              <div className="whitespace-pre-line text-center text-sm py-1">
+                🦙 Hi! I'm Pixie, your{'\n'}AI hackathon helper!
+              </div>
             </div>
           )}
         </div>
